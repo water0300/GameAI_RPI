@@ -1,1 +1,1 @@
-# UnityMiniProjects
+# GameAI Coursework at RPI
