@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public Transform playerSpawn;
     public GameObject playerPrefab;
     public CinemachineVirtualCamera vcam;
-
+    public Rigidbody spike;
     private GameObject _currPlayer;
 
     private int _attempts = 0;
@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
         _attempts++;
         attemptText.text = $"Attempts: {_attempts}";
         _currPlayer.GetComponent<Player>().enabled = false;
+        spike.AddForce(Vector3.right * 500f);
         PlayerInit();
     }
 
