@@ -22,16 +22,17 @@ public class PlayerInputHandler : MonoBehaviour {
     }
 
     private void Start(){
-        PlayerInput.Player.Fire.performed += ctx => TrackingEvent(ctx);
-        PlayerInput.Player.AltFire.performed += ctx =>  CommandEvent(ctx);
+        PlayerInput.Player.MoveTarget.performed += ctx => MouseMoveEvent(ctx);
+        // PlayerInput.Player.AltFire.performed += ctx =>  CommandEvent(ctx);
         // PlayerInput.Player.Move.performed += ctx => MoveEvent(ctx);
         // PlayerInput.Player.Dash.performed += ctx => DashEvent(ctx, true);
         // PlayerInput.Player.Dash.canceled += ctx => DashEvent(ctx, false);
     }
 
-    private void TrackingEvent(InputAction.CallbackContext ctx) => _playerControl.IssueCommand(Mouse.current.position.ReadValue());
-    private void CommandEvent(InputAction.CallbackContext ctx) => _playerControl.IssueTrackingCommand();
+    // private void TrackingEvent(InputAction.CallbackContext ctx) => _playerControl.IssueCommand();
+    // private void CommandEvent(InputAction.CallbackContext ctx) => _playerControl.IssueCommand();
 
+    private void MouseMoveEvent(InputAction.CallbackContext ctx) => _playerControl.OnMouseMoved(ctx.ReadValue<Vector2>());
 
 
 }

@@ -62,6 +62,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveTarget"",
+                    ""type"": ""Value"",
+                    ""id"": ""206965a1-f28c-4b91-88a3-dd748b4e2f31"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -293,6 +302,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Alt Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71333c91-5fea-4472-8b3a-d1fd80188084"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MoveTarget"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -884,6 +904,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_AltFire = m_Player.FindAction("Alt Fire", throwIfNotFound: true);
+        m_Player_MoveTarget = m_Player.FindAction("MoveTarget", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -959,6 +980,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_AltFire;
+    private readonly InputAction m_Player_MoveTarget;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -967,6 +989,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @AltFire => m_Wrapper.m_Player_AltFire;
+        public InputAction @MoveTarget => m_Wrapper.m_Player_MoveTarget;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -988,6 +1011,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @AltFire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltFire;
                 @AltFire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltFire;
                 @AltFire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltFire;
+                @MoveTarget.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveTarget;
+                @MoveTarget.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveTarget;
+                @MoveTarget.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveTarget;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1004,6 +1030,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @AltFire.started += instance.OnAltFire;
                 @AltFire.performed += instance.OnAltFire;
                 @AltFire.canceled += instance.OnAltFire;
+                @MoveTarget.started += instance.OnMoveTarget;
+                @MoveTarget.performed += instance.OnMoveTarget;
+                @MoveTarget.canceled += instance.OnMoveTarget;
             }
         }
     }
@@ -1164,6 +1193,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnAltFire(InputAction.CallbackContext context);
+        void OnMoveTarget(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

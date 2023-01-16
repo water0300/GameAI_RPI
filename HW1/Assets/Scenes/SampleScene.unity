@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 291719178}
   - component: {fileID: 291719177}
   - component: {fileID: 291719176}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,7 +657,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793189855}
-  - component: {fileID: 793189854}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -665,23 +664,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &793189854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793189853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 558ee5e44afed4d409c1e038101dde95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1498708001}
-  waypointPrefab: {fileID: 2935332901982728792, guid: 938afd9b3b0a5514a803028864316557,
-    type: 3}
-  maxWaypoints: 3
-  waypointYOffset: 0
 --- !u!4 &793189855
 Transform:
   m_ObjectHideFlags: 0
@@ -875,7 +857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04ed5f3e4a6fdc148b30127da8a087b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointPool: {fileID: 793189854}
+  player: {fileID: 1498708001}
   maxSpeed: 5
   accelerationFactor: 2
 --- !u!1 &1144242829
@@ -954,6 +936,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d3f322b6d85794e84217fa09cb1778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPrefab: {fileID: 2935332901982728792, guid: 0b965f4f016de4c43ad1eb1f582e8d03,
+    type: 3}
 --- !u!114 &1498708002
 MonoBehaviour:
   m_ObjectHideFlags: 0

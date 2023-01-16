@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,10 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Agent : MonoBehaviour {
     [Header("In Scene References")]
-    public WaypointPool waypointPool;
+    // public WaypointPool waypointPool;
+    public Player player;
     [Header("Options")]
     public float maxSpeed;
     public float accelerationFactor;
+
 
     public GameObject Target {get; private set; }
     public IAgentState AgentState {get; private set; }
@@ -17,11 +20,12 @@ public class Agent : MonoBehaviour {
     public Quaternion AngularVelocity {get; set; } = Quaternion.identity; 
 
     private void OnEnable() {
-        waypointPool.OnWaypointSelect += AssignTarget;
+        // waypointPool.OnWaypointSelect += AssignTarget;
+        player.OnTargetActivate += AssignTarget;
     }
     private void OnDisable() {
-        waypointPool.OnWaypointSelect -= AssignTarget;
-
+        // waypointPool.OnWaypointSelect -= AssignTarget;
+        player.OnTargetActivate += AssignTarget;
     }
     void Awake(){
         Rb = GetComponent<Rigidbody>();
