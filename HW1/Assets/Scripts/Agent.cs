@@ -7,11 +7,13 @@ using UnityEngine;
 public class Agent : MonoBehaviour {
     [Header("In Scene References")]
     // public WaypointPool waypointPool;
-    public Player player;
+    public AgentManager player;
+    
     [Header("Options")]
     public float maxSpeed;
     public float accelerationFactor;
-
+    public float arrivalRadius;
+    public float slowdownRadius;
 
     public GameObject Target {get; private set; }
     public IAgentState AgentState {get; private set; }
@@ -25,7 +27,7 @@ public class Agent : MonoBehaviour {
     }
     private void OnDisable() {
         // waypointPool.OnWaypointSelect -= AssignTarget;
-        player.OnTargetActivate += AssignTarget;
+        player.OnTargetActivate -= AssignTarget;
     }
     void Awake(){
         Rb = GetComponent<Rigidbody>();
@@ -34,6 +36,7 @@ public class Agent : MonoBehaviour {
     void Start(){
         AgentState = new SeekState();
         // AgentState = new FleeState();
+
 
     }
 

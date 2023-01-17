@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(AgentManager))]
 public class PlayerInputHandler : MonoBehaviour {
-    private Player _playerControl;
+    private AgentManager _playerControl;
     private PlayerInputActions _playerInput;
     public PlayerInputActions PlayerInput { 
         get {
@@ -18,7 +18,7 @@ public class PlayerInputHandler : MonoBehaviour {
     private void OnEnable() => PlayerInput.Enable();
     private void OnDisable() => PlayerInput.Disable();
     private void Awake(){
-        _playerControl = GetComponent<Player>();
+        _playerControl = GetComponent<AgentManager>();
     }
 
     private void Start(){

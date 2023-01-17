@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour {
+public class AgentManager : MonoBehaviour {
     public GameObject targetPrefab;
     public event Action<Vector3> OnWaypointSpawn;
     public event Action<GameObject> OnTargetActivate;
