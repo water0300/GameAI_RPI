@@ -5,17 +5,23 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Agent : MonoBehaviour {
+    [Header("Prefab References")]
+    public GameObject targetIndicatorPrefab;
     [Header("In Scene References")]
     // public WaypointPool waypointPool;
-    public AgentManager player;
+    public Player player;
     
     [Header("Options")]
     public float maxSpeed;
-    public float accelerationFactor;
+    public float maxAcceleration = 3f;
+    public float maxAngularAccelaration = 3f;
     public float arrivalRadius;
     public float slowdownRadius;
+    public float maxPrediction;
+    [Range(0.01f, 2f)] public float timeToTarget = 0.1f;
 
-    public GameObject Target {get; private set; }
+    public Rigidbody TargetRB {get; private set; }
+    public Transform Target {get; private set; }
     public IAgentState AgentState {get; private set; }
     public Rigidbody Rb {get; private set; }
     public Vector3 Velocity {get; set; } = Vector3.zero; 
@@ -34,21 +40,25 @@ public class Agent : MonoBehaviour {
     }
 
     void Start(){
-        AgentState = new SeekState();
+        // AgentState = new SeekAndArriveState();
         // AgentState = new FleeState();
+        AgentState = new PursueState();
 
 
     }
 
     void FixedUpdate(){
-        if(Target != null){
-            AgentState.OnUpdate(this, AgentState.GetSteering(this), Time.fixedDeltaTime);
+        if(TargetRB != null){
+            AgentState.OnUpdate(this, Time.fixedDeltaTime);
+            // Debug.Log($"Speed: {Velocity.magnitude}");
+
         }
 
     }
 
-    void AssignTarget(GameObject newTarget){
-        Target = newTarget;
+    void AssignTarget(Rigidbody newTarget){
+        TargetRB = newTarget;
+        Target = Instantiate(targetIndicatorPrefab.transform);
     }
     public void SetState(IAgentState state) {
         // if(AgentState != null) yield return StartCoroutine(genericState.OnStateExit());

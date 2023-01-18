@@ -4,10 +4,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Agent))]
 public class AgentUI : MonoBehaviour {
+
     [Header("In Scene References")]
-    public AgentCircleIndicator slowdownUI;
-    public AgentCircleIndicator arrivedUI;
+    public AgentCircleIndicator slowdownLineRenderer;
+    public AgentCircleIndicator arrivedLineRenderer;
     public Agent Agent {get; private set; }
+
+    private GameObject _activeTargetIndicator;
 
     private void Awake() {
         Agent = GetComponent<Agent>();
@@ -15,7 +18,7 @@ public class AgentUI : MonoBehaviour {
 
     // Update is called once per frame
     void LateUpdate(){
-        slowdownUI.Radius = Agent.slowdownRadius;
-        arrivedUI.Radius = Agent.arrivalRadius;
+        slowdownLineRenderer.Radius = Agent.slowdownRadius;
+        arrivedLineRenderer.Radius = Agent.arrivalRadius;
     }
 }
