@@ -70,14 +70,15 @@ public class SeekAndArriveState : MoveState {
 
 public class PursueState : SeekAndArriveState {
     public override Vector3 GetTargetPosition(Agent agent){
+        Debug.Log("ayfasdf");
         Vector3 direction = agent.Target.position - agent.transform.position;
-        float distSqrMagnitude = direction.sqrMagnitude;
-        float speedSqrMagnitude = agent.Velocity.sqrMagnitude;
+        float distance = direction.magnitude;
+        float speed = agent.Velocity.magnitude;
         float prediction;
-        if (speedSqrMagnitude <= distSqrMagnitude / (agent.maxPrediction * agent.maxPrediction)){
+        if (speed <= distance /agent.maxPrediction){
             prediction = agent.maxPrediction;
         } else {
-            prediction = distSqrMagnitude / speedSqrMagnitude;
+            prediction = distance/speed;
         }
 
         return agent.TargetRB.position + agent.TargetRB.velocity * prediction;

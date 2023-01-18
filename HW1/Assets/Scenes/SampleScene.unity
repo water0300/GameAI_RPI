@@ -1146,7 +1146,7 @@ MonoBehaviour:
   maxAngularAccelaration: 3
   arrivalRadius: 2
   slowdownRadius: 9.24
-  maxPrediction: 0.26
+  maxPrediction: 1.34
   timeToTarget: 0.05
 --- !u!114 &1118490117
 MonoBehaviour:
@@ -1241,7 +1241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d3f322b6d85794e84217fa09cb1778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  maxSpeed: 5
+  _smoothedInputSpeed: 0.2
 --- !u!54 &1192746349
 Rigidbody:
   m_ObjectHideFlags: 0
