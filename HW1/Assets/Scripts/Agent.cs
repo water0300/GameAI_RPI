@@ -7,6 +7,7 @@ using UnityEngine;
 public class Agent : MonoBehaviour {
     [Header("Prefab References")]
     public GameObject targetIndicatorPrefab;
+
     [Header("In Scene References")]
     // public WaypointPool waypointPool;
     public Player player;
@@ -26,6 +27,12 @@ public class Agent : MonoBehaviour {
     [Range(0f, 180f)]public float slowAlignWindow;
     [Range(0.01f, 2f)] public float timeToAlign = 0.1f;
 
+    [Header("Wander Modifiers")]
+    public float wanderOffset;
+    public float wanderRadius;
+    public float wanderRate;
+
+
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
     public AgentState AgentState {get; private set; }
@@ -34,6 +41,7 @@ public class Agent : MonoBehaviour {
     public float AngularSpeed_Y {get; set; } = 0f; 
     public Vector3 Linear {get; set; } = Vector3.zero; 
     public float AngularAcceleration_Y {get; set; } = 0f; 
+
     // public float Rotation_f {get => }
     private void OnEnable() {
         // waypointPool.OnWaypointSelect += AssignTarget;
@@ -51,8 +59,8 @@ public class Agent : MonoBehaviour {
         // AgentState = new SeekAndArriveState();
         // AgentState = new FleeState();
         // AgentState = new ArriveState(this);
-        AgentState = new AlignState(this, new LookaheadTargetPositionUpdater());
-
+        // AgentState = new AlignState(this, new FaceTargetRotationUpdater());
+        AgentState = new WanderState(this);
     }
 
     void FixedUpdate(){
