@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ITargetPositionUpdater {
+public interface ITargetPositionUpdater { //interface exists because seek and arrive reuse the same code
     Vector3 GetTargetPosition(Agent agent);
 }
 
@@ -31,5 +31,3 @@ public class LookaheadTargetPositionUpdater : ITargetPositionUpdater {
     }
 
 }
-
-

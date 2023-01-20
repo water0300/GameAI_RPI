@@ -31,7 +31,8 @@ public class Agent : MonoBehaviour {
     public float wanderOffset;
     public float wanderRadius;
     public float wanderRate;
-
+    [Header("Path Following Modifiers")]
+    [Range(-3f, 3f)] public float pathOffset;
 
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
@@ -41,8 +42,8 @@ public class Agent : MonoBehaviour {
     public float AngularSpeed_Y {get; set; } = 0f; 
     public Vector3 Linear {get; set; } = Vector3.zero; 
     public float AngularAcceleration_Y {get; set; } = 0f; 
+    public Path Path {get; set; }
 
-    // public float Rotation_f {get => }
     private void OnEnable() {
         // waypointPool.OnWaypointSelect += AssignTarget;
         player.OnTargetActivate += AssignTarget;
@@ -75,8 +76,8 @@ public class Agent : MonoBehaviour {
     void HandleAgentMovement(float time){
         // SteeringOutput steering = AgentStateFactory.GetSteering(this, new ArriveState(new LookaheadTargetPositionUpdater()), new AlignState(new FaceTargetRotationUpdater())); //pursue
         // SteeringOutput steering = AgentStateFactory.GetSteering(this, new FleeSteer(new LookaheadTargetPositionUpdater()), new AlignState(new HideFromTargetRotationUpdater())); //flee
-        SteeringOutput steering = AgentStateFactory.GetSteering(this, new WanderState());
-
+        // SteeringOutput steering = AgentStateFactory.GetSteering(this, new WanderSteer());
+        SteeringOutput steering = AgentStateFactory.GetSteering(this, new FollowPathSteer(), new AlignSteer(new FaceTargetRotationUpdater()));
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
         Velocity = Vector3.ClampMagnitude(Velocity + steering.linearAcceleration*time ?? Vector3.zero, maxSpeed);

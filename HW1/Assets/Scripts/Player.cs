@@ -13,8 +13,8 @@ public class Player : MonoBehaviour {
     // public event Action<Vector3> OnTargetMove;
     private Rigidbody _rb;
     public Vector2 InputAxis {get; set;}
-    public Vector2 MouseAxis {get; set;}
-    public bool IsMouseControl {get; set; } = false;
+    // public Vector2 MouseAxis {get; set;}
+    // public bool IsMouseControl {get; set; } = false;
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
@@ -22,16 +22,16 @@ public class Player : MonoBehaviour {
         OnTargetActivate?.Invoke(_rb);
     }
 
-    //mouse movement character
-    private void HandleMouseMovement(){
-        Ray ray = Camera.main.ScreenPointToRay(MouseAxis);
-        RaycastHit hit;
-        // Debug.Log("asdf");
+    // //mouse movement character
+    // private void HandleMouseMovement(){
+    //     Ray ray = Camera.main.ScreenPointToRay(MouseAxis);
+    //     RaycastHit hit;
+    //     // Debug.Log("asdf");
 
-        if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("World"))){
-            _rb.MovePosition(InputAxis);
-        }
-    }
+    //     if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("World"))){
+    //         _rb.MovePosition(InputAxis);
+    //     }
+    // }
 
     private Vector2 _smoothedInputAxis;
     private Vector2 _smoothedInputVelocity;
@@ -43,11 +43,11 @@ public class Player : MonoBehaviour {
 
 
     private void FixedUpdate() {
-        if(IsMouseControl){
-            HandleMouseMovement();
-        } else {
+        // if(IsMouseControl){
+        //     HandleMouseMovement();
+        // } else {
             HandleWASDMovement();
-        }
+        // }
     }
 
     // public void IssueCommand(){
