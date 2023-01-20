@@ -8,6 +8,7 @@ public class AgentUI : MonoBehaviour {
     [Header("In Scene References")]
     public AgentCircleIndicator slowdownLineRenderer;
     public AgentCircleIndicator arrivedLineRenderer;
+    public AgentCircleIndicator wanderLineRenderer;
     public AgentArrowIndicator accelerationArrow;
     public Agent Agent {get; private set; }
 

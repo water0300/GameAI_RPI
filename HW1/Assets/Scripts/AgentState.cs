@@ -3,147 +3,141 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AgentState {
-    public Agent Agent {get; private set; }
-    public ITargetPositionUpdater TargetPositionUpdater {get; protected set; }
-    public ITargetRotationUpdater TargetRotationUpdater {get; protected set; }
 
-    public AgentState(Agent agent){
-        Agent = agent;
-    }
-    public AgentState(Agent agent, ITargetPositionUpdater targetPositionUpdater){
-        Agent = agent;
-        TargetPositionUpdater = targetPositionUpdater;
-    }    
-    public AgentState(Agent agent, ITargetRotationUpdater targetRotationUpdater){
-        Agent = agent;
-        TargetRotationUpdater = targetRotationUpdater;
-    }
-    public AgentState(Agent agent, ITargetPositionUpdater targetPositionUpdater, ITargetRotationUpdater targetRotationUpdater){
-        Agent = agent;
-        TargetPositionUpdater = targetPositionUpdater;
-        TargetRotationUpdater = targetRotationUpdater;
-    }
-    public abstract SteeringOutput? GetSteering();
+public interface IPositionSteer {
+    ITargetPositionUpdater TargetPositionUpdater {get; set; }
+    Vector3? GetPositionSteering(Agent agent);
+}
+
+public interface IRotationSteer{
+    ITargetRotationUpdater TargetRotationUpdater {get; set; }
+    float? GetRotationSteering(Agent agent);
+}
+
+public interface ISteer : IPositionSteer, IRotationSteer {}
+
+public static class AgentStateFactory {
+    public static SteeringOutput GetSteering(Agent agent, ISteer steering) => new SteeringOutput(steering.GetPositionSteering(agent), steering.GetRotationSteering(agent));
+    public static SteeringOutput GetSteering(Agent agent, IPositionSteer positionSteer, IRotationSteer rotationSteer) => new SteeringOutput(positionSteer.GetPositionSteering(agent), rotationSteer.GetRotationSteering(agent));
+
 
 }
 
-public class SeekState : AgentState {
-    public SeekState(Agent agent) : base(agent) {
-        TargetPositionUpdater = new DirectTargetPositionUpdater();
+public class SeekSteer : IPositionSteer {
+    public ITargetPositionUpdater TargetPositionUpdater {get; set; }
+    public SeekSteer(ITargetPositionUpdater targetPositionUpdater){
+        TargetPositionUpdater = targetPositionUpdater;
     }
-    public SeekState(Agent agent, ITargetPositionUpdater targetPositionUpdater) : base(agent, targetPositionUpdater) {}
 
-    public override SteeringOutput? GetSteering(){
-        Agent.Target.position = TargetPositionUpdater.GetTargetPosition(Agent);
-        return new SteeringOutput((Agent.Target.position - Agent.transform.position).XZPlane().normalized * Agent.maxAcceleration, 0f);
+    public Vector3? GetPositionSteering(Agent agent){
+        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        return (agent.Target.position - agent.transform.position).XZPlane().normalized * agent.maxAcceleration;
+    }
+}
+
+public class FleeSteer : IPositionSteer {
+    public ITargetPositionUpdater TargetPositionUpdater {get; set; }
+    public FleeSteer(ITargetPositionUpdater targetPositionUpdater){
+        TargetPositionUpdater = targetPositionUpdater;
+    }
+    public Vector3? GetPositionSteering(Agent agent){
+        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        return (agent.transform.position - agent.Target.position).XZPlane().normalized * agent.maxAcceleration;
     } 
 
 }
 
-public class FleeState : AgentState {
-    public FleeState(Agent agent) : base(agent) {
-        TargetPositionUpdater = new DirectTargetPositionUpdater();
+public class ArriveState : IPositionSteer {
+    public ITargetPositionUpdater TargetPositionUpdater {get; set; }
+    public ArriveState(ITargetPositionUpdater targetPositionUpdater){
+        TargetPositionUpdater = targetPositionUpdater;
     }
-    public FleeState(Agent agent, ITargetPositionUpdater targetPositionUpdater) : base(agent, targetPositionUpdater) {}
+    public Vector3? GetPositionSteering(Agent agent){
+        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
 
-    public override SteeringOutput? GetSteering(){
-        Agent.Target.position = TargetPositionUpdater.GetTargetPosition(Agent);
-        return new SteeringOutput((Agent.transform.position - Agent.Target.position).XZPlane().normalized * Agent.maxAcceleration, 0f);
-    } 
-
-}
-
-public class ArriveState : AgentState {
-    public ArriveState(Agent agent) : base(agent) {
-        TargetPositionUpdater = new DirectTargetPositionUpdater();
-    }
-    public ArriveState(Agent agent, ITargetPositionUpdater targetPositionUpdater) : base(agent, targetPositionUpdater) {}
-    public override SteeringOutput? GetSteering(){
-        Agent.Target.position = TargetPositionUpdater.GetTargetPosition(Agent);
-
-        Vector3 direction = Agent.Target.position - Agent.transform.position;
+        Vector3 direction = agent.Target.position - agent.transform.position;
         float distSqrMagnitude = direction.sqrMagnitude;
-        if (distSqrMagnitude < Agent.targetRadius * Agent.targetRadius){
+        if (distSqrMagnitude < agent.targetRadius * agent.targetRadius){
             // Debug.Log("Arriving");
             return null;
         }
 
         float targetSpeed;
-        if(distSqrMagnitude > Agent.slowRadius * Agent.slowRadius ){
-            targetSpeed = Agent.maxSpeed;
+        if(distSqrMagnitude > agent.slowRadius * agent.slowRadius ){
+            targetSpeed = agent.maxSpeed;
             // Debug.Log($"Full Steam: {targetSpeed}");
 
         } else {
-            targetSpeed = Agent.maxSpeed * Mathf.Sqrt(distSqrMagnitude) / Agent.slowRadius;
+            targetSpeed = agent.maxSpeed * Mathf.Sqrt(distSqrMagnitude) / agent.slowRadius;
             // Debug.Log($"Slowing: {targetSpeed}");
         }
         Vector3 targetVelocity = direction.XZPlane().normalized * targetSpeed;
 
-        return new SteeringOutput(Vector3.ClampMagnitude((targetVelocity - Agent.Velocity) / Agent.timeToTarget, Agent.maxAcceleration), 0f);
+        return Vector3.ClampMagnitude((targetVelocity - agent.Velocity) / agent.timeToTarget, agent.maxAcceleration);
 
     }
 
 }
 
-public class AlignState : AgentState
-{
-    public AlignState(Agent agent) : base(agent) {
-        TargetRotationUpdater = new FaceTargetRotationUpdater();
+public class AlignState : IRotationSteer {
+    public ITargetRotationUpdater TargetRotationUpdater {get; set; }
+    protected AlignState() {}
+    public AlignState(ITargetRotationUpdater targetRotationUpdater){
+        TargetRotationUpdater = targetRotationUpdater;
     }
-    public AlignState(Agent agent, ITargetRotationUpdater targetRotationUpdater) : base(agent, targetRotationUpdater) {}
-    
-    protected virtual Quaternion GetTargetRotation() => TargetRotationUpdater.GetTargetRotation(Agent);
-    protected virtual Vector3? GetTargetPosition() => null;
-    public override SteeringOutput? GetSteering()
-    {
-        Agent.Target.rotation = GetTargetRotation();
-        Agent.Target.position = GetTargetPosition() ?? Agent.Target.position;
-        float rotation = Agent.transform.rotation.eulerAngles.y - Agent.Target.transform.rotation.eulerAngles.y;
+    public virtual float? GetRotationSteering(Agent agent) {
+        agent.Target.rotation = TargetRotationUpdater.GetTargetRotation(agent);
+        return GetRotationSteeringHelper(agent);
+    }
+
+    protected float? GetRotationSteeringHelper(Agent agent){
+        float rotation = agent.transform.rotation.eulerAngles.y - agent.Target.transform.rotation.eulerAngles.y;
         rotation %= 360;
         rotation = rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation);
         float rotationSize = Mathf.Abs(rotation);
-        if(rotationSize < Agent.targetAlignWindow){
+        if(rotationSize < agent.targetAlignWindow){
             return null;
         }
         // Debug.Log($"Rotation: {rotation}");
 
         float targetAngularSpeed_Y;
-        if(rotationSize > Agent.slowAlignWindow){
-            targetAngularSpeed_Y = Agent.maxAngularSpeed_Y; 
+        if(rotationSize > agent.slowAlignWindow){
+            targetAngularSpeed_Y = agent.maxAngularSpeed_Y; 
         } else {
-            targetAngularSpeed_Y = Agent.maxAngularSpeed_Y * rotationSize / Agent.slowAlignWindow;
+            targetAngularSpeed_Y = agent.maxAngularSpeed_Y * rotationSize / agent.slowAlignWindow;
         }
         // Debug.Log($"TargetRotation: {targetRotation}");
 
         targetAngularSpeed_Y *= rotation/rotationSize;
-
-
-
-        float angular = Mathf.Clamp((targetAngularSpeed_Y - Agent.AngularSpeed_Y) / Agent.timeToAlign, -Agent.maxAngularAcceleration_Y, Agent.maxAngularAcceleration_Y);
-        // Debug.Log($"math: {targetAngularSpeed_Y - Agent.AngularSpeed_Y}");
-
-        return new SteeringOutput(Vector3.zero, angular);
+        return Mathf.Clamp((targetAngularSpeed_Y - agent.AngularSpeed_Y) / agent.timeToAlign, -agent.maxAngularAcceleration_Y, agent.maxAngularAcceleration_Y);
     }
 }
 
-public class WanderState : AlignState {
+public class WanderState : AlignState, ISteer {
+    public WanderState() {}
+    private WanderState(ITargetRotationUpdater targetRotationUpdater) : base(targetRotationUpdater) {}
+
     public float WanderOrientation {get; private set; } = 0f;
-    public WanderState(Agent agent) : base(agent) {}
+    public ITargetPositionUpdater TargetPositionUpdater {get; set; }
 
-    protected override Quaternion GetTargetRotation(){
-        WanderOrientation += Utilities.RandomBinomial() * Agent.wanderRate;
-        return Quaternion.AngleAxis(WanderOrientation + Agent.transform.rotation.eulerAngles.y, Vector3.down);
+    protected Quaternion GetWanderTargetRotation(Agent agent){
+        WanderOrientation += Utilities.RandomBinomial() * agent.wanderRate; //todo smoothdamp?
+        // WanderOrientation = Mathf.SmoothDampAngle(WanderOrientation, Utilities.RandomBinomial() * agent.wanderRate, ref v, 0.1f); //todo smoothdamp?
+        Debug.Log($"Wander: {WanderOrientation}");
+        return Quaternion.AngleAxis(WanderOrientation + agent.transform.rotation.eulerAngles.y, Vector3.up);
     }
 
-    protected override Vector3? GetTargetPosition(){
-        return (Agent.transform.position + Agent.wanderOffset * Agent.transform.rotation.AsVector()) + Agent.wanderRadius * Agent.Target.rotation.AsVector();
+    private Vector3 GetWanderTargetPosition(Agent agent){
+        return (agent.transform.position + agent.wanderOffset * agent.transform.rotation.AsVector()) + agent.wanderRadius * agent.Target.rotation.AsVector();
     }
 
-    public override SteeringOutput? GetSteering(){
-        return new SteeringOutput(Agent.maxAcceleration * Agent.transform.rotation.AsVector(), base.GetSteering()?.angularAcceleration ?? 0f);
-        
+    public override float? GetRotationSteering(Agent agent){
+        agent.Target.rotation = GetWanderTargetRotation(agent);
+        agent.Target.position = GetWanderTargetPosition(agent);
+        return GetRotationSteeringHelper(agent);
     }
+    public Vector3? GetPositionSteering(Agent agent) => agent.maxAcceleration * agent.transform.rotation.AsVector();
+    
 
 }
 

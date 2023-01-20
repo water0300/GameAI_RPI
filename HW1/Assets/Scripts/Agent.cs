@@ -35,7 +35,7 @@ public class Agent : MonoBehaviour {
 
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
-    public AgentState AgentState {get; private set; }
+    // public ISteer SteerState {get; private set; }
     public Rigidbody Rb {get; private set; }
     public Vector3 Velocity {get; set; } = Vector3.zero; 
     public float AngularSpeed_Y {get; set; } = 0f; 
@@ -60,7 +60,7 @@ public class Agent : MonoBehaviour {
         // AgentState = new FleeState();
         // AgentState = new ArriveState(this);
         // AgentState = new AlignState(this, new FaceTargetRotationUpdater());
-        AgentState = new WanderState(this);
+        // AgentState = new WanderState(this);
     }
 
     void FixedUpdate(){
@@ -73,25 +73,27 @@ public class Agent : MonoBehaviour {
     }
 
     void HandleAgentMovement(float time){
-        SteeringOutput? steering = AgentState.GetSteering();
+        // SteeringOutput steering = AgentStateFactory.GetSteering(this, new ArriveState(new LookaheadTargetPositionUpdater()), new AlignState(new FaceTargetRotationUpdater())); //pursue
+        // SteeringOutput steering = AgentStateFactory.GetSteering(this, new FleeSteer(new LookaheadTargetPositionUpdater()), new AlignState(new HideFromTargetRotationUpdater())); //flee
+        SteeringOutput steering = AgentStateFactory.GetSteering(this, new WanderState());
 
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
-        Velocity = Vector3.ClampMagnitude(Velocity + steering?.linearAcceleration*time ?? Vector3.zero, maxSpeed);
-        AngularSpeed_Y = AngularSpeed_Y + steering?.angularAcceleration * time ?? 0f;
+        Velocity = Vector3.ClampMagnitude(Velocity + steering.linearAcceleration*time ?? Vector3.zero, maxSpeed);
+        AngularSpeed_Y += steering.angularAcceleration * time ?? 0f;
         
         //debug
-        Linear = steering?.linearAcceleration ?? Vector3.zero;
-        AngularAcceleration_Y = steering?.angularAcceleration ?? 0f;
+        Linear = steering.linearAcceleration ?? Vector3.zero;
+        AngularAcceleration_Y = steering.angularAcceleration ?? 0f;
     }
 
     void AssignTarget(Rigidbody newTarget){
         TargetRB = newTarget;
         Target = Instantiate(targetIndicatorPrefab.transform);
     }
-    public void SetState(AgentState state) {
-        // if(AgentState != null) yield return StartCoroutine(genericState.OnStateExit());
-        AgentState = state;
-        // yield return StartCoroutine(genericState.OnStateEnter());
-    }
+    // public void SetState(AgentState state) {
+    //     // if(AgentState != null) yield return StartCoroutine(genericState.OnStateExit());
+    //     AgentState = state;
+    //     // yield return StartCoroutine(genericState.OnStateEnter());
+    // }
 }
