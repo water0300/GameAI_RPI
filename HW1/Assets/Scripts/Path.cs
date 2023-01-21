@@ -12,6 +12,7 @@ public class Path {
         return (agentPos - Utilities.FindNearestPointOnLine(Segments[(int)param].start, Segments[(int)param].start, agentPos));
     }
     public float GetParam(Vector3 agentPos, float lastParam){
+        Debug.Log(lastParam);
         if(lastParam < 0 || lastParam > Segments.Count-1){
             return lastParam;
         }
@@ -31,13 +32,14 @@ public class Path {
     }
 
     public Vector3 GetPosition(float param){
-        if(param <= 0){
+        if(param < 0){
             return Segments[0].start;
         }
-        if(param >= Segments.Count-1){
+        if(param > Segments.Count-1){
             return Segments[Segments.Count-1].end;
         }
 
+        // Debug.Log(param);
         return Vector3.Lerp(Segments[(int)param].start, Segments[(int)param].end, param - (int)param);
     }
 }

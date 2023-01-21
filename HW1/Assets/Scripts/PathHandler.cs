@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PathHandler : MonoBehaviour {
 
@@ -17,9 +18,9 @@ public class PathHandler : MonoBehaviour {
     private int _nodeCount = 0;
     private GameObject _currNode;
     private Path _currPath;
-
+    private bool _pointerOverUI = false;
     public void SpawnPathNode(){
-        if(IsCreatingPath){
+        if(IsCreatingPath && !_pointerOverUI){
             Ray ray = Camera.main.ScreenPointToRay(MouseAxis);
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("World"))){
@@ -50,10 +51,8 @@ public class PathHandler : MonoBehaviour {
     }
 
     //todo: ui should be in dedicated script? 
-    public void LateUpdate(){
-        if(_currNode != null){
-
-        }
+    public void Update(){
+        _pointerOverUI = EventSystem.current.IsPointerOverGameObject();
     }
     
     private void OnDrawGizmos() {
@@ -61,7 +60,7 @@ public class PathHandler : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(MouseAxis);
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("World"))){
-                Debug.Log(hit.point);
+                // Debug.Log(hit.point);
                 Gizmos.DrawLine(_currNode.transform.position, GetNodePos(hit.point));
             }
         }

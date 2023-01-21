@@ -5,12 +5,12 @@ using UnityEngine;
 
 
 public interface IPositionSteer {
-    // ITargetPositionUpdater TargetPositionUpdater {get; set; }
+    ITargetPositionUpdater TargetPositionUpdater {get; }
     Vector3? GetPositionSteering(Agent agent);
 }
 
 public interface IRotationSteer{
-    // ITargetRotationUpdater TargetRotationUpdater {get; set; }
+    ITargetRotationUpdater TargetRotationUpdater {get; }
     float? GetRotationSteering(Agent agent);
 }
 
@@ -32,6 +32,10 @@ public class SeekSteer : IPositionSteer {
 
     public virtual Vector3? GetPositionSteering(Agent agent){
         agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        return GetPositionSteeringHelper(agent);
+    }
+
+    protected virtual Vector3? GetPositionSteeringHelper(Agent agent){
         return (agent.Target.position - agent.transform.position).XZPlane().normalized * agent.maxAcceleration;
     }
 }
@@ -81,17 +85,17 @@ public class ArriveSteer : IPositionSteer {
 }
 
 public class AlignSteer : IRotationSteer {
-    public ITargetRotationUpdater TargetRotationUpdater {get; private set; }
+    public ITargetRotationUpdater TargetRotationUpdater {get; protected set; }
     protected AlignSteer() {}
     public AlignSteer(ITargetRotationUpdater targetRotationUpdater){
         TargetRotationUpdater = targetRotationUpdater;
     }
     public virtual float? GetRotationSteering(Agent agent) {
         agent.Target.rotation = TargetRotationUpdater.GetTargetRotation(agent);
-        return GetRotationSteeringHelper(agent);
+        return GetAlignSteering(agent);
     }
 
-    protected float? GetRotationSteeringHelper(Agent agent){
+    protected float? GetAlignSteering(Agent agent){
         float rotation = agent.transform.rotation.eulerAngles.y - agent.Target.transform.rotation.eulerAngles.y;
         rotation %= 360;
         rotation = rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation);
@@ -115,14 +119,12 @@ public class AlignSteer : IRotationSteer {
 }
 
 public class WanderSteer : AlignSteer, ISteer {
-    public WanderSteer() {}
-    public float WanderOrientation {get; private set; } = 0f;
+    public ITargetPositionUpdater TargetPositionUpdater { get; private set; }
 
-    //choice to null position/rotation updater due to the fact that they shouldn't be interfaces lol
-    protected Quaternion GetWanderTargetRotation(Agent agent){
-        WanderOrientation += Utilities.RandomBinomial() * agent.wanderRate; //todo smoothdamp?
-        // WanderOrientation = Mathf.SmoothDampAngle(WanderOrientation, Utilities.RandomBinomial() * agent.wanderRate, ref v, 0.1f); //todo smoothdamp?
-        return Quaternion.AngleAxis(WanderOrientation + agent.transform.rotation.eulerAngles.y, Vector3.up);
+    public WanderSteer() {
+        WanderTargetUpdater wtu = new WanderTargetUpdater();
+        TargetRotationUpdater = wtu;
+        TargetPositionUpdater = wtu;
     }
 
     private Vector3 GetWanderTargetPosition(Agent agent){
@@ -130,9 +132,9 @@ public class WanderSteer : AlignSteer, ISteer {
     }
 
     public override float? GetRotationSteering(Agent agent){
-        agent.Target.rotation = GetWanderTargetRotation(agent);
-        agent.Target.position = GetWanderTargetPosition(agent);
-        return GetRotationSteeringHelper(agent);
+        agent.Target.rotation = TargetRotationUpdater.GetTargetRotation(agent);
+        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        return GetAlignSteering(agent);
     }
     public Vector3? GetPositionSteering(Agent agent) => agent.maxAcceleration * agent.transform.rotation.AsVector();
     
@@ -146,8 +148,10 @@ public class FollowPathSteer : SeekSteer {
         if(agent.Path == null){
             return null;
         }
+
+        //todo at crit point current param stops changing
         CurrentParam = agent.Path.GetParam(agent.transform.position, CurrentParam);
         agent.Target.position = agent.Path.GetPosition(CurrentParam + agent.pathOffset);
-        return base.GetPositionSteering(agent);
+        return base.GetPositionSteeringHelper(agent);
     }
 }
