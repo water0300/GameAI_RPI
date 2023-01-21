@@ -8,7 +8,7 @@ public class WanderTargetUpdater : ITargetPositionUpdater, ITargetRotationUpdate
 
     public Vector3 GetTargetPosition(Agent agent)
     {
-       return (agent.transform.position + agent.wanderOffset * agent.transform.rotation.AsVector()) + agent.wanderRadius * agent.Target.rotation.AsVector();
+       return (agent.transform.position + agent.wanderOffset * agent.transform.rotation.AsNormVector()) + agent.wanderRadius * agent.Target.rotation.AsNormVector();
 
     }
 

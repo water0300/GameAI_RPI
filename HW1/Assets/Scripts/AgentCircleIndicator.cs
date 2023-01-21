@@ -10,6 +10,7 @@ public class AgentCircleIndicator : MonoBehaviour
     public int vertexCount = 40;
     public float lineWidth = 0.2f;
     public float Radius {get; set;}
+    public Vector3 Offset {get; set; } = Vector3.zero;
     private LineRenderer _lineRenderer;
     private void Awake() {
         _lineRenderer = GetComponent<LineRenderer>();
@@ -36,7 +37,7 @@ public class AgentCircleIndicator : MonoBehaviour
         float deltaTheta = (2f*Mathf.PI) / vertexCount;
         float theta = 0f;
         for(int i = 0; i < vertexCount; i++){
-            _lineRenderer.SetPosition(i, transform.position + new Vector3(Radius * Mathf.Cos(theta), 0f, Radius * Mathf.Sin(theta)));
+            _lineRenderer.SetPosition(i, transform.position + Offset + new Vector3(Radius * Mathf.Cos(theta), 0f, Radius * Mathf.Sin(theta)));
             theta += deltaTheta;
         }
     }
@@ -46,7 +47,7 @@ public class AgentCircleIndicator : MonoBehaviour
         float theta = 0f;
         Vector3 oldPos = transform.position;
         for(int i = 0; i < vertexCount; i++){
-            Vector3 pos = new Vector3(Radius * Mathf.Cos(theta), 0f, Radius * Mathf.Sin(theta));
+            Vector3 pos = new Vector3(Radius * Mathf.Cos(theta), 0f, Radius * Mathf.Sin(theta)) + Offset;
             Gizmos.DrawLine(oldPos, transform.position + pos);
             oldPos = transform.position + pos;
             theta += deltaTheta;

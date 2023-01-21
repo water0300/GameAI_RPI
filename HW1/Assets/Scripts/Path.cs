@@ -8,11 +8,18 @@ public class Path {
     //let param minor = lerped segment
     public List<PathSegment> Segments {get; private set; } = new List<PathSegment>();
 
-    private Vector3 GetClosestSegmentPoint(Vector3 agentPos, float param){
-        return (agentPos - Utilities.FindNearestPointOnLine(Segments[(int)param].start, Segments[(int)param].start, agentPos));
+    private Vector3 GetClosestSegmentPoint(Vector3 agentPos, float paramMajor){
+        return Utilities.FindNearestPointOnLine(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, agentPos);
+    }
+
+    public float GetParam(Vector3 agentPos){
+        int paramMajor = Segments.Select((seg, index) => index).Aggregate((l, r) => GetClosestSegmentPoint(agentPos, l).sqrMagnitude < GetClosestSegmentPoint(agentPos, r).sqrMagnitude ? l : r);
+        float paramMinor = Utilities.InverseLerp(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, GetClosestSegmentPoint(agentPos, paramMajor));
+        return paramMajor + paramMinor;    
     }
     public float GetParam(Vector3 agentPos, float lastParam){
-        Debug.Log(lastParam);
+        Debug.Log($"last param: {lastParam}");
+
         if(lastParam < 0 || lastParam > Segments.Count-1){
             return lastParam;
         }
@@ -28,18 +35,21 @@ public class Path {
         distGroups.Add(lastParam, GetClosestSegmentPoint(agentPos, lastParam));
         float paramMajor = distGroups.Aggregate((l, r) => l.Value.sqrMagnitude < r.Value.sqrMagnitude ? l : r).Key;
         float paramMinor = Utilities.InverseLerp(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, distGroups[paramMajor]);
+
         return paramMajor + paramMinor;
     }
 
-    public Vector3 GetPosition(float param){
+    public Vector3 GetTargetPosition(float param){
         if(param < 0){
+            // Debug.Log("yewot < 0");
             return Segments[0].start;
         }
-        if(param > Segments.Count-1){
+        if(param > Segments.Count){
+            // Debug.Log("yetwot > c");
             return Segments[Segments.Count-1].end;
         }
 
-        // Debug.Log(param);
+        // Debug.Log($"new param: {param}");
         return Vector3.Lerp(Segments[(int)param].start, Segments[(int)param].end, param - (int)param);
     }
 }

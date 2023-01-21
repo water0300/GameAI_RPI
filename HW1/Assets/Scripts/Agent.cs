@@ -76,6 +76,7 @@ public class Agent : MonoBehaviour {
 
     }
 
+    public float currParam = 0f;
     void HandleAgentMovement(float time){
         // SteeringOutput steering = AgentStateFactory.GetSteering(this, new ArriveState(new LookaheadTargetPositionUpdater()), new AlignState(new FaceTargetRotationUpdater())); //pursue
         // SteeringOutput steering = AgentStateFactory.GetSteering(this, new FleeSteer(new LookaheadTargetPositionUpdater()), new AlignState(new HideFromTargetRotationUpdater())); //flee

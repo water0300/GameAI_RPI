@@ -128,7 +128,7 @@ public class WanderSteer : AlignSteer, ISteer {
     }
 
     private Vector3 GetWanderTargetPosition(Agent agent){
-        return (agent.transform.position + agent.wanderOffset * agent.transform.rotation.AsVector()) + agent.wanderRadius * agent.Target.rotation.AsVector();
+        return (agent.transform.position + agent.wanderOffset * agent.transform.rotation.AsNormVector()) + agent.wanderRadius * agent.Target.rotation.AsNormVector();
     }
 
     public override float? GetRotationSteering(Agent agent){
@@ -136,22 +136,24 @@ public class WanderSteer : AlignSteer, ISteer {
         agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
         return GetAlignSteering(agent);
     }
-    public Vector3? GetPositionSteering(Agent agent) => agent.maxAcceleration * agent.transform.rotation.AsVector();
+    public Vector3? GetPositionSteering(Agent agent) => agent.maxAcceleration * agent.transform.rotation.AsNormVector();
     
 
 }
 
 public class FollowPathSteer : SeekSteer {
-    public float CurrentParam {get; private set; }
-    public FollowPathSteer(){}
+    public float CurrentParam {get; private set; } = 0f;
+    public FollowPathSteer(){
+        
+    }
     public override Vector3? GetPositionSteering(Agent agent){
         if(agent.Path == null){
             return null;
         }
-
+        CurrentParam = agent.currParam;
         //todo at crit point current param stops changing
-        CurrentParam = agent.Path.GetParam(agent.transform.position, CurrentParam);
-        agent.Target.position = agent.Path.GetPosition(CurrentParam + agent.pathOffset);
+        // CurrentParam = agent.Path.GetParam(agent.transform.position);
+        agent.Target.position = agent.Path.GetTargetPosition(CurrentParam + agent.pathOffset);
         return base.GetPositionSteeringHelper(agent);
     }
 }

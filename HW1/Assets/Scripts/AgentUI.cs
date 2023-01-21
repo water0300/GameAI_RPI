@@ -22,6 +22,8 @@ public class AgentUI : MonoBehaviour {
     void LateUpdate(){
         slowdownLineRenderer.Radius = Agent.slowRadius;
         arrivedLineRenderer.Radius = Agent.targetRadius;
+        wanderLineRenderer.Radius = Agent.wanderRadius;
+        wanderLineRenderer.Offset = Agent.wanderOffset * Agent.transform.rotation.AsNormVector();
         accelerationArrow.Vector = Agent.Linear;
     }
 }
