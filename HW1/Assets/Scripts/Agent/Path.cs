@@ -23,7 +23,7 @@ public class Path {
         Vector3 closest = GetClosestSegmentPoint(agentPos, paramMajor);
 
         float paramMinor = Utilities.InverseLerp(Segments[paramMajor].start, Segments[paramMajor].end, closest) * 1.1f - 0.1f; //todo - hardcoded to allow for multi direction
-        Debug.Log($"Last: {paramMajor}, New: {paramMinor}");
+        // Debug.Log($"Last: {paramMajor}, New: {paramMinor}");
         //this is hard coded - fix it later
         return Mathf.Clamp(paramMajor + paramMinor, 0, Segments.Count - 0.01f);
     }
