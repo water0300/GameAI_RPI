@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Agent))]
 public class AgentUI : MonoBehaviour {
@@ -11,10 +12,10 @@ public class AgentUI : MonoBehaviour {
     public AgentCircleIndicator arrivedLineRenderer;
     public AgentCircleIndicator wanderLineRenderer;
     public AgentArrowIndicator accelerationArrow;
+    public GameObject pathFollowUI;
     public TMP_Text infotext;
     public Agent Agent {get; private set; }
 
-    private GameObject _activeTargetIndicator;
 
     private void OnEnable() {
         Agent.OnStateChange += OnStateChange;
@@ -26,11 +27,7 @@ public class AgentUI : MonoBehaviour {
         Agent = GetComponent<Agent>();
     }
 
-    private void UpdateInfotext(){ //todo idk if this should be update loop
-        infotext.text = Agent.statusText;
-    }
 
-    // Update is called once per frame
     void LateUpdate(){
         switch(Agent.ActiveState){
             case PursueState _:
@@ -51,7 +48,7 @@ public class AgentUI : MonoBehaviour {
         }
 
         accelerationArrow.Vector = Agent.Linear;
-        UpdateInfotext();
+        infotext.text = Agent.statusText;
     }
 
     void OnStateChange(){ //todo make less shitty
@@ -60,25 +57,35 @@ public class AgentUI : MonoBehaviour {
                 slowdownLineRenderer.gameObject.SetActive(true);
                 arrivedLineRenderer.gameObject.SetActive(true);
                 wanderLineRenderer.gameObject.SetActive(false);
+                pathFollowUI.gameObject.SetActive(false);
+
                 break;
             case FleeState _:
                 slowdownLineRenderer.gameObject.SetActive(false);
                 arrivedLineRenderer.gameObject.SetActive(false);
                 wanderLineRenderer.gameObject.SetActive(false);
+                pathFollowUI.gameObject.SetActive(false);
                 break;
             case WanderState _:
                 slowdownLineRenderer.gameObject.SetActive(false);
                 arrivedLineRenderer.gameObject.SetActive(false);
                 wanderLineRenderer.gameObject.SetActive(true);
+                pathFollowUI.gameObject.SetActive(false);
+
                 break;
             case FollowPathState:
                 slowdownLineRenderer.gameObject.SetActive(false);
                 arrivedLineRenderer.gameObject.SetActive(false);
                 wanderLineRenderer.gameObject.SetActive(false);
+                pathFollowUI.gameObject.SetActive(true);
                 break;
             default:
                 break;
 
         }
+
     }
+
+
+
 }

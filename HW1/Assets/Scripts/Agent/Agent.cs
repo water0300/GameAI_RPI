@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Agent : MonoBehaviour {
@@ -108,19 +109,24 @@ public class Agent : MonoBehaviour {
 
     public void SetState(int index) {
         ActiveState = AgentStateList[index];
-        OnStateChange?.Invoke();
+        
         //for now, hard reset
         Velocity = Vector3.zero;
         AngularSpeed_Y = 0f;
         transform.position = Vector3.zero + Vector3.up * 2f;
-
+        
         //todo instead of hard coding, encode into state
         if(index == 3){
             pathHandler.enabled = true;
         } else {
             pathHandler.enabled = false;
-            pathHandler.ClearPath();
         }
+        pathHandler.ClearPath();
+
+        OnStateChange?.Invoke();
+
+        player.transform.position = new Vector3(13, 2, 4);//lmao
+
     }
 
 }

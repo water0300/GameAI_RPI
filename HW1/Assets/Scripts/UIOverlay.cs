@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public class UIOverlay : MonoBehaviour {
+
+    public GameObject PursueUI;
+    public GameObject WanderUI;
+    public GameObject PathingUI;
+
+    public Player player;
+    public Agent agent;
+    private void OnEnable() {
+        agent.OnStateChange += OnStateChange;
+    }
+    
+    private void OnDisable() {
+        agent.OnStateChange -= OnStateChange;
+    }
+
+    private void OnStateChange(){
+        switch(agent.ActiveState){
+            case PursueState _:
+                PursueUI.gameObject.SetActive(true);
+                WanderUI.gameObject.SetActive(false);
+                PathingUI.gameObject.SetActive(false);
+                break;
+            case FleeState _:
+                PursueUI.gameObject.SetActive(false);
+                WanderUI.gameObject.SetActive(false);
+                PathingUI.gameObject.SetActive(false);
+                break;
+            case WanderState _:
+                PursueUI.gameObject.SetActive(false);
+                WanderUI.gameObject.SetActive(true);
+                PathingUI.gameObject.SetActive(false);
+                break;
+            case FollowPathState:
+                PursueUI.gameObject.SetActive(false);
+                WanderUI.gameObject.SetActive(false);
+                PathingUI.gameObject.SetActive(true);
+                break;
+            default:
+                break;
+
+        }
+    }
+}

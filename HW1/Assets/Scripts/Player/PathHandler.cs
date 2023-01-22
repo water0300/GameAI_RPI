@@ -21,7 +21,7 @@ public class PathHandler : MonoBehaviour {
     private GameObject _currNode;
     private LineRenderer _currNodeLine;
     private Path _currPath;
-    private List<LineRenderer> _visiblePath = new List<LineRenderer>();
+    private List<LineRenderer> _visiblePath = new List<LineRenderer>(); //todo combine this with the actual path object?
     private List<GameObject> _visiblePathNodes = new List<GameObject>();
     private bool _pointerOverUI = false;
     public void SpawnPathNode(){
@@ -48,6 +48,7 @@ public class PathHandler : MonoBehaviour {
     private Vector3 GetNodePos(Vector3 point) => _currNode.transform.position + (point - _currNode.transform.position).normalized * pathSegmentLength;
 
     public void FinalizePath(){
+        //todo ugly but neccesary?
         _visiblePath.Remove(_currNodeLine);
         Destroy(_currNodeLine.gameObject);
         _currNodeLine = null;
