@@ -8,13 +8,13 @@ public class WanderTargetUpdater : ITargetPositionUpdater, ITargetRotationUpdate
 
     public Vector3 GetTargetPosition(Agent agent)
     {
-       return (agent.transform.position + agent.wanderOffset * agent.transform.rotation.AsNormVector()) + agent.wanderRadius * agent.Target.rotation.AsNormVector();
+       return (agent.transform.position + agent.WanderOffset * agent.transform.rotation.AsNormVector()) + agent.WanderRadius * agent.Target.rotation.AsNormVector();
 
     }
 
     public Quaternion GetTargetRotation(Agent agent)
     {
-        WanderOrientation += Utilities.RandomBinomial() * agent.wanderRate; //todo smoothdamp?
+        WanderOrientation += Utilities.RandomBinomial() * agent.WanderRate; //todo smoothdamp?
         // WanderOrientation = Mathf.SmoothDampAngle(WanderOrientation, Utilities.RandomBinomial() * agent.wanderRate, ref v, 0.1f); //todo smoothdamp?
         return Quaternion.AngleAxis(WanderOrientation + agent.transform.rotation.eulerAngles.y, Vector3.up);
     }

@@ -23,7 +23,7 @@ public class SeekSteer : IPositionSteer {
     }
 
     protected virtual Vector3? GetPositionSteeringHelper(Agent agent){
-        return (agent.Target.position - agent.transform.position).XZPlane().normalized * agent.maxAcceleration;
+        return (agent.Target.position - agent.transform.position).XZPlane().normalized * agent.MaxAcceleration;
     }
 }
 
@@ -35,7 +35,7 @@ public class FleeSteer : IPositionSteer {
     public Vector3? GetPositionSteering(Agent agent){
         agent.statusText = "Fleeing";
         agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
-        return (agent.transform.position - agent.Target.position).XZPlane().normalized * agent.maxAcceleration;
+        return (agent.transform.position - agent.Target.position).XZPlane().normalized * agent.MaxAcceleration;
     } 
 
 }
@@ -50,24 +50,24 @@ public class ArriveSteer : IPositionSteer {
 
         Vector3 direction = agent.Target.position - agent.transform.position;
         float distSqrMagnitude = direction.sqrMagnitude;
-        if (distSqrMagnitude < agent.targetRadius * agent.targetRadius){
+        if (distSqrMagnitude < agent.TargetRadius * agent.TargetRadius){
             agent.statusText = "Idle";
             return null;
         }
 
         float targetSpeed;
-        if(distSqrMagnitude > agent.slowRadius * agent.slowRadius ){
-            targetSpeed = agent.maxSpeed;
+        if(distSqrMagnitude > agent.SlowRadius * agent.SlowRadius ){
+            targetSpeed = agent.MaxSpeed;
             agent.statusText = "Seeking";
 
 
         } else {
-            targetSpeed = agent.maxSpeed * Mathf.Sqrt(distSqrMagnitude) / agent.slowRadius;
+            targetSpeed = agent.MaxSpeed * Mathf.Sqrt(distSqrMagnitude) / agent.SlowRadius;
             agent.statusText = "Arriving";
         }
         Vector3 targetVelocity = direction.XZPlane().normalized * targetSpeed;
 
-        return Vector3.ClampMagnitude((targetVelocity - agent.Velocity) / agent.timeToTarget, agent.maxAcceleration);
+        return Vector3.ClampMagnitude((targetVelocity - agent.Velocity) / agent.TimeToTarget, agent.MaxAcceleration);
 
     }
 
@@ -88,7 +88,7 @@ public class FollowPathSteer : SeekSteer {
             CurrentParam = agent.currParam;
             //todo at crit point current param stops changing
             // CurrentParam = agent.Path.GetParam(agent.transform.position);
-            agent.Target.position = agent.Path.GetTargetPosition(CurrentParam + agent.pathOffset);
+            agent.Target.position = agent.Path.GetTargetPosition(CurrentParam + agent.PathOffset);
             return base.GetPositionSteeringHelper(agent);
         }
 

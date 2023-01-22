@@ -13,29 +13,29 @@ public class Agent : MonoBehaviour {
     // public WaypointPool waypointPool;
     public Player player;
     public PathHandler pathHandler;
-    
-    [Header("Position Modifiers")]
-    public float maxSpeed;
-    public float maxAcceleration = 3f;
-    public float targetRadius;
-    public float slowRadius;
-    public float maxPredictionLookahead;
-    [Range(0.01f, 2f)] public float timeToTarget = 0.1f;
 
-    [Header("Rotation Modifiers")]
-    public float maxAngularSpeed_Y = 10f;
-    public float maxAngularAcceleration_Y = 3f;
-    [Range(0f, 180f)]public float targetAlignWindow;
-    [Range(0f, 180f)]public float slowAlignWindow;
-    [Range(0.01f, 2f)] public float timeToAlign = 0.1f;
+    [field: Header("Position Modifiers")] 
+    [field: SerializeField] public float MaxSpeed {get; set; } = 5;
+    [field: SerializeField] public float MaxAcceleration {get; set; }= 8f;
+    [field: SerializeField] public float TargetRadius {get; set; }= 1.75f;
+    [field: SerializeField] public float SlowRadius {get; set; }= 9.4f;
+    [field: SerializeField] public float MaxPredictionLookahead {get; set; } = 1.57f;
+    [field: SerializeField] [field: Range(0.01f, 0.5f)] public float TimeToTarget {get; set; }= 0.01f;
 
-    [Header("Wander Modifiers")]
-    public float wanderOffset;
-    public float wanderRadius;
-    public float wanderRate;
+    [field: Header("Rotation Modifiers")]
+    [field: SerializeField] public float MaxAngularSpeed_Y {get; set; } = 72f;
+    [field: SerializeField] public float MaxAngularAcceleration_Y {get; set; } = 39f;
+    [field: SerializeField] [field: Range(0f, 180f)]public float TargetAlignWindow {get; set; } = 5f;
+    [field: SerializeField] [field: Range(0f, 180f)]public float SlowAlignWindow {get; set; } = 50f;
+    [field: SerializeField] [field: Range(0.01f, 2f)] public float TimeToAlign {get; set; } = 0.05f;
 
-    [Header("Path Following Modifiers")]
-    [Range(-3f, 3f)] public float pathOffset = 0.5f;
+    [field: Header("Wander Modifiers")]
+    [field: SerializeField] public float WanderOffset {get; set; } = 7f;
+    [field: SerializeField] public float WanderRadius {get; set; } = 4.8f;
+    [field: SerializeField] public float WanderRate {get; set; } = 3.5f;
+
+    [field: Header("Path Following Modifiers")]
+    [field: SerializeField] [field: Range(-3f, 3f)] public float PathOffset {get; set; } = 0.2f;
 
     public event Action OnStateChange;
     public string statusText {get; set; } =  "Idle";
@@ -90,7 +90,7 @@ public class Agent : MonoBehaviour {
 
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
-        Velocity = Vector3.ClampMagnitude(Velocity + CurrSteeringOutput.linearAcceleration*time ?? Vector3.zero, maxSpeed);
+        Velocity = Vector3.ClampMagnitude(Velocity + CurrSteeringOutput.linearAcceleration*time ?? Vector3.zero, MaxSpeed);
         AngularSpeed_Y += CurrSteeringOutput.angularAcceleration * time ?? 0f;
         
         //debug

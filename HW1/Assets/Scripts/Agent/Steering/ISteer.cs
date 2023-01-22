@@ -22,7 +22,7 @@ public class WanderSteer : AlignSteer, ISteer {
 
     public Vector3? GetPositionSteering(Agent agent){ 
         agent.statusText = "Wandering";
-        return agent.maxAcceleration * agent.transform.rotation.AsNormVector();
+        return agent.MaxAcceleration * agent.transform.rotation.AsNormVector();
     }
     
 

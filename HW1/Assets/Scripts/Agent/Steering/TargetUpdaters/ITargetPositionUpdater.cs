@@ -17,8 +17,8 @@ public class LookaheadTargetPositionUpdater : ITargetPositionUpdater {
         float distance = direction.magnitude;
         float speed = agent.Velocity.magnitude;
         float prediction;
-        if (speed <= distance /agent.maxPredictionLookahead){
-            prediction = agent.maxPredictionLookahead;
+        if (speed <= distance /agent.MaxPredictionLookahead){
+            prediction = agent.MaxPredictionLookahead;
             // Debug.Log("max predict");
         } else {
             prediction = distance/speed;

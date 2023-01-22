@@ -31,14 +31,14 @@ public class AgentUI : MonoBehaviour {
     void LateUpdate(){
         switch(Agent.ActiveState){
             case PursueState _:
-                slowdownLineRenderer.Radius = Agent.slowRadius;
-                arrivedLineRenderer.Radius = Agent.targetRadius;
+                slowdownLineRenderer.Radius = Agent.SlowRadius;
+                arrivedLineRenderer.Radius = Agent.TargetRadius;
                 break;
             case FleeState _:
                 break;
             case WanderState _:
-                wanderLineRenderer.Radius = Agent.wanderRadius;
-                wanderLineRenderer.Offset = Agent.wanderOffset * Agent.transform.rotation.AsNormVector();
+                wanderLineRenderer.Radius = Agent.WanderRadius;
+                wanderLineRenderer.Offset = Agent.WanderOffset * Agent.transform.rotation.AsNormVector();
                 break;
             case FollowPathState:
                 break;

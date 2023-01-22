@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour {
-    public float maxSpeed = 20f;
-    public float _smoothedInputSpeed = .2f;
+    [field: SerializeField] public float MaxSpeed {get; set; } = 5f;
+    [field: SerializeField] public float AccelerationFactor {get; set; } = .2f;
     // public event Action<Vector3> OnWaypointSpawn;
     public event Action<Rigidbody> OnTargetActivate;
     // public event Action<Vector3> OnTargetMove;
@@ -37,8 +37,8 @@ public class Player : MonoBehaviour {
     private Vector2 _smoothedInputVelocity;
     private void HandleWASDMovement(){
         // Debug.Log("InputAxis");
-        _smoothedInputAxis = Vector2.SmoothDamp(_smoothedInputAxis, InputAxis, ref _smoothedInputVelocity, _smoothedInputSpeed);
-        _rb.MovePosition(transform.position + _smoothedInputAxis.XZPlane() * maxSpeed * Time.fixedDeltaTime);
+        _smoothedInputAxis = Vector2.SmoothDamp(_smoothedInputAxis, InputAxis, ref _smoothedInputVelocity, 1f - AccelerationFactor);
+        _rb.MovePosition(transform.position + _smoothedInputAxis.XZPlane() * MaxSpeed * Time.fixedDeltaTime);
     }
 
 
