@@ -17,6 +17,7 @@ public class SeekSteer : IPositionSteer {
     }
 
     public virtual Vector3? GetPositionSteering(Agent agent){
+        agent.statusText = "Seeking";
         agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
         return GetPositionSteeringHelper(agent);
     }
@@ -32,6 +33,7 @@ public class FleeSteer : IPositionSteer {
         TargetPositionUpdater = targetPositionUpdater;
     }
     public Vector3? GetPositionSteering(Agent agent){
+        agent.statusText = "Fleeing";
         agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
         return (agent.transform.position - agent.Target.position).XZPlane().normalized * agent.maxAcceleration;
     } 
@@ -49,18 +51,19 @@ public class ArriveSteer : IPositionSteer {
         Vector3 direction = agent.Target.position - agent.transform.position;
         float distSqrMagnitude = direction.sqrMagnitude;
         if (distSqrMagnitude < agent.targetRadius * agent.targetRadius){
-            // Debug.Log("Arriving");
+            agent.statusText = "Idle";
             return null;
         }
 
         float targetSpeed;
         if(distSqrMagnitude > agent.slowRadius * agent.slowRadius ){
             targetSpeed = agent.maxSpeed;
-            // Debug.Log($"Full Steam: {targetSpeed}");
+            agent.statusText = "Seeking";
+
 
         } else {
             targetSpeed = agent.maxSpeed * Mathf.Sqrt(distSqrMagnitude) / agent.slowRadius;
-            // Debug.Log($"Slowing: {targetSpeed}");
+            agent.statusText = "Arriving";
         }
         Vector3 targetVelocity = direction.XZPlane().normalized * targetSpeed;
 
@@ -76,13 +79,19 @@ public class FollowPathSteer : SeekSteer {
         
     }
     public override Vector3? GetPositionSteering(Agent agent){
+
         if(agent.Path == null){
+            agent.statusText = "Left click to create path node";
             return null;
+        } else {
+            agent.statusText = "Path Following";
+            CurrentParam = agent.currParam;
+            //todo at crit point current param stops changing
+            // CurrentParam = agent.Path.GetParam(agent.transform.position);
+            agent.Target.position = agent.Path.GetTargetPosition(CurrentParam + agent.pathOffset);
+            return base.GetPositionSteeringHelper(agent);
         }
-        CurrentParam = agent.currParam;
-        //todo at crit point current param stops changing
-        // CurrentParam = agent.Path.GetParam(agent.transform.position);
-        agent.Target.position = agent.Path.GetTargetPosition(CurrentParam + agent.pathOffset);
-        return base.GetPositionSteeringHelper(agent);
+
+        
     }
 }

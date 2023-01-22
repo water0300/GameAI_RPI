@@ -32,10 +32,14 @@ public class Agent : MonoBehaviour {
     public float wanderOffset;
     public float wanderRadius;
     public float wanderRate;
+
     [Header("Path Following Modifiers")]
     [Range(-3f, 3f)] public float pathOffset = 0.5f;
-    public ISteerContainer ActiveSteeringContainer {get; private set; }
-    public List<ISteerContainer> SteeringContainerList {get; private set; }
+
+    public event Action OnStateChange;
+    public string statusText {get; set; } =  "Idle";
+    public IAgentState ActiveState {get; private set; }
+    public List<IAgentState> AgentStateList {get; private set; }
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
     public Rigidbody Rb {get; private set; }
@@ -61,14 +65,14 @@ public class Agent : MonoBehaviour {
     }
 
     void Start(){
-        SteeringContainerList = new List<ISteerContainer>(){
-            new MultiSteerContainer(new ArriveSteer(new LookaheadTargetPositionUpdater()), new AlignSteer(new FaceTargetRotationUpdater())), //pursue
-            new MultiSteerContainer(new FleeSteer(new LookaheadTargetPositionUpdater()), new AlignSteer(new HideFromTargetRotationUpdater())), //flee
-            new SingleSteerContainer(new WanderSteer()), //wander
-            new MultiSteerContainer(new FollowPathSteer(), new AlignSteer(new FaceTargetRotationUpdater())) //pathfollow
+        AgentStateList = new List<IAgentState>(){
+            new PursueState(),
+            new FleeState(),
+            new WanderState(),
+            new FollowPathState()
         };
-        SetSteering(0); //temp
-    
+        SetState(0); //temp
+
     }
 
     void FixedUpdate(){
@@ -81,7 +85,7 @@ public class Agent : MonoBehaviour {
     public float currParam = 0f;
     //consider null check
     void HandleAgentMovement(float time){
-        SteeringOutput CurrSteeringOutput = SteeringOutputFactory.GetSteering(this, ActiveSteeringContainer);
+        SteeringOutput CurrSteeringOutput = SteeringOutputFactory.GetSteering(this, ActiveState);
 
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
@@ -102,7 +106,21 @@ public class Agent : MonoBehaviour {
         Path = path;
     }
 
-    public void SetSteering(int index) {
-        ActiveSteeringContainer = SteeringContainerList[index];
+    public void SetState(int index) {
+        ActiveState = AgentStateList[index];
+        OnStateChange?.Invoke();
+        //for now, hard reset
+        Velocity = Vector3.zero;
+        AngularSpeed_Y = 0f;
+        transform.position = Vector3.zero + Vector3.up * 2f;
+
+        //todo instead of hard coding, encode into state
+        if(index == 3){
+            pathHandler.enabled = true;
+        } else {
+            pathHandler.enabled = false;
+            pathHandler.ClearPath();
+        }
     }
+
 }

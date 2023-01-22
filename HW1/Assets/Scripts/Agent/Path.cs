@@ -6,7 +6,7 @@ using System.Linq;
 public class Path {
     //let param major = segment #
     //let param minor = lerped segment
-    public List<PathSegment> Segments {get; private set; } = new List<PathSegment>();
+    public List<PathSegmentData> Segments {get; private set; } = new List<PathSegmentData>();
 
     private Vector3 GetClosestSegmentPoint(Vector3 agentPos, float paramMajor){
         return Utilities.FindNearestPointOnLine(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, agentPos);
@@ -18,7 +18,7 @@ public class Path {
         return paramMajor + paramMinor;    
     }
     public float GetParam(Vector3 agentPos, float lastParam){
-        Debug.Log($"last param: {lastParam}");
+        // Debug.Log($"last param: {lastParam}");
 
         if(lastParam < 0 || lastParam > Segments.Count-1){
             return lastParam;
@@ -54,12 +54,3 @@ public class Path {
     }
 }
 
-public struct PathSegment {
-    public Vector3 start;
-    public Vector3 end;
-
-    public PathSegment(Vector3 start, Vector3 end){
-        this.start = start;
-        this.end = end;
-    }
-}

@@ -1,10 +1,10 @@
 using System;
 public static class SteeringOutputFactory {
-    public static SteeringOutput GetSteering(Agent agent, ISteerContainer steeringContainer){
+    public static SteeringOutput GetSteering(Agent agent, IAgentState steeringContainer){
         switch (steeringContainer) {
-            case SingleSteerContainer c:
+            case SingleAgentState c:
                 return GetSteering(agent, c.Steer);
-            case MultiSteerContainer c:
+            case MultiAgentState c:
                 return GetSteering(agent, c.PositionSteer, c.RotationSteer);
             default:
                 throw new Exception(); //todo handle lol
