@@ -34,7 +34,8 @@ public class Agent : MonoBehaviour {
     public float wanderRate;
     [Header("Path Following Modifiers")]
     [Range(-3f, 3f)] public float pathOffset = 0.5f;
-
+    public ISteerContainer ActiveSteeringContainer {get; private set; }
+    public List<ISteerContainer> SteeringContainerList {get; private set; }
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
     public Rigidbody Rb {get; private set; }
@@ -60,36 +61,36 @@ public class Agent : MonoBehaviour {
     }
 
     void Start(){
-        // AgentState = new SeekAndArriveState();
-        // AgentState = new FleeState();
-        // AgentState = new ArriveState(this);
-        // AgentState = new AlignState(this, new FaceTargetRotationUpdater());
-        // AgentState = new WanderState(this);
+        SteeringContainerList = new List<ISteerContainer>(){
+            new MultiSteerContainer(new ArriveSteer(new LookaheadTargetPositionUpdater()), new AlignSteer(new FaceTargetRotationUpdater())), //pursue
+            new MultiSteerContainer(new FleeSteer(new LookaheadTargetPositionUpdater()), new AlignSteer(new HideFromTargetRotationUpdater())), //flee
+            new SingleSteerContainer(new WanderSteer()), //wander
+            new MultiSteerContainer(new FollowPathSteer(), new AlignSteer(new FaceTargetRotationUpdater())) //pathfollow
+        };
+        SetSteering(0); //temp
+    
     }
 
     void FixedUpdate(){
         if(TargetRB != null){
             HandleAgentMovement(Time.fixedDeltaTime);
-            // Debug.Log($"Speed: {Velocity.magnitude}");
-
         }
 
     }
 
     public float currParam = 0f;
+    //consider null check
     void HandleAgentMovement(float time){
-        // SteeringOutput steering = AgentStateFactory.GetSteering(this, new ArriveState(new LookaheadTargetPositionUpdater()), new AlignState(new FaceTargetRotationUpdater())); //pursue
-        // SteeringOutput steering = AgentStateFactory.GetSteering(this, new FleeSteer(new LookaheadTargetPositionUpdater()), new AlignState(new HideFromTargetRotationUpdater())); //flee
-        SteeringOutput steering = AgentStateFactory.GetSteering(this, new WanderSteer());
-        // SteeringOutput steering = AgentStateFactory.GetSteering(this, new FollowPathSteer(), new AlignSteer(new FaceTargetRotationUpdater()));
+        SteeringOutput CurrSteeringOutput = SteeringOutputFactory.GetSteering(this, ActiveSteeringContainer);
+
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
-        Velocity = Vector3.ClampMagnitude(Velocity + steering.linearAcceleration*time ?? Vector3.zero, maxSpeed);
-        AngularSpeed_Y += steering.angularAcceleration * time ?? 0f;
+        Velocity = Vector3.ClampMagnitude(Velocity + CurrSteeringOutput.linearAcceleration*time ?? Vector3.zero, maxSpeed);
+        AngularSpeed_Y += CurrSteeringOutput.angularAcceleration * time ?? 0f;
         
         //debug
-        Linear = steering.linearAcceleration ?? Vector3.zero;
-        AngularAcceleration_Y = steering.angularAcceleration ?? 0f;
+        Linear = CurrSteeringOutput.linearAcceleration ?? Vector3.zero;
+        AngularAcceleration_Y = CurrSteeringOutput.angularAcceleration ?? 0f;
     }
 
     void AssignTarget(Rigidbody newTarget){
@@ -100,9 +101,8 @@ public class Agent : MonoBehaviour {
     void AssignPath(Path path){
         Path = path;
     }
-    // public void SetState(AgentState state) {
-    //     // if(AgentState != null) yield return StartCoroutine(genericState.OnStateExit());
-    //     AgentState = state;
-    //     // yield return StartCoroutine(genericState.OnStateEnter());
-    // }
+
+    public void SetSteering(int index) {
+        ActiveSteeringContainer = SteeringContainerList[index];
+    }
 }

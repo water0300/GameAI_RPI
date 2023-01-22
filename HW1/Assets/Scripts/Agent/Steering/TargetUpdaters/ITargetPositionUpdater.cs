@@ -13,17 +13,16 @@ public class DirectTargetPositionUpdater : ITargetPositionUpdater {
 
 public class LookaheadTargetPositionUpdater : ITargetPositionUpdater {
     public Vector3 GetTargetPosition(Agent agent){
-        // Debug.Log("ayfasdf");
         Vector3 direction = agent.TargetRB.position - agent.transform.position;
         float distance = direction.magnitude;
         float speed = agent.Velocity.magnitude;
         float prediction;
         if (speed <= distance /agent.maxPredictionLookahead){
             prediction = agent.maxPredictionLookahead;
-            Debug.Log("max predict");
+            // Debug.Log("max predict");
         } else {
             prediction = distance/speed;
-            Debug.Log("slowing down");
+            // Debug.Log("slowing down");
 
         }
 
