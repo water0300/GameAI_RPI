@@ -4,7 +4,8 @@ using UnityEngine;
 
 public static class Utilities {
     public static float RandomBinomial() => Random.value - Random.value;
-    
+    public static float RandomUniform() => Random.value - 0.5f;
+
     public static Vector3 FindNearestPointOnLine(Vector3 origin, Vector3 end, Vector3 point)
     {
         //Get heading

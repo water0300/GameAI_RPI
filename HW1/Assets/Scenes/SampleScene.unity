@@ -1730,7 +1730,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 18
   m_WholeNumbers: 0
-  m_Value: 5
+  m_Value: 4
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -7695,10 +7695,9 @@ MonoBehaviour:
   <SlowAlignWindow>k__BackingField: 50
   <TimeToAlign>k__BackingField: 0.05
   <WanderOffset>k__BackingField: 7
-  <WanderRadius>k__BackingField: 4.8
-  <WanderRate>k__BackingField: 3.5
-  <PathOffset>k__BackingField: 0.2
-  currParam: 0
+  <WanderRadius>k__BackingField: 4
+  <WanderRate>k__BackingField: 3
+  <PathOffset>k__BackingField: 0.47
 --- !u!114 &1118490117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9397,7 +9396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1385729488
 Transform:
   m_ObjectHideFlags: 0
@@ -11849,8 +11848,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 2120191850}
   m_HandleRect: {fileID: 1660662206}
   m_Direction: 0
-  m_MinValue: -3
-  m_MaxValue: 3
+  m_MinValue: -1
+  m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0.2
   m_OnValueChanged:
@@ -12299,7 +12298,7 @@ MonoBehaviour:
   m_MinValue: 0.01
   m_MaxValue: 12
   m_WholeNumbers: 0
-  m_Value: 3.5
+  m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -13350,7 +13349,7 @@ PrefabInstance:
     - target: {fileID: 5331555540340253902, guid: 59bd300b18b7e024db976abecd6fc82c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -3.4420166
+      value: -3.4421387
       objectReference: {fileID: 0}
     - target: {fileID: 5331555540340253903, guid: 59bd300b18b7e024db976abecd6fc82c,
         type: 3}

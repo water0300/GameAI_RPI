@@ -36,3 +36,16 @@ public class HideFromTargetRotationUpdater : ITargetRotationUpdater {
     }
 
 }
+
+
+public class LookWhereYoureGoingTargetRotationUpdater : ITargetRotationUpdater {
+    public Quaternion GetTargetRotation(Agent agent){
+        if(agent.Velocity.sqrMagnitude == 0){
+            return agent.transform.rotation;
+        } else {
+            // Debug.Log(Mathf.Atan2(-direction.x, -direction.z) * Mathf.Rad2Deg);
+            return Quaternion.AngleAxis(Mathf.Atan2(agent.Velocity.z, -agent.Velocity.x) * Mathf.Rad2Deg, Vector3.up); //trial and error
+        }
+    }
+
+}

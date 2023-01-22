@@ -115,13 +115,20 @@ public class Agent : MonoBehaviour {
         Velocity = Vector3.zero;
         AngularSpeed_Y = 0f;
         transform.position = Vector3.zero + Vector3.up * 2f;
-        
+
         //todo instead of hard coding, encode into state
         if(index == 3){
             pathHandler.enabled = true;
+            ((ActiveState as FollowPathState).PositionSteer as FollowPathSteer).CurrentParam = 0f;
+
         } else {
             pathHandler.enabled = false;
         }
+        if(index == 2){
+            ((ActiveState as WanderState).Steer.TargetRotationUpdater as WanderTargetUpdater).WanderOrientation = 0f;
+        }
+
+
         pathHandler.ClearPath();
 
         OnStateChange?.Invoke();

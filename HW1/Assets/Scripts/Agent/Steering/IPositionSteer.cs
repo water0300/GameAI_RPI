@@ -74,7 +74,7 @@ public class ArriveSteer : IPositionSteer {
 }
 
 public class FollowPathSteer : SeekSteer {
-    public float CurrentParam {get; private set; } = 0f;
+    public float CurrentParam {get; set; } = 0f;
     public FollowPathSteer(){
         
     }

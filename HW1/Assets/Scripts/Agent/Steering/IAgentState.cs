@@ -22,7 +22,7 @@ public class FleeState : MultiAgentState {
 public class FollowPathState : MultiAgentState {
     public FollowPathState(){
         PositionSteer = new FollowPathSteer();
-        RotationSteer =  new AlignSteer(new FaceTargetRotationUpdater());
+        RotationSteer =  new AlignSteer(new LookWhereYoureGoingTargetRotationUpdater());
     }
 }
 
