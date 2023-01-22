@@ -8,35 +8,24 @@ public class Path {
     //let param minor = lerped segment
     public List<PathSegmentData> Segments {get; private set; } = new List<PathSegmentData>();
 
-    private Vector3 GetClosestSegmentPoint(Vector3 agentPos, float paramMajor){
-        return Utilities.FindNearestPointOnLine(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, agentPos);
+    private Vector3 GetClosestSegmentPoint(Vector3 agentPos, int paramMajor){
+        return Utilities.FindNearestPointOnLine(Segments[paramMajor].start, Segments[paramMajor].end, agentPos);
     }
 
-    public float GetParam(Vector3 agentPos){
-        int paramMajor = Segments.Select((seg, index) => index).Aggregate((l, r) => GetClosestSegmentPoint(agentPos, l).sqrMagnitude < GetClosestSegmentPoint(agentPos, r).sqrMagnitude ? l : r);
-        float paramMinor = Utilities.InverseLerp(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, GetClosestSegmentPoint(agentPos, paramMajor));
-        return paramMajor + paramMinor;    
-    }
+    // public float GetParam(Vector3 agentPos){
+    //     int paramMajor = Segments.Select((seg, index) => index).Aggregate((l, r) => GetClosestSegmentPoint(agentPos, l).sqrMagnitude < GetClosestSegmentPoint(agentPos, r).sqrMagnitude ? l : r);
+    //     float paramMinor = Utilities.InverseLerp(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, GetClosestSegmentPoint(agentPos, paramMajor));
+    //     return paramMajor + paramMinor;    
+    // }
     public float GetParam(Vector3 agentPos, float lastParam){
-        // Debug.Log($"last param: {lastParam}");
+        int paramMajor = (int) lastParam;
+       
+        Vector3 closest = GetClosestSegmentPoint(agentPos, paramMajor);
 
-        if(lastParam < 0 || lastParam > Segments.Count-1){
-            return lastParam;
-        }
-
-        Dictionary<float, Vector3> distGroups = new Dictionary<float, Vector3>();
-        if(lastParam != 0){
-            distGroups.Add(lastParam-1, GetClosestSegmentPoint(agentPos, lastParam-1));
-
-        }
-        if(lastParam != Segments.Count-1){
-            distGroups.Add(lastParam+1, GetClosestSegmentPoint(agentPos, lastParam+1));
-        } 
-        distGroups.Add(lastParam, GetClosestSegmentPoint(agentPos, lastParam));
-        float paramMajor = distGroups.Aggregate((l, r) => l.Value.sqrMagnitude < r.Value.sqrMagnitude ? l : r).Key;
-        float paramMinor = Utilities.InverseLerp(Segments[(int)paramMajor].start, Segments[(int)paramMajor].end, distGroups[paramMajor]);
-
-        return paramMajor + paramMinor;
+        float paramMinor = Utilities.InverseLerp(Segments[paramMajor].start, Segments[paramMajor].end, closest) * 1.1f - 0.1f; //todo - hardcoded to allow for multi direction
+        Debug.Log($"Last: {paramMajor}, New: {paramMinor}");
+        //this is hard coded - fix it later
+        return Mathf.Clamp(paramMajor + paramMinor, 0, Segments.Count - 0.01f);
     }
 
     public Vector3 GetTargetPosition(float param){
@@ -44,7 +33,7 @@ public class Path {
             // Debug.Log("yewot < 0");
             return Segments[0].start;
         }
-        if(param > Segments.Count){
+        if(param >= Segments.Count){
             // Debug.Log("yetwot > c");
             return Segments[Segments.Count-1].end;
         }

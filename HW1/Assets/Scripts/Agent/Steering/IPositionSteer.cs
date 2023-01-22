@@ -85,10 +85,11 @@ public class FollowPathSteer : SeekSteer {
             return null;
         } else {
             agent.statusText = "Path Following";
-            CurrentParam = agent.currParam;
+            // CurrentParam;
             //todo at crit point current param stops changing
-            // CurrentParam = agent.Path.GetParam(agent.transform.position);
+            CurrentParam = agent.Path.GetParam(agent.transform.position, CurrentParam);
             agent.Target.position = agent.Path.GetTargetPosition(CurrentParam + agent.PathOffset);
+            // CurrentParam = CurrentParam + agent.PathOffset;
             return base.GetPositionSteeringHelper(agent);
         }
 

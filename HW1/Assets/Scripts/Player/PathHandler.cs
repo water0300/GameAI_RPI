@@ -83,7 +83,7 @@ public class PathHandler : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(MouseAxis);
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("World"))){
-                Debug.Log(hit.point);
+                // Debug.Log(hit.point);
                 _currNodeLine.SetPosition(0, _currNode.transform.position);
                 _currNodeLine.SetPosition(1, GetNodePos(hit.point));
             }

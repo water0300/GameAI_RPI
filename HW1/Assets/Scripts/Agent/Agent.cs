@@ -84,7 +84,7 @@ public class Agent : MonoBehaviour {
 
     }
 
-    public float currParam = 0f;
+    // public float currParam = 0f;
     //consider null check
     void HandleAgentMovement(float time){
         SteeringOutput CurrSteeringOutput = SteeringOutputFactory.GetSteering(this, ActiveState);
