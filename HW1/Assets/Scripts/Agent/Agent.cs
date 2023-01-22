@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Agent : MonoBehaviour {
@@ -127,6 +128,10 @@ public class Agent : MonoBehaviour {
 
         player.transform.position = new Vector3(13, 2, 4);//lmao
 
+    }
+
+    public void HardReset(){ //todo - put in manager
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }

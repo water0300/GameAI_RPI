@@ -81,7 +81,7 @@ public class FollowPathSteer : SeekSteer {
     public override Vector3? GetPositionSteering(Agent agent){
 
         if(agent.Path == null){
-            agent.statusText = "Left click to create path node";
+            agent.statusText = "Left click to create path node(s), then Save Path";
             return null;
         } else {
             agent.statusText = "Path Following";
