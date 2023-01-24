@@ -8,13 +8,10 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour {
     [field: SerializeField] public float MaxSpeed {get; set; } = 5f;
     [field: SerializeField] public float AccelerationFactor {get; set; } = .2f;
-    // public event Action<Vector3> OnWaypointSpawn;
     public event Action<Rigidbody> OnTargetActivate;
-    // public event Action<Vector3> OnTargetMove;
     private Rigidbody _rb;
     public Vector2 InputAxis {get; set;}
-    // public Vector2 MouseAxis {get; set;}
-    // public bool IsMouseControl {get; set; } = false;
+
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
@@ -22,43 +19,21 @@ public class Player : MonoBehaviour {
         OnTargetActivate?.Invoke(_rb);
     }
 
-    // //mouse movement character
-    // private void HandleMouseMovement(){
-    //     Ray ray = Camera.main.ScreenPointToRay(MouseAxis);
-    //     RaycastHit hit;
-    //     // Debug.Log("asdf");
-
-    //     if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("World"))){
-    //         _rb.MovePosition(InputAxis);
-    //     }
-    // }
 
     private Vector2 _smoothedInputAxis;
     private Vector2 _smoothedInputVelocity;
     private void HandleWASDMovement(){
-        // Debug.Log("InputAxis");
         _smoothedInputAxis = Vector2.SmoothDamp(_smoothedInputAxis, InputAxis, ref _smoothedInputVelocity, 1f - AccelerationFactor);
         _rb.MovePosition(transform.position + _smoothedInputAxis.XZPlane() * MaxSpeed * Time.fixedDeltaTime);
     }
 
 
     private void FixedUpdate() {
-        // if(IsMouseControl){
-        //     HandleMouseMovement();
-        // } else {
+
             HandleWASDMovement();
-        // }
     }
 
-    // public void IssueCommand(){
-    //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //     RaycastHit hit;
-    //     if(Physics.Raycast(ray, out hit, Mathf.Infinity, ~6)){
-    //         Debug.Log(hit.transform.gameObject.layer);
-    //         OnWaypointSpawn?.Invoke(hit.point);
-    //     }
 
-    // }
 
 
 

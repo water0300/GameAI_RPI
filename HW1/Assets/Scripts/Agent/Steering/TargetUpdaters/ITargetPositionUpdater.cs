@@ -30,3 +30,13 @@ public class LookaheadTargetPositionUpdater : ITargetPositionUpdater {
     }
 
 }
+
+public class FollowPathTargetPositionUpdater : ITargetPositionUpdater {
+    public float CurrentParam {get; set; } = 0f;
+    public Vector3 GetTargetPosition(Agent agent){ //assume path is non null
+        CurrentParam = agent.Path.GetParam(agent.transform.position, CurrentParam);
+        return agent.Path.GetTargetPosition(CurrentParam + agent.PathOffset);
+    }
+
+}
+

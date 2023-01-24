@@ -68,10 +68,10 @@ public class Agent : MonoBehaviour {
 
     void Start(){
         AgentStateList = new List<IAgentState>(){
-            new PursueState(),
-            new FleeState(),
-            new WanderState(),
-            new FollowPathState()
+            new PursueState(this),
+            new FleeState(this),
+            new WanderState(this),
+            new FollowPathState(this)
         };
         SetState(0); //temp
 
@@ -101,7 +101,7 @@ public class Agent : MonoBehaviour {
 
     void AssignTarget(Rigidbody newTarget){
         TargetRB = newTarget;
-        Target = Instantiate(targetIndicatorPrefab.transform);
+        Target = Instantiate(targetIndicatorPrefab.transform); 
     }
 
     void AssignPath(Path path){
@@ -109,32 +109,18 @@ public class Agent : MonoBehaviour {
     }
 
     public void SetState(int index) {
+        ActiveState.OnStateExit();
         ActiveState = AgentStateList[index];
-        
+        ActiveState.OnStateEnter();
+
         //for now, hard reset
         Velocity = Vector3.zero;
         AngularSpeed_Y = 0f;
         transform.position = Vector3.zero + Vector3.up * 2f;
-
-        //todo instead of hard coding, encode into state
-        if(index == 3){
-            pathHandler.enabled = true;
-            ((ActiveState as FollowPathState).PositionSteer as FollowPathSteer).CurrentParam = 0f;
-
-        } else {
-            pathHandler.enabled = false;
-        }
-        if(index == 2){
-            ((ActiveState as WanderState).Steer.TargetRotationUpdater as WanderTargetUpdater).WanderOrientation = 0f;
-        }
-
-
+        player.transform.position = new Vector3(13, 2, 4);//lmao
         pathHandler.ClearPath();
 
         OnStateChange?.Invoke();
-
-        player.transform.position = new Vector3(13, 2, 4);//lmao
-
     }
 
     public void HardReset(){ //todo - put in manager
