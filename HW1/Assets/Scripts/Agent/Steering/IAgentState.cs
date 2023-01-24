@@ -7,7 +7,7 @@ public interface IAgentState {
 }
 
 public abstract class MultiAgentState<TPositionSteer, TRotationSteer> : IAgentState 
-    where TPositionSteer : IPositionSteer<ITargetPositionUpdater>
+    where TPositionSteer : IPositionSteer
     where TRotationSteer : IRotationSteer
     {
     public Agent Agent {get; protected set; }
@@ -42,7 +42,7 @@ public class FollowPathState : MultiAgentState<FollowPathSteer, AlignSteer> {
     public override void OnStateEnter()
     {
         Agent.pathHandler.enabled = true;
-        PositionSteer.CurrentParam = 0f;
+        (PositionSteer.TargetPositionUpdater as FollowPathTargetPositionUpdater).CurrentParam = 0f;
     }
 
     public override void OnStateExit()
