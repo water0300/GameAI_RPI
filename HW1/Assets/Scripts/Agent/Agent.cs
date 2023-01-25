@@ -109,7 +109,9 @@ public class Agent : MonoBehaviour {
     }
 
     public void SetState(int index) {
-        ActiveState.OnStateExit();
+        if(ActiveState != null){
+            ActiveState.OnStateExit();
+        }
         ActiveState = AgentStateList[index];
         ActiveState.OnStateEnter();
 
