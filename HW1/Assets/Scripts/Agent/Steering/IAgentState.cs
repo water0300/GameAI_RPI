@@ -1,72 +1,88 @@
-//todo better names
-public interface IAgentState { 
-    public Agent Agent {get; }
-    void OnStateEnter();
-    void OnStateExit();
+using System;
+using System.Collections.Generic;
 
+// public interface AgentStateComposite {
+//     Agent Agent {get;  }
+
+//     public AgentStateComposite(){
+//         var idk = new PursueSubState();
+//         idk.PosSteer.
+//     }
+//     public abstract void OnStateEnter();
+//     public abstract void OnStateExit();
+// }
+
+public interface ISubState {
+    // Agent Agent {get;  }
+    abstract void OnStateEnter();
+    abstract void OnStateExit();
+    abstract SteeringOutput GetSteering();
 }
 
-public abstract class MultiAgentState<TPositionSteer, TRotationSteer> : IAgentState 
-    where TPositionSteer : IPositionSteer
-    where TRotationSteer : IRotationSteer
-    {
+public abstract class SeparableSubState<TPos, TRot> : ISubState where TPos : IPositionSteer where TRot : IRotationSteer  {
     public Agent Agent {get; protected set; }
-    public TPositionSteer PositionSteer {get; protected set; }
-    public TRotationSteer RotationSteer {get; protected set; }
-    public virtual void OnStateEnter() {}
-    public virtual void OnStateExit() {}
+    abstract public TPos PosSteer {get; protected set;}
+    abstract public TRot RotSteer {get; protected set;}
+    public SteeringOutput GetSteering() => new SteeringOutput(PosSteer.GetPositionSteering(Agent), RotSteer.GetRotationSteering(Agent));
+    public virtual void OnStateEnter() { }
+    public virtual void OnStateExit() { }
 }
 
-public class PursueState : MultiAgentState<ArriveSteer, AlignSteer> {
-    public PursueState(Agent agent){
-        Agent = agent;
-        PositionSteer = new ArriveSteer(new LookaheadTargetPositionUpdater());
-        RotationSteer =  new AlignSteer(new FaceTargetRotationUpdater());
-    }
+public abstract class JoinedSubState<T> : ISubState where T : IPositionSteer, IRotationSteer {
+    public Agent Agent {get; protected set; }
+    abstract public T Steer {get; protected set; }
+    public SteeringOutput GetSteering() => new SteeringOutput(Steer.GetPositionSteering(Agent), Steer.GetRotationSteering(Agent));
+    public virtual void OnStateEnter() { }
+    public virtual void OnStateExit() { }
 }
-public class FleeState : MultiAgentState<FleeSteer, AlignSteer> {
-    public FleeState(Agent agent){
+
+public class PursueSubState : SeparableSubState<ArriveSteer<LookaheadTargetPositionUpdater>, AlignSteer<FaceTargetRotationUpdater>>{
+    override public ArriveSteer<LookaheadTargetPositionUpdater> PosSteer {get; protected set; }
+    override public AlignSteer<FaceTargetRotationUpdater> RotSteer {get; protected set; }
+    public PursueSubState(Agent agent){
         Agent = agent;
-        PositionSteer = new FleeSteer(new LookaheadTargetPositionUpdater());
-        RotationSteer =  new AlignSteer(new HideFromTargetRotationUpdater());
+        PosSteer = new ArriveSteer<LookaheadTargetPositionUpdater>();
+        RotSteer = new AlignSteer<FaceTargetRotationUpdater>();
     }
 }
 
-public class FollowPathState : MultiAgentState<FollowPathSteer, AlignSteer> {
-    public FollowPathState(Agent agent){
+public class FleeSubState : SeparableSubState<FleeSteer<LookaheadTargetPositionUpdater>, AlignSteer<HideFromTargetRotationUpdater>>{
+    override public FleeSteer<LookaheadTargetPositionUpdater> PosSteer {get; protected set; }
+    override public AlignSteer<HideFromTargetRotationUpdater> RotSteer {get; protected set; }
+    public FleeSubState(Agent agent){
         Agent = agent;
-        PositionSteer = new FollowPathSteer();
-        RotationSteer =  new AlignSteer(new LookWhereYoureGoingTargetRotationUpdater());
+        PosSteer = new FleeSteer<LookaheadTargetPositionUpdater>();
+        RotSteer = new AlignSteer<HideFromTargetRotationUpdater>();
     }
+}
 
-    public override void OnStateEnter()
-    {
+public class FollowPathSubState : SeparableSubState<FollowPathSteer, AlignSteer<LookWhereYoureGoingTargetRotationUpdater>>{
+    override public FollowPathSteer PosSteer {get; protected set; }
+    override public AlignSteer<LookWhereYoureGoingTargetRotationUpdater> RotSteer {get; protected set; }
+    public FollowPathSubState(Agent agent){
+        Agent = agent;
+        PosSteer = new FollowPathSteer();
+        RotSteer = new AlignSteer<LookWhereYoureGoingTargetRotationUpdater>();
+    }
+    public override void OnStateEnter(){
         Agent.pathHandler.enabled = true;
-        (PositionSteer.TargetPositionUpdater as FollowPathTargetPositionUpdater).CurrentParam = 0f;
+        PosSteer.TargetPositionUpdater.CurrentParam = 0f;
     }
 
-    public override void OnStateExit()
-    {
+    public override void OnStateExit() {
         Agent.pathHandler.enabled = false;
     }
 }
 
-public class SingleAgentState<TSteer> : IAgentState where TSteer : ISteer {
-    public Agent Agent {get; protected set; }
-    public TSteer Steer {get; protected set; }
-    public virtual void OnStateEnter() {}
-    public virtual void OnStateExit() {}
-}
-
-public class WanderState : SingleAgentState<WanderSteer> {
-    public WanderState(Agent agent){
+public class WanderSubState : JoinedSubState<WanderSteer> {
+    override public WanderSteer Steer {get; protected set; }
+    public WanderSubState(Agent agent){
         Agent = agent;
         Steer = new WanderSteer();
     }
-
-    public override void OnStateEnter()
-    {
-        (Steer.TargetRotationUpdater as WanderTargetUpdater).WanderOrientation = 0f; //todo remove the "as" via generic or polymorph idk
+    public override void OnStateEnter(){
+        Steer.TargetRotationUpdater.WanderOrientation = 0f;
     }
 
 }
+

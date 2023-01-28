@@ -3,16 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IRotationSteer{
-    ITargetRotationUpdater TargetRotationUpdater {get; }
+public interface IRotationSteer {
     float? GetRotationSteering(Agent agent);
 }
 
-public class AlignSteer : IRotationSteer {
-    public ITargetRotationUpdater TargetRotationUpdater {get; protected set; }
-    protected AlignSteer() {}
-    public AlignSteer(ITargetRotationUpdater targetRotationUpdater){
-        TargetRotationUpdater = targetRotationUpdater;
+public interface IRotationSteer<T> : IRotationSteer where T : ITargetRotationUpdater, new(){
+    T TargetRotationUpdater {get; }
+}
+
+public class AlignSteer<T> : IRotationSteer<T> where T : ITargetRotationUpdater, new() {
+    public T TargetRotationUpdater {get; protected set; }
+    public AlignSteer(){
+        TargetRotationUpdater = new T();
     }
     public virtual float? GetRotationSteering(Agent agent) {
         agent.Target.rotation = TargetRotationUpdater.GetTargetRotation(agent);

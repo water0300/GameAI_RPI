@@ -5,15 +5,17 @@ using UnityEngine;
 
 
 public interface IPositionSteer {
-    ITargetPositionUpdater TargetPositionUpdater {get; }
     Vector3? GetPositionSteering(Agent agent);
 }
 
-public class SeekSteer : IPositionSteer {
-    public ITargetPositionUpdater TargetPositionUpdater {get; protected set; }
-    protected SeekSteer(){}
-    public SeekSteer(ITargetPositionUpdater targetPositionUpdater){
-        TargetPositionUpdater = targetPositionUpdater;
+public interface IPositionSteer<T> : IPositionSteer where T : ITargetPositionUpdater {
+    public T TargetPositionUpdater {get; }
+}
+
+public class SeekSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater, new(){
+    public T TargetPositionUpdater {get; protected set; }
+    public SeekSteer(){
+        TargetPositionUpdater = new T();
     }
 
     public virtual Vector3? GetPositionSteering(Agent agent){
@@ -27,10 +29,10 @@ public class SeekSteer : IPositionSteer {
     }
 }
 
-public class FleeSteer : IPositionSteer {
-    public ITargetPositionUpdater TargetPositionUpdater {get; private set; }
-    public FleeSteer(ITargetPositionUpdater targetPositionUpdater){
-        TargetPositionUpdater = targetPositionUpdater;
+public class FleeSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater, new() {
+    public T TargetPositionUpdater {get; private set; }
+    public FleeSteer(){
+        TargetPositionUpdater = new T();
     }
     public Vector3? GetPositionSteering(Agent agent){
         agent.statusText = "Fleeing";
@@ -40,10 +42,10 @@ public class FleeSteer : IPositionSteer {
 
 }
 
-public class ArriveSteer : IPositionSteer {
-    public ITargetPositionUpdater TargetPositionUpdater {get; private set; }
-    public ArriveSteer(ITargetPositionUpdater targetPositionUpdater){
-        TargetPositionUpdater = targetPositionUpdater;
+public class ArriveSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater, new(){
+    public T TargetPositionUpdater {get; private set; }
+    public ArriveSteer(){
+        TargetPositionUpdater = new T();
     }
     public Vector3? GetPositionSteering(Agent agent){
         agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
@@ -73,7 +75,7 @@ public class ArriveSteer : IPositionSteer {
 
 }
 
-public class FollowPathSteer : SeekSteer {
+public class FollowPathSteer : SeekSteer<FollowPathTargetPositionUpdater> {
     public FollowPathSteer(){ 
         TargetPositionUpdater = new FollowPathTargetPositionUpdater();
     }
@@ -88,5 +90,11 @@ public class FollowPathSteer : SeekSteer {
         }
 
         
+    }
+}
+
+public class ConeCheckSteer : IPositionSteer {
+    public Vector3? GetPositionSteering(Agent agent){
+        throw new NotImplementedException();
     }
 }

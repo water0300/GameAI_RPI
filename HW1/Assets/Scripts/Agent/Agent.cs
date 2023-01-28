@@ -38,10 +38,14 @@ public class Agent : MonoBehaviour {
     [field: Header("Path Following Modifiers")]
     [field: SerializeField] [field: Range(-3f, 3f)] public float PathOffset {get; set; } = 0.2f;
 
+    [field: Header("Collision Avoidance Modifiers")]
+
+
+
     public event Action OnStateChange;
     public string statusText {get; set; } =  "Idle";
-    public IAgentState ActiveState {get; private set; }
-    public List<IAgentState> AgentStateList {get; private set; }
+    public ISubState ActiveState {get; private set; }
+    public List<ISubState> AgentStateList {get; private set; }
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
     public Rigidbody Rb {get; private set; }
@@ -67,11 +71,11 @@ public class Agent : MonoBehaviour {
     }
 
     void Start(){
-        AgentStateList = new List<IAgentState>(){
-            new PursueState(this),
-            new FleeState(this),
-            new WanderState(this),
-            new FollowPathState(this)
+        AgentStateList = new List<ISubState>(){
+            new PursueSubState(this),
+            new FleeSubState(this),
+            new WanderSubState(this),
+            new FollowPathSubState(this)
         };
         SetState(0); //temp
 
@@ -83,11 +87,14 @@ public class Agent : MonoBehaviour {
         }
 
     }
+    // bool AttemptAgentMovement(float time){
 
-    // public float currParam = 0f;
-    //consider null check
+    // }
+
+    
+
     void HandleAgentMovement(float time){
-        SteeringOutput CurrSteeringOutput = SteeringOutputFactory.GetSteering(this, ActiveState);
+        SteeringOutput CurrSteeringOutput = ActiveState.GetSteering();
 
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));

@@ -21,22 +21,22 @@ public class UIOverlay : MonoBehaviour {
 
     private void OnStateChange(){
         switch(agent.ActiveState){
-            case PursueState _:
+            case PursueSubState _:
                 PursueUI.gameObject.SetActive(true);
                 WanderUI.gameObject.SetActive(false);
                 PathingUI.gameObject.SetActive(false);
                 break;
-            case FleeState _:
+            case FleeSubState _:
                 PursueUI.gameObject.SetActive(false);
                 WanderUI.gameObject.SetActive(false);
                 PathingUI.gameObject.SetActive(false);
                 break;
-            case WanderState _:
+            case WanderSubState _:
                 PursueUI.gameObject.SetActive(false);
                 WanderUI.gameObject.SetActive(true);
                 PathingUI.gameObject.SetActive(false);
                 break;
-            case FollowPathState:
+            case FollowPathSubState:
                 PursueUI.gameObject.SetActive(false);
                 WanderUI.gameObject.SetActive(false);
                 PathingUI.gameObject.SetActive(true);

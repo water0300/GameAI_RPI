@@ -1,22 +1,20 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class SteeringOutputFactory {
-    public static SteeringOutput GetSteering(Agent agent, IAgentState steeringContainer){
-        switch (steeringContainer) {
-            case WanderState c:
-                return GetSteering(agent, c.Steer);
-            case PursueState c:
-                return GetSteering(agent, c.PositionSteer, c.RotationSteer);
-            case FleeState c:
-                return GetSteering(agent, c.PositionSteer, c.RotationSteer);
-            case FollowPathState c:
-                return GetSteering(agent, c.PositionSteer, c.RotationSteer);
-            default:
-                Debug.Log(steeringContainer.GetType());
-                throw new Exception(); //todo handle lol
+    public static SteeringOutput GetSteering(Agent agent, Dictionary<ISubState, float> behaviors){
+        Vector3 r_linear = Vector3.zero;
+        float r_angular = 0f;
+        foreach(var b in behaviors){
+            var steering = b.Key.GetSteering();
+            steering.ModifyByWeight(b.Value);
+            r_linear += steering.linearAcceleration ?? Vector3.zero;
+            r_angular += steering.angularAcceleration ?? 0f;
         }
+        r_linear = Vector3.ClampMagnitude(r_linear, agent.MaxAcceleration);
+        r_angular = Mathf.Max(r_angular, agent.MaxAngularAcceleration_Y);
+        return new SteeringOutput(r_linear, r_angular);
     }
-    private static SteeringOutput GetSteering(Agent agent, ISteer steering) => new SteeringOutput(steering.GetPositionSteering(agent), steering.GetRotationSteering(agent));
-    private static SteeringOutput GetSteering(Agent agent, IPositionSteer positionSteer, IRotationSteer rotationSteer) => new SteeringOutput(positionSteer.GetPositionSteering(agent), rotationSteer.GetRotationSteering(agent));
+
 }

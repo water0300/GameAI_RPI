@@ -10,4 +10,10 @@ public struct SteeringOutput {
         this.angularAcceleration = angular;
     }
 
+    public void ModifyByWeight(float weight){
+        linearAcceleration = linearAcceleration * weight ?? Vector3.zero;
+        angularAcceleration = angularAcceleration * weight ?? 0f;
+    }
+
+
 }

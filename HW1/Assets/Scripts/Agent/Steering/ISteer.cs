@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public interface ISteer : IPositionSteer, IRotationSteer {}
-public class WanderSteer : AlignSteer, ISteer {
-    public ITargetPositionUpdater TargetPositionUpdater { get; private set; }
+public class WanderSteer : AlignSteer<WanderTargetUpdater>, IPositionSteer<WanderTargetUpdater> {
+    public WanderTargetUpdater TargetPositionUpdater { get; private set; }
 
     public WanderSteer() {
         WanderTargetUpdater wtu = new WanderTargetUpdater();

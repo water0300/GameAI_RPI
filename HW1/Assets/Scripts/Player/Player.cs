@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
     public event Action<Rigidbody> OnTargetActivate;
     private Rigidbody _rb;
     public Vector2 InputAxis {get; set;}
+    private bool _isColliding = false;
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
@@ -24,15 +25,27 @@ public class Player : MonoBehaviour {
     private Vector2 _smoothedInputVelocity;
     private void HandleWASDMovement(){
         _smoothedInputAxis = Vector2.SmoothDamp(_smoothedInputAxis, InputAxis, ref _smoothedInputVelocity, 1f - AccelerationFactor);
+        // if(_isColliding){
+        //     return;
+        // }
         _rb.MovePosition(transform.position + _smoothedInputAxis.XZPlane() * MaxSpeed * Time.fixedDeltaTime);
     }
 
 
     private void FixedUpdate() {
-
-            HandleWASDMovement();
+        HandleWASDMovement();
     }
 
+    //todo - move to superclass of agent/player since code is duplicated
+    //todo - ignore floor
+    private void OnCollisionEnter(Collision other) {
+        Debug.Log("enter");
+        _isColliding = true;
+    } 
+    private void OnCollisionExit(Collision other) {
+        Debug.Log("exit");
+        _isColliding = false;
+    }
 
 
 
