@@ -15,5 +15,4 @@ public struct SteeringOutput {
         angularAcceleration = angularAcceleration * weight ?? 0f;
     }
 
-
 }

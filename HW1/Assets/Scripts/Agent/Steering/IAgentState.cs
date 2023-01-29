@@ -1,16 +1,39 @@
-using System;
+using UnityEngine;
 using System.Collections.Generic;
 
-// public interface AgentStateComposite {
-//     Agent Agent {get;  }
+public class AgentStateComposite {
+    public Agent Agent {get; private set;}
+    public Dictionary<ISubState, float> BehaviorAndWeights {get; protected set; }
+    public AgentStateComposite(Agent agent, Dictionary<ISubState, float> behaviorAndWeights){
+        Agent = agent;
+        BehaviorAndWeights = behaviorAndWeights;
+    }
 
-//     public AgentStateComposite(){
-//         var idk = new PursueSubState();
-//         idk.PosSteer.
-//     }
-//     public abstract void OnStateEnter();
-//     public abstract void OnStateExit();
-// }
+    public SteeringOutput GetSteering(){
+        Vector3 r_linear = Vector3.zero;
+        float r_angular = 0f;
+        foreach(var b in BehaviorAndWeights){
+            SteeringOutput steering = b.Key.GetSteering();
+            steering.ModifyByWeight(b.Value);
+            r_linear += steering.linearAcceleration ?? Vector3.zero;
+            r_angular += steering.angularAcceleration ?? 0f;
+        }
+        r_linear = Vector3.ClampMagnitude(r_linear, Agent.MaxAcceleration);
+        r_angular = Mathf.Clamp(r_angular, -Agent.MaxAngularAcceleration_Y, Agent.MaxAngularAcceleration_Y);
+        return new SteeringOutput(r_linear, r_angular);
+    }
+    public void OnStateEnter() {
+        foreach(var b in BehaviorAndWeights){
+            b.Key.OnStateEnter();
+        }
+    }
+
+    public void OnStateExit() {
+        foreach(var b in BehaviorAndWeights){
+            b.Key.OnStateExit();
+        }
+    }
+}
 
 public interface ISubState {
     // Agent Agent {get;  }

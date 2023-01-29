@@ -251,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 80091588}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.43, y: 0.50001, z: -15.0003}
-  m_LocalScale: {x: 52.39824, y: 1, z: 1}
+  m_LocalScale: {x: 52.39824, y: 3.1464, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1891740495}
@@ -268,7 +268,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -382,7 +382,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -942,7 +942,7 @@ Transform:
   m_GameObject: {fileID: 412527521}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.43, y: 0.50001, z: 15.0003}
-  m_LocalScale: {x: 52.39824, y: 1, z: 1}
+  m_LocalScale: {x: 52.39824, y: 3.1464, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1891740495}
@@ -959,7 +959,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -1333,7 +1333,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -1557,7 +1557,6 @@ MonoBehaviour:
   arrivedLineRenderer: {fileID: 72891222}
   wanderLineRenderer: {fileID: 18787000}
   accelerationArrow: {fileID: 1086044625}
-  pathFollowUI: {fileID: 0}
   infotext: {fileID: 0}
 --- !u!1 &1144242829
 GameObject:
@@ -1701,7 +1700,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -1944,10 +1943,10 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1341742225}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 10000
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -2195,7 +2194,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -2292,7 +2291,7 @@ Transform:
   m_GameObject: {fileID: 1602667300}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 26.00052, y: 0.50001, z: 5.5001097}
-  m_LocalScale: {x: 52.398243, y: 1, z: 1}
+  m_LocalScale: {x: 52.398243, y: 3.1464, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1891740495}
@@ -2309,7 +2308,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -2423,7 +2422,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -2523,6 +2522,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4380416288702301026, guid: 469d0ca80c09da24aa330c5056874188,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380416288702301027, guid: 469d0ca80c09da24aa330c5056874188,
+        type: 3}
+      propertyPath: <AccelerationFactor>k__BackingField
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4380416288702301029, guid: 469d0ca80c09da24aa330c5056874188,
         type: 3}
       propertyPath: m_Name
@@ -2541,7 +2550,7 @@ PrefabInstance:
     - target: {fileID: 4380416288702301054, guid: 469d0ca80c09da24aa330c5056874188,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.049993515
+      value: 2.00004
       objectReference: {fileID: 0}
     - target: {fileID: 4380416288702301054, guid: 469d0ca80c09da24aa330c5056874188,
         type: 3}
@@ -2584,7 +2593,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 4380416288702301025, guid: 469d0ca80c09da24aa330c5056874188, type: 3}
     - {fileID: 4380416288702301026, guid: 469d0ca80c09da24aa330c5056874188, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 469d0ca80c09da24aa330c5056874188, type: 3}
 --- !u!114 &1758078057 stripped
@@ -2703,7 +2711,7 @@ Transform:
   m_GameObject: {fileID: 1841721938}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -27.000542, y: 0.50001, z: 5.5001097}
-  m_LocalScale: {x: 52.398243, y: 1, z: 1}
+  m_LocalScale: {x: 52.398243, y: 3.1464, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1891740495}
@@ -2720,7 +2728,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
@@ -2965,7 +2973,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126

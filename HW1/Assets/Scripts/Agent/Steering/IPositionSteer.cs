@@ -20,7 +20,7 @@ public class SeekSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater, 
 
     public virtual Vector3? GetPositionSteering(Agent agent){
         agent.statusText = "Seeking";
-        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        TargetPositionUpdater.UpdateTargetPosition(agent);
         return GetSeekSteering(agent);
     }
 
@@ -36,7 +36,7 @@ public class FleeSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater, 
     }
     public Vector3? GetPositionSteering(Agent agent){
         agent.statusText = "Fleeing";
-        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        TargetPositionUpdater.UpdateTargetPosition(agent);
         return (agent.transform.position - agent.Target.position).XZPlane().normalized * agent.MaxAcceleration;
     } 
 
@@ -48,7 +48,7 @@ public class ArriveSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater
         TargetPositionUpdater = new T();
     }
     public Vector3? GetPositionSteering(Agent agent){
-        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        TargetPositionUpdater.UpdateTargetPosition(agent);
 
         Vector3 direction = agent.Target.position - agent.transform.position;
         float distSqrMagnitude = direction.sqrMagnitude;
@@ -85,7 +85,7 @@ public class FollowPathSteer : SeekSteer<FollowPathTargetPositionUpdater> {
             return null;
         } else {
             agent.statusText = "Path Following";
-            agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+            TargetPositionUpdater.UpdateTargetPosition(agent);
             return base.GetSeekSteering(agent);
         }
 

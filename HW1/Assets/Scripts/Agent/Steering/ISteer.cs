@@ -13,8 +13,8 @@ public class WanderSteer : AlignSteer<WanderTargetUpdater>, IPositionSteer<Wande
     }
 
     public override float? GetRotationSteering(Agent agent){
-        agent.Target.rotation = TargetRotationUpdater.GetTargetRotation(agent);
-        agent.Target.position = TargetPositionUpdater.GetTargetPosition(agent);
+        TargetRotationUpdater.UpdateTargetRotation(agent);
+        TargetPositionUpdater.UpdateTargetPosition(agent);
         return GetAlignSteering(agent);
     }
 

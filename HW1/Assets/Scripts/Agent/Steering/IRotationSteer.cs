@@ -17,7 +17,7 @@ public class AlignSteer<T> : IRotationSteer<T> where T : ITargetRotationUpdater,
         TargetRotationUpdater = new T();
     }
     public virtual float? GetRotationSteering(Agent agent) {
-        agent.Target.rotation = TargetRotationUpdater.GetTargetRotation(agent);
+        TargetRotationUpdater.UpdateTargetRotation(agent);
         return GetAlignSteering(agent);
     }
 
