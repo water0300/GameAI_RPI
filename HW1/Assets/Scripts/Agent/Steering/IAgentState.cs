@@ -146,29 +146,40 @@ public class WanderSubState : JoinedSubState<WanderSteer> {
 
 }
 
-public class ConeCheckState : PositionalSubState<ConeCheckSteer> {
-    override public ConeCheckSteer PosSteer {get; protected set; }
-    public ConeCheckState(Agent agent){
+public class SeparationState<T> : PositionalSubState<T> where T : SeparationSteer, new() {
+    override public T PosSteer {get; protected set; }
+    public SeparationState(Agent agent){
         Agent = agent;
-        PosSteer = new ConeCheckSteer();
+        PosSteer = new T();
     }
 
     public override void OnDrawGizmo() { 
         Gizmos.DrawWireSphere(PosSteer.ClosestObstaclePos, 4f);
-        Vector3 direction = (PosSteer.ClosestObstaclePos - Agent.transform.position);
-        float angle = Mathf.Acos(Agent.ConeThreshold);
-        Vector3 angleA = DirFromAngle(angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
-        Vector3 angleB = DirFromAngle(-angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
-        Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + angleA * Agent.Threshold);
-        Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + angleB * Agent.Threshold);
-        // Gizmos.DrawLine(Agent.transform.position, )
-        // Debug.Log(angle * Mathf.Rad2Deg);
+
+        switch(PosSteer){
+            case ConeCheckSteer c: //todo separate states?
+                float angle = Mathf.Acos(Agent.ConeThreshold);
+                Vector3 angleA = DirFromAngle(angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
+                Vector3 angleB = DirFromAngle(-angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
+                Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + angleA * Agent.Threshold);
+                Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + angleB * Agent.Threshold);
+                break;
+            case RayCastSteer r:
+                Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + (-Agent.transform.right * Agent.Threshold));
+                break;
+            default:
+                break;
+        }
+       
+
 
     }
 
     private Vector3 DirFromAngle(float angleInRad) => new Vector3(Mathf.Sin(angleInRad), 0, Mathf.Cos(angleInRad));
 
 }
+
+
 
 
 

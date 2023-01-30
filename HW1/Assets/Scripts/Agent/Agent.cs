@@ -36,7 +36,7 @@ public class Agent : MonoBehaviour {
     [field: SerializeField] public float WanderRate {get; set; } = 3.5f;
 
     [field: Header("Path Following Modifiers")]
-    [field: SerializeField] [field: Range(-3f, 3f)] public float PathOffset {get; set; } = 0.2f;
+    [field: SerializeField] [field: Range(0f, 5f)] public float PathOffset {get; set; } = 0.2f;
 
     [field: Header("Separation Modifiers")]
     [field: SerializeField] public float Threshold = 6f;
@@ -44,14 +44,14 @@ public class Agent : MonoBehaviour {
 
     [field: Header("Collision Avoidance Modifiers")]
     [field: SerializeField] [field: Range(-1f, 1f)] public float ConeThreshold = .5f;
-
-
+    [field: SerializeField] public float CollisionRadius = 2f;
+    public bool isChasing = false;
     public event Action OnStateChange;
     public string statusText {get; set; } =  "Idle";
     // public ISubState ActiveState {get; private set; }
     public AgentStateComposite ActiveState {get; private set; }
     public List<AgentStateComposite> AgentStateList {get; private set; }
-    public Rigidbody TargetRB {get; private set; }
+    [field: SerializeField] public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
     public Rigidbody Rb {get; private set; }
     public Vector3 Velocity {get; set; } = Vector3.zero; 
@@ -61,42 +61,87 @@ public class Agent : MonoBehaviour {
     public Path Path {get; set; }
     private Vector3 _avgNormal;
     private bool _isColliding = false;
-
+    public List<GameObject> nodes;
+    public float pathOFfsetMod = .5f;
     private void OnEnable() {
         // waypointPool.OnWaypointSelect += AssignTarget;
-        player.OnTargetActivate += AssignTarget;
-        pathHandler.OnPathUpdate += AssignPath;
+        // player.OnTargetActivate += AssignTarget;
+        // pathHandler.OnPathUpdate += AssignPath;
 
     }
     private void OnDisable() {
         // waypointPool.OnWaypointSelect -= AssignTarget;
-        player.OnTargetActivate -= AssignTarget;
-        pathHandler.OnPathUpdate -= AssignPath;
+        // player.OnTargetActivate -= AssignTarget;
+        // pathHandler.OnPathUpdate -= AssignPath;
     }
     void Awake(){
         Rb = GetComponent<Rigidbody>();
     }
 
     void Start(){
-        // AgentStateList = new List<ISubState>(){
-        //     new PursueSubState(this),
-        //     new FleeSubState(this),
-        //     new WanderSubState(this),
-        //     new FollowPathSubState(this)
-        // };
-        // AgentStateList = new List<AgentStateComposite>(){
-        //     new AgentStateComposite(this, new Dictionary<ISubState, float>(){
-        //         {new PursueSubState(this), 1} 
-        //     })
-        // };
-        AgentStateList = new List<AgentStateComposite>(){
-            new AgentStateComposite(this, new Dictionary<ISubState, float>(){
-                // {new PursueSubState(this), .2f},
-                // {new EvadeSubState(this), 1f},
+        Target = Instantiate(targetIndicatorPrefab.transform); 
+        if(isChasing){
+            AgentStateList = new List<AgentStateComposite>(){
+                new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                    {new PursueSubState(this), .2f},
+                    // {new EvadeSubState(this), 1f},
+                    // {new SeparationState<RayCastSteer>(this), 1f} 
+                    // {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                    {new SeparationState<ConeCheckSteer>(this), 1f} 
+                }),
+                new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                    {new PursueSubState(this), .2f},
+                    // {new EvadeSubState(this), 1f},
+                    // {new SeparationState<RayCastSteer>(this), 1f} 
+                    // {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                    {new SeparationState<RayCastSteer>(this), 1f} 
+                }),
+                new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                    {new PursueSubState(this), .2f},
+                    // {new EvadeSubState(this), 1f},
+                    // {new SeparationState<RayCastSteer>(this), 1f} 
+                    // {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                    {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                })
+            };
+        } else {
+            AgentStateList = new List<AgentStateComposite>(){
+                new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                    {new FollowPathSubState(this), .4f},
+                    // {new EvadeSubState(this), 1f},
+                    // {new SeparationState<RayCastSteer>(this), 1f} 
+                    // {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                    {new SeparationState<ConeCheckSteer>(this), 1f} 
+                }),
+                new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                    {new FollowPathSubState(this), .4f},
+                    // {new EvadeSubState(this), 1f},
+                    // {new SeparationState<RayCastSteer>(this), 1f} 
+                    // {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                    {new SeparationState<RayCastSteer>(this), 1f} 
+                }),
+                new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                    {new FollowPathSubState(this), .4f},
+                    // {new EvadeSubState(this), 1f},
+                    // {new SeparationState<RayCastSteer>(this), 1f} 
+                    // {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                    {new SeparationState<ObstacleAvoidanceSteer>(this), 1f} 
+                })
+            };
 
-                {new ConeCheckState(this), 1f} 
-            })
-        };
+            Path path = new Path();
+            for(int i = 0; i < nodes.Count-1; i++){
+                PathSegmentData data = new PathSegmentData(nodes[i].transform.position, nodes[i+1].transform.position);
+                path.Segments.Add(data);
+            }
+            path.Segments.Add(new PathSegmentData(nodes[nodes.Count-1].transform.position, nodes[0].transform.position));
+            Path = path;
+            
+        }
+            
+      
+        
+        
         SetState(0); //temp
 
     }
@@ -104,6 +149,10 @@ public class Agent : MonoBehaviour {
     void FixedUpdate(){
         if(TargetRB != null){
             HandleAgentMovement(Time.fixedDeltaTime);
+        }
+
+        if(!isChasing){
+            PathOffset = (PathOffset + Time.fixedDeltaTime * pathOFfsetMod) % 4;
         }
 
     }
@@ -147,7 +196,7 @@ public class Agent : MonoBehaviour {
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
 
         Velocity = Vector3.ClampMagnitude(Velocity + CurrSteeringOutput.linearAcceleration*time ?? Vector3.zero, MaxSpeed);
-        AngularSpeed_Y += CurrSteeringOutput.angularAcceleration * time ?? 0f;
+        AngularSpeed_Y = AngularSpeed_Y + CurrSteeringOutput.angularAcceleration * time ?? 0f;
         
         //debug
         Linear = CurrSteeringOutput.linearAcceleration ?? Vector3.zero;
@@ -163,11 +212,13 @@ public class Agent : MonoBehaviour {
         Path = path;
     }
 
+    public int index = 0;
     public void SetState(int index) {
         if(ActiveState != null){
             ActiveState.OnStateExit();
         }
         ActiveState = AgentStateList[index];
+        this.index = index;
         ActiveState.OnStateEnter();
 
         //for now, hard reset
@@ -175,7 +226,7 @@ public class Agent : MonoBehaviour {
         AngularSpeed_Y = 0f;
         // transform.position = Vector3.zero + Vector3.up * 2f;
         // player.transform.position = new Vector3(13, 2, 4);//lmao
-        pathHandler.ClearPath();
+        // pathHandler.ClearPath();
 
         OnStateChange?.Invoke();
     }

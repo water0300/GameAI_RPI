@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour {
     [field: SerializeField] public float MaxSpeed {get; set; } = 5f;
     [field: SerializeField] public float AccelerationFactor {get; set; } = .2f;
+    public bool autoTarget = false;
     public event Action<Rigidbody> OnTargetActivate;
     private Rigidbody _rb;
     public Vector2 InputAxis {get; set;}
@@ -16,7 +17,8 @@ public class Player : MonoBehaviour {
     private Vector2 _smoothedInputAxis;
     private Vector2 _smoothedInputVelocity;
     private Vector3 _avgNormal;
-
+    public List<GameObject> path;
+    
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
@@ -46,7 +48,22 @@ public class Player : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        HandleCollision();
+        if(autoTarget){
+            FollowPath();
+        } else {
+            HandleCollision();
+
+        }
+    }
+    float alpha = 0f;
+    public float speed = 2f;
+    public float x = 10f;
+    public float y = 5f;
+    private void FollowPath(){
+        _rb.MovePosition(_rb.position + new Vector3(0f + (Mathf.Sin(Mathf.Deg2Rad * alpha)), 0f,
+                                     0f + ( Mathf.Cos(Mathf.Deg2Rad * alpha))));
+        alpha += speed;
+
     }
 
     //todo - corners are screwed

@@ -8,9 +8,15 @@ using UnityEngine.UI;
 public class AgentUI : MonoBehaviour {
 
     [Header("In Scene References")]
-    public AgentCircleIndicator slowdownLineRenderer;
-    public AgentCircleIndicator arrivedLineRenderer;
-    public AgentCircleIndicator wanderLineRenderer;
+    // public AgentCircleIndicator slowdownLineRenderer;
+    // public AgentCircleIndicator arrivedLineRenderer;
+    // public AgentCircleIndicator wanderLineRenderer;
+    public AgentCircleIndicator thresholdRenderer;
+    public AgentArrowIndicator coneCheck1;
+    public AgentArrowIndicator coneCheck2;
+    public AgentArrowIndicator raycastCheck;
+
+
     public AgentArrowIndicator accelerationArrow;
     // public GameObject pathFollowUI;
     public TMP_Text infotext;
@@ -26,32 +32,53 @@ public class AgentUI : MonoBehaviour {
     private void Awake() {
         Agent = GetComponent<Agent>();
     }
+    private void Start() {
+        thresholdRenderer.Radius = Agent.Threshold;
+    }
 
 
     void LateUpdate(){
-        // switch(Agent.ActiveState){
-            // case PursueSubState _:
-            //     slowdownLineRenderer.Radius = Agent.SlowRadius;
-            //     arrivedLineRenderer.Radius = Agent.TargetRadius;
-            //     break;
-            // case FleeSubState _:
-            //     break;
-            // case WanderSubState _:
-            //     wanderLineRenderer.Radius = Agent.WanderRadius;
-            //     wanderLineRenderer.Offset = Agent.WanderOffset * Agent.transform.rotation.AsNormVector();
-            //     break;
-            // case FollowPathSubState:
-            //     break;
-            // default:
-            //     break;
+        
+        switch(Agent.index){
+            case 0:
+                float angle = Mathf.Acos(Agent.ConeThreshold);
+                Vector3 angleA = DirFromAngle(angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
+                Vector3 angleB = DirFromAngle(-angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
+                coneCheck1.Vector = (angleA * Agent.Threshold);
+                coneCheck2.Vector = (angleB * Agent.Threshold);
 
-        // }
+                break;
+            case 1:
+                raycastCheck.Vector = (DirFromAngle((Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad) * Agent.Threshold); 
 
+                break;
+        }
         accelerationArrow.Vector = Agent.Linear;
         // infotext.text = Agent.statusText;
     }
+    private Vector3 DirFromAngle(float angleInRad) => new Vector3(Mathf.Sin(angleInRad), 0, Mathf.Cos(angleInRad));
 
-    void OnStateChange(){ //todo make less shitty
+    void OnStateChange(){ 
+        switch(Agent.index){
+            case 0:
+                coneCheck1.gameObject.SetActive(true);
+                coneCheck2.gameObject.SetActive(true);
+                raycastCheck.gameObject.SetActive(false);
+                break;
+            case 1:
+                coneCheck1.gameObject.SetActive(false);
+                coneCheck2.gameObject.SetActive(false);
+                raycastCheck.gameObject.SetActive(true);
+
+                break;
+            case 2:
+                coneCheck1.gameObject.SetActive(false);
+                coneCheck2.gameObject.SetActive(false);
+                raycastCheck.gameObject.SetActive(false);
+                break;
+        }
+        
+        //todo make less shitty
         // switch(Agent.ActiveState){
         //     case PursueSubState _:
         //         slowdownLineRenderer.gameObject.SetActive(true);

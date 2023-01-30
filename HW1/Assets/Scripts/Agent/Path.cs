@@ -25,6 +25,7 @@ public class Path {
         float paramMinor = Utilities.InverseLerp(Segments[paramMajor].start, Segments[paramMajor].end, closest) * 1.1f - 0.1f; //todo - hardcoded to allow for multi direction
         // Debug.Log($"Last: {paramMajor}, New: {paramMinor}");
         //this is hard coded - fix it later
+        // return (paramMajor + paramMinor) % (Segments.Count+1);
         return Mathf.Clamp(paramMajor + paramMinor, 0, Segments.Count - 0.01f);
     }
 
