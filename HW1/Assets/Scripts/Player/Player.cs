@@ -15,6 +15,8 @@ public class Player : MonoBehaviour {
     private bool _isColliding = false;
     private Vector2 _smoothedInputAxis;
     private Vector2 _smoothedInputVelocity;
+    private Vector3 _avgNormal;
+
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
@@ -23,19 +25,17 @@ public class Player : MonoBehaviour {
     }
 
 
-    RaycastHit hit;
     private void MovePlayer(Vector3 correctedInputAxis){
         _smoothedInputAxis = Vector2.SmoothDamp(_smoothedInputAxis, correctedInputAxis, ref _smoothedInputVelocity, 1f - AccelerationFactor);
         _rb.MovePosition(transform.position + _smoothedInputAxis.XZPlane() * MaxSpeed * Time.fixedDeltaTime);
     }
 
-    float avgDot;
-    private void FixedUpdate() {
+    private void HandleCollision(){
         if(_isColliding){
             // Debug.Log($"normal: {avgNormal} dot: {Vector3.Dot(avgNormal, InputAxis.XZPlane())}");
-            avgDot = Vector3.Dot(avgNormal, InputAxis.XZPlane());
+            float avgDot = Vector3.Dot(_avgNormal, InputAxis.XZPlane());
             if(avgDot < 0){ //scale movement based on dot (-1 == no movmeent, -0.01 == some sideways movement)
-                Vector3 tangent = Vector3.Cross( avgNormal, Vector3.up); //respect to y axis
+                Vector3 tangent = Vector3.Cross( _avgNormal, Vector3.up); //respect to y axis
                 MovePlayer(tangent.ExcludeY() * Vector3.Dot(tangent, InputAxis.XZPlane()));
             } else {
                 MovePlayer(InputAxis);
@@ -43,26 +43,27 @@ public class Player : MonoBehaviour {
         } else {
             MovePlayer(InputAxis);
         }
-        
     }
 
-    //todo - move to superclass of agent/player since code is duplicated
+    private void FixedUpdate() {
+        HandleCollision();
+    }
+
     //todo - corners are screwed
     //get average contact point normal
     //only allow movement that is dot product > 0 (i.e away from collider lol)
-    private Vector3 avgNormal;
     private void OnCollisionEnter(Collision other) {
         if(other.gameObject.layer == 6){
             return;
         }
 
         ContactPoint[] contacts = new ContactPoint[other.contactCount];
-        avgNormal = Vector3.zero;
+        _avgNormal = Vector3.zero;
         int contactCount = other.GetContacts(contacts);
         foreach(var c in contacts){
-            avgNormal += c.normal * contactCount;
+            _avgNormal += c.normal * contactCount;
         }
-        avgNormal.Normalize();
+        _avgNormal.Normalize();
         _isColliding = true;
     } 
     private void OnCollisionExit(Collision other) {

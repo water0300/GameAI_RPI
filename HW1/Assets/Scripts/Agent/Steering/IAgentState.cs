@@ -10,18 +10,40 @@ public class AgentStateComposite {
     }
 
     public SteeringOutput GetSteering(){
-        Vector3 r_linear = Vector3.zero;
-        float r_angular = 0f;
+        Vector3 pre_r_linear = Vector3.zero;
+        float pre_r_angular = 0f;
+        int sum_linear = 0;
+        int sum_angular = 0;
         foreach(var b in BehaviorAndWeights){
             SteeringOutput steering = b.Key.GetSteering();
-            steering.ModifyByWeight(b.Value);
-            r_linear += steering.linearAcceleration ?? Vector3.zero;
-            r_angular += steering.angularAcceleration ?? 0f;
+            if(steering.linearAcceleration != null){
+                pre_r_linear += steering.linearAcceleration * b.Value ?? Vector3.zero;
+                sum_linear++;
+            }
+            if(steering.angularAcceleration != null){
+                pre_r_angular += steering.angularAcceleration * b.Value  ?? 0f;
+                sum_angular++;
+            }
         }
-        r_linear = Vector3.ClampMagnitude(r_linear, Agent.MaxAcceleration);
-        r_angular = Mathf.Clamp(r_angular, -Agent.MaxAngularAcceleration_Y, Agent.MaxAngularAcceleration_Y);
+        Vector3? r_linear = null; //todo - remove nullables?
+        float? r_angular = null;
+
+        if(sum_linear != 0){
+            r_linear = Vector3.ClampMagnitude(pre_r_linear/sum_linear, Agent.MaxAcceleration);
+        } 
+        if(sum_angular != 0){
+            r_angular = Mathf.Clamp(pre_r_angular/sum_angular, -Agent.MaxAngularAcceleration_Y, Agent.MaxAngularAcceleration_Y);
+        }
+
         return new SteeringOutput(r_linear, r_angular);
     }
+
+    public void OnDrawGizmo(){
+        foreach(var b in BehaviorAndWeights){
+            b.Key.OnDrawGizmo();
+        }
+    }
+
     public void OnStateEnter() {
         foreach(var b in BehaviorAndWeights){
             b.Key.OnStateEnter();
@@ -39,8 +61,19 @@ public interface ISubState {
     // Agent Agent {get;  }
     abstract void OnStateEnter();
     abstract void OnStateExit();
+    abstract void OnDrawGizmo();
     abstract SteeringOutput GetSteering();
 }
+
+public abstract class PositionalSubState<TPos> : ISubState where TPos : IPositionSteer{
+    public Agent Agent {get; protected set; }
+    abstract public TPos PosSteer {get; protected set;}
+    public SteeringOutput GetSteering() => new SteeringOutput(PosSteer.GetPositionSteering(Agent), null);
+    public virtual void OnStateEnter() { }
+    public virtual void OnStateExit() { }
+    public virtual void OnDrawGizmo() { }
+}
+
 
 public abstract class SeparableSubState<TPos, TRot> : ISubState where TPos : IPositionSteer where TRot : IRotationSteer  {
     public Agent Agent {get; protected set; }
@@ -49,6 +82,8 @@ public abstract class SeparableSubState<TPos, TRot> : ISubState where TPos : IPo
     public SteeringOutput GetSteering() => new SteeringOutput(PosSteer.GetPositionSteering(Agent), RotSteer.GetRotationSteering(Agent));
     public virtual void OnStateEnter() { }
     public virtual void OnStateExit() { }
+    public virtual void OnDrawGizmo() { }
+
 }
 
 public abstract class JoinedSubState<T> : ISubState where T : IPositionSteer, IRotationSteer {
@@ -57,6 +92,8 @@ public abstract class JoinedSubState<T> : ISubState where T : IPositionSteer, IR
     public SteeringOutput GetSteering() => new SteeringOutput(Steer.GetPositionSteering(Agent), Steer.GetRotationSteering(Agent));
     public virtual void OnStateEnter() { }
     public virtual void OnStateExit() { }
+    public virtual void OnDrawGizmo() { }
+
 }
 
 public class PursueSubState : SeparableSubState<ArriveSteer<LookaheadTargetPositionUpdater>, AlignSteer<FaceTargetRotationUpdater>>{
@@ -108,4 +145,30 @@ public class WanderSubState : JoinedSubState<WanderSteer> {
     }
 
 }
+
+public class ConeCheckState : PositionalSubState<ConeCheckSteer> {
+    override public ConeCheckSteer PosSteer {get; protected set; }
+    public ConeCheckState(Agent agent){
+        Agent = agent;
+        PosSteer = new ConeCheckSteer();
+    }
+
+    public override void OnDrawGizmo() { 
+        Gizmos.DrawWireSphere(PosSteer.ClosestObstaclePos, 4f);
+        Vector3 direction = (PosSteer.ClosestObstaclePos - Agent.transform.position);
+        float angle = Mathf.Acos(Agent.ConeThreshold);
+        Vector3 angleA = DirFromAngle(angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
+        Vector3 angleB = DirFromAngle(-angle/2 + (Agent.transform.eulerAngles.y - 90f) * Mathf.Deg2Rad);
+        Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + angleA * Agent.Threshold);
+        Gizmos.DrawLine(Agent.transform.position, Agent.transform.position + angleB * Agent.Threshold);
+        // Gizmos.DrawLine(Agent.transform.position, )
+        // Debug.Log(angle * Mathf.Rad2Deg);
+
+    }
+
+    private Vector3 DirFromAngle(float angleInRad) => new Vector3(Mathf.Sin(angleInRad), 0, Mathf.Cos(angleInRad));
+
+}
+
+
 

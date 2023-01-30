@@ -24,7 +24,7 @@ public class SeekSteer<T> : IPositionSteer<T> where T : ITargetPositionUpdater, 
         return GetSeekSteering(agent);
     }
 
-    protected virtual Vector3? GetSeekSteering(Agent agent){
+    protected Vector3? GetSeekSteering(Agent agent){
         return (agent.Target.position - agent.transform.position).XZPlane().normalized * agent.MaxAcceleration;
     }
 }
@@ -93,8 +93,84 @@ public class FollowPathSteer : SeekSteer<FollowPathTargetPositionUpdater> {
     }
 }
 
-public class ConeCheckSteer : IPositionSteer {
-    public Vector3? GetPositionSteering(Agent agent){
-        throw new NotImplementedException();
+public class SeparationSteer : IPositionSteer {
+    public Vector3 ClosestObstaclePos {get; protected set; }
+    public float LorRMod {get; protected set; }
+    public SeparationSteer(){}
+    public virtual Vector3? GetPositionSteering(Agent agent) {
+        // Collider[] cols = Physics.OverlapSphere(agent.transform.position, agent.Threshold, ~(1 << 6 | 1 << 7) );
+        // if(cols.Length == 0) {
+        //     return null;
+        // }
+        
+        // Vector3 closestPos = Vector3.zero;
+        // foreach(Collider col in cols){
+        //     if(closestPos == Vector3.zero || Vector3.Distance(col.transform.position, agent.transform.position) < Vector3.Distance(closestPos, agent.transform.position)){
+        //         closestPos = col.transform.position;
+        //         var dot = col.bounds.center.x * -col.bounds.ClosestPoint(agent.transform.position).z +  -col.bounds.center.z * col.bounds.ClosestPoint(agent.transform.position).x;
+        //         if(dot > 0){ //closest point is right of center
+        //             LorRMod = 1;
+        //             Debug.Log("right of center");
+        //         } else {
+        //             LorRMod = -1;
+        //             Debug.Log("left of center");
+
+        //         }
+        //     }
+        // }
+        // ClosestObstaclePos = closestPos;
+        // return GetSeparationSteering(agent);
+       return null;
     }
+
+    protected virtual Vector3? GetSeparationSteering(Agent agent){
+        Vector3 direction = (agent.transform.position - ClosestObstaclePos).XZPlane();
+
+        if(direction.sqrMagnitude < agent.Threshold * agent.Threshold){
+            float strength = Mathf.Min(agent.DecayCoefficient / direction.sqrMagnitude, agent.MaxAcceleration);
+            Vector3 tangent = Vector3.Cross(direction.normalized * strength, Vector3.up) * LorRMod; //respect to y axis
+            return strength * tangent;
+        } else {
+            return null;
+        }
+    }
+
 }
+
+public class ConeCheckSteer : SeparationSteer {
+    public override Vector3? GetPositionSteering(Agent agent){
+       Collider[] cols = Physics.OverlapSphere(agent.transform.position, agent.Threshold, ~(1 << 6 | 1 << 7) );
+        if(cols.Length == 0) {
+            return null;
+        }
+
+        Vector3 closestPos = Vector3.zero;
+        foreach(Collider col in cols){
+            if(closestPos == Vector3.zero || Vector3.Distance(col.transform.position, agent.transform.position) < Vector3.Distance(closestPos, agent.transform.position)){
+                Vector3 direction = (col.transform.position - agent.transform.position).XZPlane();
+                Debug.Log(Vector3.Dot(agent.transform.rotation.AsNormVector(), direction.normalized));
+                if(Vector3.Dot(agent.transform.rotation.AsNormVector(), direction.normalized) > agent.ConeThreshold){
+                    closestPos = col.transform.position;
+                    var dot = col.bounds.center.x * -col.bounds.ClosestPoint(agent.transform.position).z +  -col.bounds.center.z * col.bounds.ClosestPoint(agent.transform.position).x;
+                    if(dot > 0){ //closest point is right of center
+                        LorRMod = 1;
+                        Debug.Log("right of center");
+                    } else {
+                        LorRMod = -1;
+                        Debug.Log("left of center");
+
+                    }
+                }
+            }
+        }
+
+        if(closestPos == Vector3.zero){
+            return null;
+        } else {
+            ClosestObstaclePos = closestPos;
+            return base.GetSeparationSteering(agent);
+        }
+    }
+
+}
+

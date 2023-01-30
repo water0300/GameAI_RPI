@@ -20,30 +20,30 @@ public class UIOverlay : MonoBehaviour {
     }
 
     private void OnStateChange(){
-        switch(agent.ActiveState){
-            case PursueSubState _:
-                PursueUI.gameObject.SetActive(true);
-                WanderUI.gameObject.SetActive(false);
-                PathingUI.gameObject.SetActive(false);
-                break;
-            case FleeSubState _:
-                PursueUI.gameObject.SetActive(false);
-                WanderUI.gameObject.SetActive(false);
-                PathingUI.gameObject.SetActive(false);
-                break;
-            case WanderSubState _:
-                PursueUI.gameObject.SetActive(false);
-                WanderUI.gameObject.SetActive(true);
-                PathingUI.gameObject.SetActive(false);
-                break;
-            case FollowPathSubState:
-                PursueUI.gameObject.SetActive(false);
-                WanderUI.gameObject.SetActive(false);
-                PathingUI.gameObject.SetActive(true);
-                break;
-            default:
-                break;
+    //     switch(agent.ActiveState){
+    //         case PursueSubState _:
+    //             PursueUI.gameObject.SetActive(true);
+    //             WanderUI.gameObject.SetActive(false);
+    //             PathingUI.gameObject.SetActive(false);
+    //             break;
+    //         case FleeSubState _:
+    //             PursueUI.gameObject.SetActive(false);
+    //             WanderUI.gameObject.SetActive(false);
+    //             PathingUI.gameObject.SetActive(false);
+    //             break;
+    //         case WanderSubState _:
+    //             PursueUI.gameObject.SetActive(false);
+    //             WanderUI.gameObject.SetActive(true);
+    //             PathingUI.gameObject.SetActive(false);
+    //             break;
+    //         case FollowPathSubState:
+    //             PursueUI.gameObject.SetActive(false);
+    //             WanderUI.gameObject.SetActive(false);
+    //             PathingUI.gameObject.SetActive(true);
+    //             break;
+    //         default:
+    //             break;
 
-        }
+    //     }
     }
 }

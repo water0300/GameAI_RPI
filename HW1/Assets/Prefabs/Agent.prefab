@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4259882383031711424}
   - component: {fileID: 4259882383031711427}
   - component: {fileID: 4259882383031711426}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 4259882383454242167}
   - component: {fileID: 4259882383454242166}
   - component: {fileID: 4259882383454242169}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4259882384084243248}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 4259882384193757114}
   - component: {fileID: 4259882384193757115}
   - component: {fileID: 4259882384193757112}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +397,6 @@ MonoBehaviour:
   arrivedLineRenderer: {fileID: 6016399540857719387}
   wanderLineRenderer: {fileID: 6016399542570207570}
   accelerationArrow: {fileID: 4259882384159238255}
-  pathFollowUI: {fileID: 0}
   infotext: {fileID: 0}
 --- !u!114 &4259882384193757112
 MonoBehaviour:
@@ -527,6 +526,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Arrival
+      objectReference: {fileID: 0}
+    - target: {fileID: 7521204842658091758, guid: 8c59aad148ec0c74a9c9e82189f87a55,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c59aad148ec0c74a9c9e82189f87a55, type: 3}
@@ -660,6 +664,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wander
       objectReference: {fileID: 0}
+    - target: {fileID: 7521204842658091758, guid: 8c59aad148ec0c74a9c9e82189f87a55,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c59aad148ec0c74a9c9e82189f87a55, type: 3}
 --- !u!114 &6016399542570207570 stripped
@@ -782,6 +791,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slowdown
       objectReference: {fileID: 0}
+    - target: {fileID: 7521204842658091758, guid: 8c59aad148ec0c74a9c9e82189f87a55,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c59aad148ec0c74a9c9e82189f87a55, type: 3}
 --- !u!4 &4259882384289458634 stripped
@@ -868,6 +882,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AccArrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 5660011014541952759, guid: 4f7d5c5d044664548ab12f642f3ab5df,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f7d5c5d044664548ab12f642f3ab5df, type: 3}

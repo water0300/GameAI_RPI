@@ -38,14 +38,19 @@ public class Agent : MonoBehaviour {
     [field: Header("Path Following Modifiers")]
     [field: SerializeField] [field: Range(-3f, 3f)] public float PathOffset {get; set; } = 0.2f;
 
-    [field: Header("Collision Avoidance Modifiers")]
+    [field: Header("Separation Modifiers")]
+    [field: SerializeField] public float Threshold = 6f;
+    [field: SerializeField] public float DecayCoefficient = 7f;
 
+    [field: Header("Collision Avoidance Modifiers")]
+    [field: SerializeField] [field: Range(-1f, 1f)] public float ConeThreshold = .5f;
 
 
     public event Action OnStateChange;
     public string statusText {get; set; } =  "Idle";
-    public ISubState ActiveState {get; private set; }
-    public List<ISubState> AgentStateList {get; private set; }
+    // public ISubState ActiveState {get; private set; }
+    public AgentStateComposite ActiveState {get; private set; }
+    public List<AgentStateComposite> AgentStateList {get; private set; }
     public Rigidbody TargetRB {get; private set; }
     public Transform Target {get; private set; }
     public Rigidbody Rb {get; private set; }
@@ -54,6 +59,8 @@ public class Agent : MonoBehaviour {
     public Vector3 Linear {get; set; } = Vector3.zero; 
     public float AngularAcceleration_Y {get; set; } = 0f; 
     public Path Path {get; set; }
+    private Vector3 _avgNormal;
+    private bool _isColliding = false;
 
     private void OnEnable() {
         // waypointPool.OnWaypointSelect += AssignTarget;
@@ -71,11 +78,24 @@ public class Agent : MonoBehaviour {
     }
 
     void Start(){
-        AgentStateList = new List<ISubState>(){
-            new PursueSubState(this),
-            new FleeSubState(this),
-            new WanderSubState(this),
-            new FollowPathSubState(this)
+        // AgentStateList = new List<ISubState>(){
+        //     new PursueSubState(this),
+        //     new FleeSubState(this),
+        //     new WanderSubState(this),
+        //     new FollowPathSubState(this)
+        // };
+        // AgentStateList = new List<AgentStateComposite>(){
+        //     new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+        //         {new PursueSubState(this), 1} 
+        //     })
+        // };
+        AgentStateList = new List<AgentStateComposite>(){
+            new AgentStateComposite(this, new Dictionary<ISubState, float>(){
+                // {new PursueSubState(this), .2f},
+                // {new EvadeSubState(this), 1f},
+
+                {new ConeCheckState(this), 1f} 
+            })
         };
         SetState(0); //temp
 
@@ -87,17 +107,45 @@ public class Agent : MonoBehaviour {
         }
 
     }
-    // bool AttemptAgentMovement(float time){
+    private void OnCollisionEnter(Collision other) {
+        if(other.gameObject.layer == 6){
+            return;
+        }
 
-    // }
+        ContactPoint[] contacts = new ContactPoint[other.contactCount];
+        _avgNormal = Vector3.zero;
+        int contactCount = other.GetContacts(contacts);
+        foreach(var c in contacts){
+            _avgNormal += c.normal * contactCount;
+        }
+        _avgNormal.Normalize();
+        _isColliding = true;
+    } 
+    private void OnCollisionExit(Collision other) {
+        if(other.gameObject.layer == 6){
+            return;
+        }
+        _isColliding = false;
+    }
 
-    
+    void HandleCollision(){
+        if(_isColliding){
+            // Debug.Log($"normal: {avgNormal} dot: {Vector3.Dot(avgNormal, InputAxis.XZPlane())}");
+            float avgDot = Vector3.Dot(_avgNormal, Velocity);
+            if(avgDot < 0) { //scale movement based on dot (-1 == no movmeent, -0.01 == some sideways movement)
+                Vector3 tangent = Vector3.Cross( _avgNormal, Vector3.up); //respect to y axis
+                Velocity = tangent * Vector3.Dot(tangent, Velocity);
+            } 
+        } 
+    }
 
     void HandleAgentMovement(float time){
         SteeringOutput CurrSteeringOutput = ActiveState.GetSteering();
 
+        HandleCollision();
         Rb.MovePosition(Rb.position + Velocity * time);
         Rb.MoveRotation(Rb.rotation * Quaternion.AngleAxis(AngularSpeed_Y * time, Vector3.down));
+
         Velocity = Vector3.ClampMagnitude(Velocity + CurrSteeringOutput.linearAcceleration*time ?? Vector3.zero, MaxSpeed);
         AngularSpeed_Y += CurrSteeringOutput.angularAcceleration * time ?? 0f;
         
@@ -125,8 +173,8 @@ public class Agent : MonoBehaviour {
         //for now, hard reset
         Velocity = Vector3.zero;
         AngularSpeed_Y = 0f;
-        transform.position = Vector3.zero + Vector3.up * 2f;
-        player.transform.position = new Vector3(13, 2, 4);//lmao
+        // transform.position = Vector3.zero + Vector3.up * 2f;
+        // player.transform.position = new Vector3(13, 2, 4);//lmao
         pathHandler.ClearPath();
 
         OnStateChange?.Invoke();
@@ -136,4 +184,19 @@ public class Agent : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    private void OnDrawGizmos() {
+        float deltaTheta = (2f*Mathf.PI) / 40f;
+        float theta = 0f;
+        Vector3 oldPos = transform.position;
+        for(int i = 0; i < 40f; i++){
+            Vector3 pos = new Vector3(Threshold * Mathf.Cos(theta), 0f, Threshold * Mathf.Sin(theta));
+            Gizmos.DrawLine(oldPos, transform.position + pos);
+            oldPos = transform.position + pos;
+            theta += deltaTheta;
+        }
+
+        ActiveState?.OnDrawGizmo();
+
+    }
+    
 }

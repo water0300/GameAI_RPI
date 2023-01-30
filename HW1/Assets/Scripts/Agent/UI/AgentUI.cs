@@ -29,60 +29,60 @@ public class AgentUI : MonoBehaviour {
 
 
     void LateUpdate(){
-        switch(Agent.ActiveState){
-            case PursueSubState _:
-                slowdownLineRenderer.Radius = Agent.SlowRadius;
-                arrivedLineRenderer.Radius = Agent.TargetRadius;
-                break;
-            case FleeSubState _:
-                break;
-            case WanderSubState _:
-                wanderLineRenderer.Radius = Agent.WanderRadius;
-                wanderLineRenderer.Offset = Agent.WanderOffset * Agent.transform.rotation.AsNormVector();
-                break;
-            case FollowPathSubState:
-                break;
-            default:
-                break;
+        // switch(Agent.ActiveState){
+            // case PursueSubState _:
+            //     slowdownLineRenderer.Radius = Agent.SlowRadius;
+            //     arrivedLineRenderer.Radius = Agent.TargetRadius;
+            //     break;
+            // case FleeSubState _:
+            //     break;
+            // case WanderSubState _:
+            //     wanderLineRenderer.Radius = Agent.WanderRadius;
+            //     wanderLineRenderer.Offset = Agent.WanderOffset * Agent.transform.rotation.AsNormVector();
+            //     break;
+            // case FollowPathSubState:
+            //     break;
+            // default:
+            //     break;
 
-        }
+        // }
 
         accelerationArrow.Vector = Agent.Linear;
-        infotext.text = Agent.statusText;
+        // infotext.text = Agent.statusText;
     }
 
     void OnStateChange(){ //todo make less shitty
-        switch(Agent.ActiveState){
-            case PursueSubState _:
-                slowdownLineRenderer.gameObject.SetActive(true);
-                arrivedLineRenderer.gameObject.SetActive(true);
-                wanderLineRenderer.gameObject.SetActive(false);
-                // pathFollowUI.gameObject.SetActive(false);
+        // switch(Agent.ActiveState){
+        //     case PursueSubState _:
+        //         slowdownLineRenderer.gameObject.SetActive(true);
+        //         arrivedLineRenderer.gameObject.SetActive(true);
+        //         wanderLineRenderer.gameObject.SetActive(false);
+        //         // pathFollowUI.gameObject.SetActive(false);
 
-                break;
-            case FleeSubState _:
-                slowdownLineRenderer.gameObject.SetActive(false);
-                arrivedLineRenderer.gameObject.SetActive(false);
-                wanderLineRenderer.gameObject.SetActive(false);
-                // pathFollowUI.gameObject.SetActive(false);
-                break;
-            case WanderSubState _:
-                slowdownLineRenderer.gameObject.SetActive(false);
-                arrivedLineRenderer.gameObject.SetActive(false);
-                wanderLineRenderer.gameObject.SetActive(true);
-                // pathFollowUI.gameObject.SetActive(false);
+        //         break;
+        //     case FleeSubState _:
+        //         slowdownLineRenderer.gameObject.SetActive(false);
+        //         arrivedLineRenderer.gameObject.SetActive(false);
+        //         wanderLineRenderer.gameObject.SetActive(false);
+        //         // pathFollowUI.gameObject.SetActive(false);
+        //         break;
+        //     case WanderSubState _:
+        //         slowdownLineRenderer.gameObject.SetActive(false);
+        //         arrivedLineRenderer.gameObject.SetActive(false);
+        //         wanderLineRenderer.gameObject.SetActive(true);
+        //         // pathFollowUI.gameObject.SetActive(false);
 
-                break;
-            case FollowPathSubState:
-                slowdownLineRenderer.gameObject.SetActive(false);
-                arrivedLineRenderer.gameObject.SetActive(false);
-                wanderLineRenderer.gameObject.SetActive(false);
-                // pathFollowUI.gameObject.SetActive(true);
-                break;
-            default:
-                break;
+        //         break;
+        //     case FollowPathSubState:
+        //         slowdownLineRenderer.gameObject.SetActive(false);
+        //         arrivedLineRenderer.gameObject.SetActive(false);
+        //         wanderLineRenderer.gameObject.SetActive(false);
+        //         // pathFollowUI.gameObject.SetActive(true);
+        //         break;
+        //     default:
+        //         break;
 
-        }
+        // }
 
     }
 
