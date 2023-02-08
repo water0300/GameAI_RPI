@@ -238,8 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 4309469874788402017, guid: 332a19042a03b465897a1c7300c8cdbc, type: 3}
   leader: {fileID: 1680083330}
-  characterRadius: 3
-  characterCount: 1
+  characterRadius: 1
   tickrateSeconds: 0.4
 --- !u!4 &413304186
 Transform:

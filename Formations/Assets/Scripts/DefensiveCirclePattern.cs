@@ -14,7 +14,7 @@ public class DefensiveCirclePattern : IFormationPattern {
     public PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, float characterRadius) {
         PositionOrientation result = new PositionOrientation();
         foreach(var assignment in assignments){
-            PositionOrientation location = GetSlotLocation(assignment.slotNumber, CalculateNumSlots(assignments), characterRadius);
+            PositionOrientation location = GetSlotLocation(assignment.slotNumber, characterRadius);
             result.position += location.position;
             result.orientationDeg += location.orientationDeg;
         }
@@ -23,16 +23,16 @@ public class DefensiveCirclePattern : IFormationPattern {
         return result;
     }
 
-    public PositionOrientation GetSlotLocation(int slotNumber, int numberOfSlots, float characterRadius) {
-        float angleAroundCircleRad = slotNumber / numberOfSlots * Mathf.PI * 2;
-        float radius = characterRadius / Mathf.Sin(Mathf.PI / numberOfSlots);
-        Debug.Log($"{radius}, {characterRadius}, {numberOfSlots}");
+    public PositionOrientation GetSlotLocation(int slotNumber, float characterRadius) {
+        float angleAroundCircleRad = (float) slotNumber /  (float) FormationManager.numberOfSlots * Mathf.PI * 2;
+        float radius = (float) characterRadius /  (float) Mathf.Sin(Mathf.PI / FormationManager.numberOfSlots);
+        // Debug.Log($"{radius}, {characterRadius}, {numberOfSlots}");
 
-        Vector3 newPosition = new Vector3(
+        Vector2 newPosition = new Vector2(
             radius * Mathf.Cos(angleAroundCircleRad),
-            0f,
             radius * Mathf.Sin(angleAroundCircleRad)
         );
+        // Debug.Log(newPosition);
         return new PositionOrientation(newPosition, angleAroundCircleRad * Mathf.Rad2Deg);
     }
 

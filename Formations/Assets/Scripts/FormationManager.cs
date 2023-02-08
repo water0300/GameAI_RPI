@@ -16,6 +16,7 @@ public class FormationManager : MonoBehaviour {
     public List<SlotAssignment> SlotAssignments {get; private set; } = new List<SlotAssignment>();
     public PositionOrientation DriftOffset {get; private set; }
     public IFormationPattern Pattern {get; private set; }
+    // public static int SlotNumber {get => characterCount; } //todo temp
 
     [Header("Prefab Refs")]
     public Character characterPrefab;
@@ -25,11 +26,11 @@ public class FormationManager : MonoBehaviour {
 
     [Header("Properties")]
     public float characterRadius;
-    public int characterCount;
+    public static int numberOfSlots = 12; //todo
     public float tickrateSeconds = 0.4f;
     private void Start() {
         Pattern = new DefensiveCirclePattern();
-        for(int i = 0; i < characterCount; i++){
+        for(int i = 0; i < numberOfSlots; i++){
             Character c = Instantiate(characterPrefab);
             AddCharacter(c);
         }
@@ -71,12 +72,15 @@ public class FormationManager : MonoBehaviour {
         PositionOrientation anchor = GetAnchorPoint();
         for(int i = 0; i < SlotAssignments.Count; i++){
             int slotNumber = SlotAssignments[i].slotNumber;
-            PositionOrientation slot = Pattern.GetSlotLocation(slotNumber, pattern.CalculateNumSlots(SlotAssignments), characterRadius);
+            PositionOrientation slot = Pattern.GetSlotLocation(slotNumber, characterRadius);
             // Debug.Log($"{anchor.position} + {slot.Rotation.eulerAngles} * {slot.position}");
+            
+            // Vector3 dir = Mathf.atan
+            // Debug.Log(slot.Rotation * slot.position);
 
             SlotAssignments[i].character.SetTarget(
                 new PositionOrientation(
-                    anchor.position + slot.Rotation * slot.position,
+                    anchor.position + slot.position - DriftOffset.position,
                     anchor.orientationDeg + slot.orientationDeg - DriftOffset.orientationDeg
                 )
             );
