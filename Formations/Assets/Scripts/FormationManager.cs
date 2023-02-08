@@ -91,4 +91,8 @@ public class FormationManager : MonoBehaviour {
         return new PositionOrientation(leader.position, leader.rotation);
     }
     
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        // Gizmos.DrawWireSphere(DriftOffset.position, 0.5f);
+    }
 }
