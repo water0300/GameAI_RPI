@@ -8,19 +8,52 @@ public interface Steering {
 
 public class MatchLeaderSteer : Steering {
     protected Vector2? GetAvoidanceSteering(Character agent){
-        RaycastHit2D hit = Physics2D.Raycast(agent.transform.position, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3));
-        if(hit.collider != null){
-            // Debug.Log(hit.collider.bounds.center);
-            agent.CollisionIndicatorPoint = hit.transform.position.IgnoreZ();
-            Vector2 ahead = agent.transform.position + agent.transform.up * agent.threshold;
-            agent.AheadIndicatorPoint = ahead;
-            Vector2 avoidanceForce = (ahead - hit.transform.position.IgnoreZ()).normalized * agent.maxAvoidForce;
-            agent.AvoidanceForcePoint = avoidanceForce + hit.transform.position.IgnoreZ();
-            // agent.
+        Vector2 p1 = agent.Col.bounds.center + agent.transform.right * (agent.Col.bounds.size.x/2);
+        Vector2 p2 = agent.Col.bounds.center - agent.transform.right * (agent.Col.bounds.size.x/2);
+        // RaycastHit2D hit0 = Physics2D.Raycast(agent.transform.position, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3));
+        // RaycastHit2D hit1 = Physics2D.Raycast(p1, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3));
+        // RaycastHit2D hit2 = Physics2D.Raycast(p2, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3));
+        // Collider2D colHit = hit0.collider ?? hit1.collider ?? hit2.collider ?? null;
+        Collider2D colHit = 
+            Physics2D.Raycast(agent.transform.position, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3)).collider ??
+            Physics2D.Raycast(p1, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3)).collider ??
+            Physics2D.Raycast(p2, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3)).collider ??
+            null;
+
+
+        if(colHit != null){
+            agent.CollisionIndicatorPoint = colHit.transform.position.IgnoreZ();
+            agent.CollisionAheadPoint = agent.transform.position + agent.transform.up * agent.threshold;
+
+            Vector2 v1 = (agent.transform.position.IgnoreZ() - agent.CollisionIndicatorPoint.Value).normalized;
+            Vector2 v2 = (agent.transform.position.IgnoreZ() - agent.CollisionAheadPoint.Value).normalized;
+            // var dot = Vector2.Dot(new Vector2(v1.x, -v1.y), new Vector2(-v2.y, v2.x));
+            var cross = Vector3.Cross(v1, v2);
+            // Debug.Log(cross);
+            // Debug.Log(colHit.bounds.ClosestPoint(agent.transform.position));
+            float lOrRMod = 0;
+            if(cross.z > 0){ //closest point is right of center
+                lOrRMod = 1;
+                // Debug.Log("left of center");
+            } else {
+                lOrRMod = -1;
+                // Debug.Log("right of center");
+
+            }
+            Vector2 direction = (agent.transform.position - colHit.transform.position);
+            Vector2 tangent = Vector3.Cross(direction.normalized, Vector3.forward); //respect to y axis
+            Vector2 avoidanceForce = agent.maxAvoidForce * tangent * lOrRMod;
+            // Debug.Log(avoidanceForce);
+            agent.AvoidanceForcePoint = avoidanceForce + colHit.transform.position.IgnoreZ();
+
             return avoidanceForce;
+
+
+            // agent.
+            // return avoidanceForce;
         } else {
             agent.CollisionIndicatorPoint = null;
-            agent.AheadIndicatorPoint = null;
+            agent.CollisionAheadPoint = null;
             // agent.avoi
             return null;
         }
@@ -85,10 +118,11 @@ public class LeaderSteer : MatchLeaderSteer {
         Vector2 direction =  agent.transform.position.IgnoreZ() - agent.Target.position;
         if(direction.sqrMagnitude != 0){
             agent.Target.orientationDeg = Mathf.Atan2(direction.x, -direction.y) * Mathf.Rad2Deg; //trial and error
-        }
+    }
         // return new SteeringOutput(GetPositionSteering(agent), GetRotationSteering(agent));
+        return new SteeringOutput(GetAvoidanceSteering(agent), GetRotationSteering(agent));
 
-        return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
+        // return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
     }
 
 }

@@ -334,7 +334,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 501897630}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.08, y: 1.64, z: 0}
+  m_LocalPosition: {x: -1.41, y: -3.66, z: 0}
   m_LocalScale: {x: 3.2106001, y: 3.2106001, z: 3.2106001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -634,7 +634,8 @@ GameObject:
   - component: {fileID: 1110819706}
   - component: {fileID: 1110819705}
   - component: {fileID: 1110819704}
-  m_Layer: 0
+  - component: {fileID: 1110819708}
+  m_Layer: 3
   m_Name: agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,13 +660,13 @@ MonoBehaviour:
   targetRadius: 3
   slowRadius: 7.8
   timeToTarget: 0.01
-  maxAngularSpeed_Y: 90
+  maxAngularSpeed_Y: 50
   maxAngularAcceleration_Y: 70
-  targetAlignWindow: 30
+  targetAlignWindow: 18
   slowAlignWindow: 100
   TimeToAlign: 0.01
   threshold: 7.8
-  maxAvoidForce: 20
+  maxAvoidForce: 10
 --- !u!50 &1110819705
 Rigidbody2D:
   serializedVersion: 4
@@ -746,15 +747,31 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1110819703}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.84, y: 1.15, z: 0}
+  m_LocalRotation: {x: -0, y: -0.009862668, z: 0, w: 0.99995136}
+  m_LocalPosition: {x: 8.06, y: -3.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1828971273}
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -1.13, z: 0}
+--- !u!58 &1110819708
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110819703}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &1445357196
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,7 +936,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1680083328}
   m_LocalRotation: {x: -0, y: -0.003275526, z: 0, w: 0.99999464}
-  m_LocalPosition: {x: -5.96, y: 1.39, z: 0}
+  m_LocalPosition: {x: -5.96, y: -3.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -993,7 +1010,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1828971273}
   - component: {fileID: 1828971274}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

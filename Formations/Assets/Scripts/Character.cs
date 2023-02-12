@@ -23,6 +23,7 @@ public class Character : MonoBehaviour {
 
     public PositionOrientation Target {get; private set; }
     public Rigidbody2D Rb {get; private set; }
+    public Collider2D Col {get; private set; }
     public Steering Steer {get; private set; }
     public Vector2 Velocity {get; set; }
     public float AngularSpeed {get; set; }
@@ -31,12 +32,13 @@ public class Character : MonoBehaviour {
     public Vector2 Linear {get; private set; }
     public float AngularAcceleration {get; private set; }
     public Vector2? CollisionIndicatorPoint {get; set; }
-    public Vector2? AheadIndicatorPoint {get; set; }
+    public Vector2? CollisionAheadPoint {get; set; }
     public Vector2? AvoidanceForcePoint {get; set; }
     private void Start() {
         // Steer = new MatchLeaderSteer();
         Steer = new LeaderSteer();
         Rb = GetComponent<Rigidbody2D>();
+        Col = GetComponent<Collider2D>();
         Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
 
     }
@@ -101,16 +103,31 @@ public class Character : MonoBehaviour {
         Gizmos.DrawLine(transform.position, transform.position.IgnoreZ() + newVec);
         _lastVector = newVec;
 
-        Gizmos.color = Color.red;
         if(CollisionIndicatorPoint != null){
+            Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, CollisionIndicatorPoint.Value);
             if(AvoidanceForcePoint != null){
+                Gizmos.color = Color.blue;
                 Gizmos.DrawLine(CollisionIndicatorPoint.Value, AvoidanceForcePoint.Value);
             }
         }
-        if(AheadIndicatorPoint != null){
-            Gizmos.DrawLine(transform.position, AheadIndicatorPoint.Value);
+
+        if(CollisionAheadPoint != null){
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, CollisionAheadPoint.Value);
+
         }
+        if(Col != null){
+            Vector2 b1 = Col.bounds.center + transform.right * (Col.bounds.size.x/2);
+            Vector2 b2 = Col.bounds.center - transform.right * (Col.bounds.size.x/2);
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(b1, b1 + threshold * transform.up.IgnoreZ());
+            Gizmos.DrawLine(b2, b2 + threshold * transform.up.IgnoreZ());
+        }
+
+            // Debug.Log(Col.bounds.min);
+            
+        
 
     }
 }
