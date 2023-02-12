@@ -6,6 +6,7 @@ using UnityEngine;
 public class Character : MonoBehaviour {
     public Transform tempTarget;
     public bool manual = false;
+    public bool leader = false;
     [Header("Positional")]
     public float maxSpeed = 5f;
     public float maxAcceleration = 3f;
@@ -22,7 +23,8 @@ public class Character : MonoBehaviour {
     public float threshold = 1f;
     public float maxAvoidForce = 5f;
 
-    public PositionOrientation Target {get; private set; }
+    [field: SerializeField] public Path Path {get; set; }
+    public PositionOrientation Target {get; set; }
     public Rigidbody2D Rb {get; private set; }
     public Collider2D Col {get; private set; }
     public Steering Steer {get; private set; }
@@ -41,8 +43,11 @@ public class Character : MonoBehaviour {
         Rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
         if(manual)
-         Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
+            Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
 
+        if(leader){
+            Path = FindObjectOfType<Path>();
+        }
     }
 
     private void Update() {
@@ -52,10 +57,6 @@ public class Character : MonoBehaviour {
 
     private void FixedUpdate() {
         HandleAgentMovement(Time.fixedDeltaTime);
-    }
-    public void SetTarget(PositionOrientation positionOrientation){
-        Target = positionOrientation;
-        // Debug.Log(Target.position);
     }
 
     void HandleCollision(){

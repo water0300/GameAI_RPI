@@ -20,7 +20,7 @@ public class MatchLeaderSteer : Steering {
             Physics2D.Raycast(p2, agent.transform.up, agent.threshold, ~(1 << 6 | 1 << 3)).collider ??
             null;
 
-        
+
         if(colHit != null){
             Debug.Log(colHit.gameObject.name);
             agent.CollisionIndicatorPoint = colHit.transform.position.IgnoreZ();
@@ -114,16 +114,33 @@ public class MatchLeaderSteer : Steering {
 
 public class LeaderSteer : MatchLeaderSteer {
 
-
+    int currNode = 0;
     public override SteeringOutput GetSteering(Character agent) {
+        //path following 
+        if(agent.Path != null){
+            agent.Target = new PositionOrientation();
+            agent.Target.position = agent.Path.nodes[currNode].transform.position;
+            if(Vector2.Distance(agent.transform.position, agent.Target.position) <= 2f){
+                currNode++;
+                if(currNode >= agent.Path.nodes.Count) {
+                    currNode = agent.Path.nodes.Count - 1;
+                }
+            }
+        }
+
+        //face target
         Vector2 direction =  agent.transform.position.IgnoreZ() - agent.Target.position;
         if(direction.sqrMagnitude != 0){
             agent.Target.orientationDeg = Mathf.Atan2(direction.x, -direction.y) * Mathf.Rad2Deg; //trial and error
-    }
+        }
+
+        return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
+
+
         // return new SteeringOutput(GetPositionSteering(agent), GetRotationSteering(agent));
         // return new SteeringOutput(GetAvoidanceSteering(agent), GetRotationSteering(agent));
-        Debug.Log($"pos null?: {GetPositionSteering(agent) == null}, obsavoid null?: {GetAvoidanceSteering(agent) == null}");
-        return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
+        // Debug.Log($"pos null?: {GetPositionSteering(agent) == null}, obsavoid null?: {GetAvoidanceSteering(agent) == null}");
+        // return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
     }
 
 }
