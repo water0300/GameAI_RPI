@@ -38,6 +38,11 @@ public class FormationManager : MonoBehaviour {
 
     }
 
+    private void Update() {
+        UpdateSlots();
+
+    }
+
     private IEnumerator FormationUpdater(){
         while(true){
             UpdateSlots();
