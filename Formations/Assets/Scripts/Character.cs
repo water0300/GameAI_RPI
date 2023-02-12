@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Character : MonoBehaviour {
     public Transform tempTarget;
+    public bool manual = false;
     [Header("Positional")]
     public float maxSpeed = 5f;
     public float maxAcceleration = 3f;
@@ -39,12 +40,14 @@ public class Character : MonoBehaviour {
         Steer = new LeaderSteer();
         Rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
-        Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
+        if(manual)
+         Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
 
     }
 
     private void Update() {
-        Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
+        if(manual)
+            Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
     }
 
     private void FixedUpdate() {
