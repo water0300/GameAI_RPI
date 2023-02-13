@@ -39,7 +39,6 @@ public class Character : MonoBehaviour {
     public Vector2? AvoidanceForcePoint {get; set; }
     private void Start() {
         // Steer = new MatchLeaderSteer();
-        Steer = new LeaderSteer();
         Rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
         if(manual)
@@ -47,6 +46,9 @@ public class Character : MonoBehaviour {
 
         if(leader){
             Path = FindObjectOfType<Path>();
+            Steer = new LeaderSteer();
+        } else {
+            Steer = new MatchLeaderSteer();
         }
     }
 

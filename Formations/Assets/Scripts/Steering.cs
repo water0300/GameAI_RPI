@@ -22,9 +22,10 @@ public class MatchLeaderSteer : Steering {
 
 
         if(colHit != null){
-            Debug.Log(colHit.gameObject.name);
+            // Debug.Log(colHit.gameObject.name);
             agent.CollisionIndicatorPoint = colHit.transform.position.IgnoreZ();
-            agent.CollisionAheadPoint = agent.transform.position + agent.transform.up * agent.threshold;
+            // agent.CollisionAheadPoint = agent.transform.position + agent.transform.up * agent.threshold;
+            agent.CollisionAheadPoint = agent.Target.position;
 
             Vector2 v1 = (agent.transform.position.IgnoreZ() - agent.CollisionIndicatorPoint.Value).normalized;
             Vector2 v2 = (agent.transform.position.IgnoreZ() - agent.CollisionAheadPoint.Value).normalized;
@@ -83,9 +84,11 @@ public class MatchLeaderSteer : Steering {
     }
 
     protected float? GetRotationSteering(Character agent){
-        float rotation = agent.transform.rotation.eulerAngles.z - agent.Target.orientationDeg;
+        float rotation = agent.transform.localEulerAngles.z - agent.Target.orientationDeg;
         rotation %= 360;
-        rotation = rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation);
+        // rotation = rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation);
+        Debug.Log($"{agent.name}: {(int)agent.transform.localEulerAngles.z }");
+        Debug.Log($"target: {(int)agent.Target.orientationDeg }");
         float rotationSize = Mathf.Abs(rotation);
         if(rotationSize < agent.targetAlignWindow){
             return null;
@@ -105,8 +108,8 @@ public class MatchLeaderSteer : Steering {
     }
 
     public virtual SteeringOutput GetSteering(Character agent) {
-        return new SteeringOutput(GetAvoidanceSteering(agent), GetRotationSteering(agent));
-        // return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
+        // return new SteeringOutput(GetAvoidanceSteering(agent), GetRotationSteering(agent));
+        return new SteeringOutput(GetPositionSteering(agent) + GetAvoidanceSteering(agent) ?? GetPositionSteering(agent) ?? GetAvoidanceSteering(agent) ?? null, GetRotationSteering(agent));
     }
 
 }

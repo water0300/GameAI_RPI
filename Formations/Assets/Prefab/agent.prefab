@@ -123,6 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tempTarget: {fileID: 0}
   manual: 0
+  leader: 0
   maxSpeed: 5
   maxAcceleration: 7.09
   targetRadius: 0.5
@@ -133,8 +134,9 @@ MonoBehaviour:
   targetAlignWindow: 18
   slowAlignWindow: 100
   TimeToAlign: 0.01
-  threshold: 7.8
-  maxAvoidForce: 10
+  threshold: 3
+  maxAvoidForce: 15
+  <Path>k__BackingField: {fileID: 0}
 --- !u!58 &5480316512814064748
 CircleCollider2D:
   m_ObjectHideFlags: 0

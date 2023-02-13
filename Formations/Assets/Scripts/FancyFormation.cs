@@ -3,14 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
-public class DefensiveCirclePattern : IFormationPattern {
-    // public float characterRadius; 
-    public int CalculateNumSlots(List<FormationManager.SlotAssignment> assignments) {
-        var x = 1 + assignments.Aggregate((max, next) => next.slotNumber > max.slotNumber ? next : max).slotNumber;
-    
-        Debug.Log(x);
-        return x;
-    }
+public class FancyFormationPattern : IFormationPattern {
+
     public PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, FormationManager formationManager) {
         PositionOrientation result = new PositionOrientation();
         foreach(var assignment in assignments){
@@ -24,17 +18,22 @@ public class DefensiveCirclePattern : IFormationPattern {
     }
 
     public PositionOrientation GetSlotLocation(int slotNumber, FormationManager formationManager) {
-        float angleAroundCircleRad = (float) slotNumber /  (float) formationManager.numberOfSlots * Mathf.PI * 2;
-        angleAroundCircleRad += formationManager.leader.transform.eulerAngles.z * Mathf.Deg2Rad;
-        float radius = (float) formationManager.characterRadius /  (float) Mathf.Sin(Mathf.PI / formationManager.numberOfSlots);
+        
+
+        float angle = formationManager.spreadAngle * -1;        
+
+        float radius = formationManager.characterRadius * (slotNumber/2 + 1); //distance
+        float lOrR = slotNumber == 0? 1 : ((float)slotNumber/2)/(slotNumber/2) == 1 ? 1 : -1; //left or right
+        
+        Debug.Log(radius);
         // Debug.Log($"{radius}, {characterRadius}, {numberOfSlots}");
 
         Vector2 newPosition = new Vector2(
-            radius * Mathf.Cos(angleAroundCircleRad),
-            radius * Mathf.Sin(angleAroundCircleRad)
-        );
+            radius * lOrR * Mathf.Cos(angle* Mathf.Deg2Rad),
+            radius * Mathf.Sin(angle * Mathf.Deg2Rad)
+        ) ;
         // Debug.Log(newPosition);
-        return new PositionOrientation(newPosition, angleAroundCircleRad * Mathf.Rad2Deg);
+        return new PositionOrientation(newPosition, formationManager.transform.eulerAngles.z);
     }
 
     public bool SupportsSlots(int slotCount) => true;

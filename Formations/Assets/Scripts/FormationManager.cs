@@ -26,12 +26,14 @@ public class FormationManager : MonoBehaviour {
 
     [Header("Properties")]
     public float characterRadius;
-    public static int numberOfSlots = 12; //todo
+    public int numberOfSlots = 12; //todo
+    [Range(0f, 90f)] public float spreadAngle = 90f;
     public float tickrateSeconds = 0.4f;
     private void Start() {
-        Pattern = new DefensiveCirclePattern();
+        Pattern = new FancyFormationPattern();
         for(int i = 0; i < numberOfSlots; i++){
-            Character c = Instantiate(characterPrefab);
+            Character c = Instantiate(characterPrefab, transform.position, transform.rotation);
+            c.name = $"clone_{i}";
             AddCharacter(c);
         }
         UpdateSlots();
@@ -55,7 +57,7 @@ public class FormationManager : MonoBehaviour {
         for(int i = 0; i < SlotAssignments.Count; i++){
             SlotAssignments[i].slotNumber = i;
         }
-        DriftOffset = Pattern.GetDriftOffset(SlotAssignments, characterRadius);
+        DriftOffset = Pattern.GetDriftOffset(SlotAssignments, this);
     }
 
     public bool AddCharacter(Character character){
@@ -77,7 +79,7 @@ public class FormationManager : MonoBehaviour {
         PositionOrientation anchor = GetAnchorPoint();
         for(int i = 0; i < SlotAssignments.Count; i++){
             int slotNumber = SlotAssignments[i].slotNumber;
-            PositionOrientation slot = Pattern.GetSlotLocation(slotNumber, characterRadius);
+            PositionOrientation slot = Pattern.GetSlotLocation(slotNumber, this);
             // Debug.Log($"{anchor.position} + {slot.Rotation.eulerAngles} * {slot.position}");
             
             // Vector3 dir = Mathf.atan

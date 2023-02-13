@@ -4,8 +4,8 @@ using UnityEngine;
 using System.Linq;
 
 public interface IFormationPattern {
-    int CalculateNumSlots(List<FormationManager.SlotAssignment> assignments);
-    PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, float characterRadius);
-    PositionOrientation GetSlotLocation(int slotNumber, float characterRadius);
+    // int CalculateNumSlots(List<FormationManager.SlotAssignment> assignments);
+    PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, FormationManager formationManager);
+    PositionOrientation GetSlotLocation(int slotNumber, FormationManager formationManager);
     bool SupportsSlots(int slotCount);
 }
