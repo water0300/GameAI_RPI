@@ -63,7 +63,7 @@ public class FancyFormationPattern : IFormationPattern {
 
         // <|
         // Debug.Log(newPosition);
-        return new PositionOrientation(newPosition, formationManager.transform.eulerAngles.z);
+        return new PositionOrientation(newPosition, 0f); //formationManager.leader.transform.eulerAngles.z
     }
 
     public bool SupportsSlots(int slotCount) => true;

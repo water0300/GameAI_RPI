@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5480316512814064743}
   m_LocalRotation: {x: -0, y: -0.009862668, z: 0, w: 0.99995136}
-  m_LocalPosition: {x: 8.06, y: -3.9, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 8.06, y: -3.5204, z: 0}
+  m_LocalScale: {x: 0.39012, y: 0.39012, z: 0.39012}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5480316513263764505}
@@ -129,11 +129,11 @@ MonoBehaviour:
   targetRadius: 0.5
   slowRadius: 7.8
   timeToTarget: 0.01
-  maxAngularSpeed_Y: 50
-  maxAngularAcceleration_Y: 70
-  targetAlignWindow: 18
-  slowAlignWindow: 100
-  TimeToAlign: 0.01
+  maxAngularSpeed_Y: 2
+  maxAngularAcceleration_Y: 1
+  targetAlignWindow: 5
+  slowAlignWindow: 80
+  TimeToAlign: 1
   threshold: 3
   maxAvoidForce: 15
   <Path>k__BackingField: {fileID: 0}

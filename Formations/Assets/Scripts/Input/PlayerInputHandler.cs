@@ -27,12 +27,14 @@ public class PlayerInputHandler : MonoBehaviour {
         PlayerInput.Player.WASD.canceled += ctx => WASDEvent(ctx);
         PlayerInput.Player.QE.performed += ctx => QEEvent(ctx);
         PlayerInput.Player.QE.canceled += ctx => QEEvent(ctx);
+        PlayerInput.Player.Shoot.performed += ctx => ShootEvent(ctx);
 
     }
 
     // private void MouseMoveEvent(InputAction.CallbackContext ctx) => _pathHandler.MouseAxis = ctx.ReadValue<Vector2>();
     private void WASDEvent(InputAction.CallbackContext ctx) => _player.InputAxis = ctx.ReadValue<Vector2>();
     private void QEEvent(InputAction.CallbackContext ctx) => _player.RotationAxis = ctx.ReadValue<float>() * -1f;
+    private void ShootEvent(InputAction.CallbackContext ctx) => _player.OnShoot();
     // private void PathEvent(InputAction.CallbackContext ctx) => _pathHandler.SpawnPathNode();
 
 }
