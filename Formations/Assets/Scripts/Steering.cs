@@ -87,8 +87,8 @@ public class MatchLeaderSteer : Steering {
         float rotation = agent.transform.localEulerAngles.z - agent.Target.orientationDeg;
         rotation %= 360;
         // rotation = rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation);
-        Debug.Log($"{agent.name}: {(int)agent.transform.localEulerAngles.z }");
-        Debug.Log($"target: {(int)agent.Target.orientationDeg }");
+        // Debug.Log($"{agent.name}: {(int)agent.transform.localEulerAngles.z }");
+        // Debug.Log($"target: {(int)agent.Target.orientationDeg }");
         float rotationSize = Mathf.Abs(rotation);
         if(rotationSize < agent.targetAlignWindow){
             return null;

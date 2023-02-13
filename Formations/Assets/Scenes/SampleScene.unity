@@ -1282,9 +1282,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 5480316512814064744, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
   leader: {fileID: 1522940226}
-  characterRadius: 4
+  characterRadius: 3
   numberOfSlots: 12
-  spreadAngle: 30
+  spreadAngle: 70
+  lerpAngleLimit: 75
   tickrateSeconds: 0.4
 --- !u!4 &413304186
 Transform:

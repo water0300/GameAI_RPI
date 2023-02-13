@@ -26,8 +26,9 @@ public class FormationManager : MonoBehaviour {
 
     [Header("Properties")]
     public float characterRadius;
-    public int numberOfSlots = 12; //todo
+    public int numberOfSlots = 12; 
     [Range(0f, 90f)] public float spreadAngle = 90f;
+    [Range(0f, 90f)] public float lerpAngleLimit = 70f;
     public float tickrateSeconds = 0.4f;
     private void Start() {
         Pattern = new FancyFormationPattern();
@@ -90,6 +91,7 @@ public class FormationManager : MonoBehaviour {
                     anchor.position + slot.position - DriftOffset.position,
                     anchor.orientationDeg + slot.orientationDeg - DriftOffset.orientationDeg
                 );
+                
         }
     }
 
