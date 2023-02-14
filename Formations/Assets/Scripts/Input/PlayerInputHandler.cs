@@ -27,7 +27,7 @@ public class PlayerInputHandler : MonoBehaviour {
         PlayerInput.Player.WASD.canceled += ctx => WASDEvent(ctx);
         PlayerInput.Player.QE.performed += ctx => QEEvent(ctx);
         PlayerInput.Player.QE.canceled += ctx => QEEvent(ctx);
-        PlayerInput.Player.Shoot.performed += ctx => ShootEvent(ctx);
+        // PlayerInput.Player.Shoot.started += ctx => ShootEvent(ctx);
 
     }
 

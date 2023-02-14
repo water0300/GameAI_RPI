@@ -5,7 +5,7 @@ using System.Linq;
 using System; 
 
 
-public class FormationManager : MonoBehaviour {
+public class FormationManager : MonoBehaviour { //should be singleton
     public class SlotAssignment {
         public Character character;
         public int slotNumber;
