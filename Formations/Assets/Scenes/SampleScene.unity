@@ -1513,7 +1513,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 19.620567
+  orthographic size: 5.67
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1537,7 +1537,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.54, y: 10.18, z: -10}
+  m_LocalPosition: {x: 7.8, y: 34.1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3275,7 +3275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1680083329
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3863,6 +3863,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 384460710719426585, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5480316512814064743, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
       propertyPath: m_Name
       value: agent
@@ -3932,6 +3936,18 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5480316512814064747, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5176839
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480316512814064747, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5176839
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480316512814064747, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5176839
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480316512814064747, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.177339
       objectReference: {fileID: 0}
@@ -3972,8 +3988,20 @@ PrefabInstance:
       value: -0.628
       objectReference: {fileID: 0}
     - target: {fileID: 5480316512814064748, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_Radius
+      value: 1.1411171
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480316512814064748, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480316512814064748, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.03286811
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480316512814064748, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.000360424
       objectReference: {fileID: 0}
     - target: {fileID: 5480316513263764504, guid: 37ea8043ec70a87478fcb4c65f145e81, type: 3}
       propertyPath: m_IsActive

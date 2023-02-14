@@ -16,13 +16,18 @@ public class Player : MonoBehaviour {
     }
 
     public void OnShoot(){
-        var MousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Ray ray = Camera.main.ScreenPointToRay(MousePos);
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(MousePos), Vector2.zero, Mathf.Infinity, ~(1 << 6 | 1 << 3));
+
+        Vector3 mousePos = Mouse.current.position.ReadValue();   
+        Vector3 worldpos=Camera.main.ScreenToWorldPoint(mousePos);
+        worldpos.z = 10f;
+
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.transform.position, Camera.main.transform.position - worldpos, Mathf.Infinity, ~(1 << 6 | 1 << 3));
+        // RaycastHit2D hit = Physics2D.Raycast(Camera.main.transform.position, Camera.main.transform.position - worldpos);
         Character target;
-        if(hit.collider.TryGetComponent<Character>(out target)){
+        // Debug.Log(worldpos);
+            if(hit.collider != null && hit.collider.TryGetComponent<Character>(out target)){
             Debug.Log($"Hit {target.name}");
-        }
+        } 
         
     }
 
