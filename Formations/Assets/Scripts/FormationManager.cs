@@ -86,11 +86,12 @@ public class FormationManager : MonoBehaviour { //should be singleton
             // Vector3 dir = Mathf.atan
             // Debug.Log(slot.Rotation * slot.position);
 
-            SlotAssignments[i].character.Target = 
+            SlotAssignments[i].character.SetTarget( 
                 new PositionOrientation(
                     anchor.position + slot.position - DriftOffset.position,
                     anchor.orientationDeg + slot.orientationDeg - DriftOffset.orientationDeg
-                );
+                )
+            );
                 
         }
     }

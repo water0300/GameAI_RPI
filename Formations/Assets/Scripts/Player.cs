@@ -36,23 +36,23 @@ public class Player : MonoBehaviour {
 
     public void OnShoot(){
 
-        Vector3 mousePos = Mouse.current.position.ReadValue();   
-        Vector3 worldpos=Camera.main.ScreenToWorldPoint(mousePos);
-        worldpos.z = -10f;
+        // Vector3 mousePos = Mouse.current.position.ReadValue();   
+        // Vector3 worldpos=Camera.main.ScreenToWorldPoint(mousePos);
+        // worldpos.z = -10f;
 
-        RaycastHit2D hit = Physics2D.Raycast(worldpos, worldpos - Vector3.up, Mathf.Infinity, ~(1 << 6 | 1 << 3));
-        // RaycastHit2D hit = Physics2D.Raycast(Camera.main.transform.position, Camera.main.transform.position - worldpos);
-        Character target;
-        // Debug.Log(worldpos);
+        // RaycastHit2D hit = Physics2D.Raycast(worldpos, worldpos - Vector3.up, Mathf.Infinity, ~(1 << 6 | 1 << 3));
+        // // RaycastHit2D hit = Physics2D.Raycast(Camera.main.transform.position, Camera.main.transform.position - worldpos);
+        // // Character target;
+        // // Debug.Log(worldpos);
 
-        //     if(hit.collider != null && hit.collider.TryGetComponent<Character>(out target)){
-        //     Debug.Log($"Hit {target.name}");
-        // } 
-        if(hit.collider != null){
-            Debug.Log($"Hit {hit.collider.name}");
-        } else {
-            Debug.Log("Miss");
-        }
+        // //     if(hit.collider != null && hit.collider.TryGetComponent<Character>(out target)){
+        // //     Debug.Log($"Hit {target.name}");
+        // // } 
+        // if(hit.collider != null){
+        //     Debug.Log($"Hit {hit.collider.name}");
+        // } else {
+        //     Debug.Log("Miss");
+        // }
 
         //     if(hit.collider != null && hit.collider.TryGetComponent<Character>(out target)){
         //     Debug.Log($"Hit {target.name}");

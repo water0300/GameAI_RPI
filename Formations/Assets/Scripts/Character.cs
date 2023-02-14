@@ -1,33 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class Character : MonoBehaviour {
     public Transform tempTarget;
     public bool manual = false;
     public bool leader = false;
-    [Header("Positional")]
-    public float maxSpeed = 5f;
-    public float maxAcceleration = 3f;
-    public float targetRadius = 3f;
-    public float slowRadius = 10f;
-    public float timeToTarget = 0.01f;
     [Header("Rotational")]
-    public float maxAngularSpeed_Y = 90f;
-    public float maxAngularAcceleration_Y = 70f;
-    public float targetAlignWindow = 30f;
-    public float slowAlignWindow = 100f;
-    public float TimeToAlign = 0.01f;
+    public float TimeToAlign = .5f;
     [Header("Obstacal")]
     public float threshold = 1f;
     public float maxAvoidForce = 5f;
 
     [field: SerializeField] public Path Path {get; set; }
-    public PositionOrientation Target {get; set; }
+    public PositionOrientation Target {get; private set; }
     public Rigidbody2D Rb {get; private set; }
+    public NavMeshAgent Agent {get; private set; }
     public Collider2D Col {get; private set; }
-    public Steering Steer {get; private set; }
+    public FormationManager Fm {get; private set; }
     public Vector2 Velocity {get; set; }
     public float AngularSpeed {get; set; }
 
@@ -37,50 +28,76 @@ public class Character : MonoBehaviour {
     public Vector2? CollisionIndicatorPoint {get; set; }
     public Vector2? CollisionAheadPoint {get; set; }
     public Vector2? AvoidanceForcePoint {get; set; }
+    void Awake(){
+        Col = GetComponent<Collider2D>();
+        Agent = GetComponent<NavMeshAgent>();
+        Fm = GetComponent<FormationManager>();
+    }
     private void Start() {
         // Steer = new MatchLeaderSteer();
-        Rb = GetComponent<Rigidbody2D>();
-        Col = GetComponent<Collider2D>();
+        // Rb = GetComponent<Rigidbody2D>();
+        Agent.updateRotation = false; //todo check
+        Agent.updateUpAxis = false;
         if(manual)
-            Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
+            SetTarget(new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z));
 
         if(leader){
             Path = FindObjectOfType<Path>();
-            Steer = new LeaderSteer();
+            // Steer = new LeaderSteer();
         } else {
-            Steer = new MatchLeaderSteer();
+            // Steer = new MatchLeaderSteer();
         }
     }
 
+    public void SetTarget(PositionOrientation target){
+        Target = target;
+        Agent.SetDestination(target.position);
+    }
+
+    Vector3 _vPos;
+    float oldAng;
+    float _m;
     private void Update() {
         if(manual)
-            Target = new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z);
+            SetTarget(new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z));
+            Agent.updatePosition = false;
+
+        if(leader){
+            Debug.Log("wot");
+            Vector2 direction = (Target.position - transform.position.IgnoreZ()).normalized;
+            float angle = Mathf.Atan2(-direction.x, direction.y) * Mathf.Rad2Deg;
+            float newAng = Mathf.SmoothDampAngle(oldAng, angle, ref _m, TimeToAlign);
+
+            transform.rotation = Quaternion.Euler(0f, 0f, newAng);
+            oldAng = newAng;
+
+        } else {
+            float newAng = Mathf.SmoothDampAngle(oldAng, Fm.leader.eulerAngles.z, ref _m, TimeToAlign);
+            transform.rotation = Quaternion.Euler(0f, 0f, newAng);
+            oldAng = newAng;
+
+        }
+        transform.rotation = Quaternion.Euler(0f, 0f, transform.eulerAngles.z);
     }
 
-    private void FixedUpdate() {
-        HandleAgentMovement(Time.fixedDeltaTime);
-    }
 
-    void HandleCollision(){
-
-    }
 
     void HandleAgentMovement(float time){
-        SteeringOutput CurrSteeringOutput = Steer.GetSteering(this);
+        
+        // SteeringOutput CurrSteeringOutput = Steer.GetSteering(this);
 
-        HandleCollision();
         // Rb.MovePosition(Rb.position + Velocity * time);
-        if(CurrSteeringOutput.linearAcceleration != null){
-            Rb.AddForce(CurrSteeringOutput.linearAcceleration.Value);
-        } else {
-            Rb.velocity = Vector2.zero;
-        }
+        // if(CurrSteeringOutput.linearAcceleration != null){
+        //     Rb.AddForce(CurrSteeringOutput.linearAcceleration.Value);
+        // } else {
+        //     Rb.velocity = Vector2.zero;
+        // }
 
-        if(CurrSteeringOutput.angularAcceleration != null){
-            Rb.AddTorque(CurrSteeringOutput.angularAcceleration.Value);
-        } else {
-            Rb.angularVelocity = 0f;
-        }
+        // if(CurrSteeringOutput.angularAcceleration != null){
+        //     Rb.AddTorque(CurrSteeringOutput.angularAcceleration.Value);
+        // } else {
+        //     Rb.angularVelocity = 0f;
+        // }
 
 
         // Rb.MoveRotation(Rb.rotation * CurrSteeringOutput.angularAcceleration.Value * time);
@@ -89,8 +106,8 @@ public class Character : MonoBehaviour {
         // AngularSpeed = AngularSpeed + CurrSteeringOutput.angularAcceleration * time ?? 0f;
         
         //debug
-        Linear = CurrSteeringOutput.linearAcceleration ?? Vector3.zero;
-        AngularAcceleration = CurrSteeringOutput.angularAcceleration ?? 0f;
+        // Linear = CurrSteeringOutput.linearAcceleration ?? Vector3.zero;
+        // AngularAcceleration = CurrSteeringOutput.angularAcceleration ?? 0f;
     }
 
     private Vector3 _lastVector = Vector3.zero;
@@ -98,38 +115,38 @@ public class Character : MonoBehaviour {
     private void OnDrawGizmos() {
         Gizmos.color = Color.white;
         if(Target != null)
-            Gizmos.DrawWireSphere(Target.position, targetRadius);
+            Gizmos.DrawWireSphere(Target.position, Col.bounds.size.x);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, targetRadius);
-        Gizmos.DrawWireSphere(transform.position, slowRadius);
+        // Gizmos.color = Color.green;
+        // Gizmos.DrawWireSphere(transform.position, targetRadius);
+        // Gizmos.DrawWireSphere(transform.position, slowRadius);
 
-        Gizmos.color = Color.white;
-        Vector2 newVec = Vector3.SmoothDamp(_lastVector, Linear, ref _v, 0.5f);
-        Gizmos.DrawLine(transform.position, transform.position.IgnoreZ() + newVec);
-        _lastVector = newVec;
+        // Gizmos.color = Color.white;
+        // Vector2 newVec = Vector3.SmoothDamp(_lastVector, Linear, ref _v, 0.5f);
+        // Gizmos.DrawLine(transform.position, transform.position.IgnoreZ() + newVec);
+        // _lastVector = newVec;
 
-        if(CollisionIndicatorPoint != null){
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, CollisionIndicatorPoint.Value);
-            if(AvoidanceForcePoint != null){
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(CollisionIndicatorPoint.Value, AvoidanceForcePoint.Value);
-            }
-        }
+        // if(CollisionIndicatorPoint != null){
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawLine(transform.position, CollisionIndicatorPoint.Value);
+        //     if(AvoidanceForcePoint != null){
+        //         Gizmos.color = Color.blue;
+        //         Gizmos.DrawLine(CollisionIndicatorPoint.Value, AvoidanceForcePoint.Value);
+        //     }
+        // }
 
-        if(CollisionAheadPoint != null){
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(transform.position, CollisionAheadPoint.Value);
+        // if(CollisionAheadPoint != null){
+        //     Gizmos.color = Color.cyan;
+        //     Gizmos.DrawLine(transform.position, CollisionAheadPoint.Value);
 
-        }
-        if(Col != null){
-            Vector2 b1 = Col.bounds.center + transform.right * (Col.bounds.size.x/2);
-            Vector2 b2 = Col.bounds.center - transform.right * (Col.bounds.size.x/2);
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(b1, b1 + threshold * transform.up.IgnoreZ());
-            Gizmos.DrawLine(b2, b2 + threshold * transform.up.IgnoreZ());
-        }
+        // }
+        // if(Col != null){
+        //     Vector2 b1 = Col.bounds.center + transform.right * (Col.bounds.size.x/2);
+        //     Vector2 b2 = Col.bounds.center - transform.right * (Col.bounds.size.x/2);
+        //     Gizmos.color = Color.magenta;
+        //     Gizmos.DrawLine(b1, b1 + threshold * transform.up.IgnoreZ());
+        //     Gizmos.DrawLine(b2, b2 + threshold * transform.up.IgnoreZ());
+        // }
 
             // Debug.Log(Col.bounds.min);
             
