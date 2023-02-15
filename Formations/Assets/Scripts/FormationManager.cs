@@ -27,7 +27,9 @@ public class FormationManager : MonoBehaviour { //should be singleton
     [Header("Properties")]
     public float characterRadius;
     public int numberOfSlots = 12; 
-    [Range(0f, 90f)] public float spreadAngle = 90f;
+    [Range(0f, 90f)] public float defaultSpreadAngle = 90f;
+    public float rSpreadAngle = 90f;
+    public float lSpreadAngle = 90f;
     [Range(0f, 90f)] public float lerpAngleLimit = 70f;
     public float tickrateSeconds = 0.4f;
     private void Start() {

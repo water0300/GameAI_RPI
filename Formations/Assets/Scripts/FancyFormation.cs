@@ -6,23 +6,22 @@ using System;
 public class FancyFormationPattern : IFormationPattern {
 
     public PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, FormationManager formationManager) {
-        // return new PositionOrientation();
-        PositionOrientation result = new PositionOrientation();
-        foreach(var assignment in assignments){
-            PositionOrientation location = GetSlotLocation(assignment.slotNumber, formationManager);
-            result.position += location.position;
-            result.orientationDeg += location.orientationDeg;
-        }
-        result.position /= assignments.Count;
-        result.orientationDeg /= assignments.Count;
-        return result;
+        return new PositionOrientation();
+        // PositionOrientation result = new PositionOrientation();
+        // foreach(var assignment in assignments){
+        //     PositionOrientation location = GetSlotLocation(assignment.slotNumber, formationManager);
+        //     result.position += location.position;
+        //     result.orientationDeg += location.orientationDeg;
+        // }
+        // result.position /= assignments.Count;
+        // result.orientationDeg /= assignments.Count;
+        // return result;
     }
 
     public PositionOrientation GetSlotLocation(int slotNumber, FormationManager formationManager) {
         
 
         float leaderRotation = formationManager.leader.transform.eulerAngles.z;
-        float angle = formationManager.spreadAngle;        
         float lerplimit = formationManager.lerpAngleLimit;
 
         //temp
@@ -32,25 +31,26 @@ public class FancyFormationPattern : IFormationPattern {
         //70- 70 = 0
         //90 - 70 = 20
         //(angle - lerplimit) / abs(angle-lerplimit)
-        if(angle > lerplimit){
+        if(formationManager.lSpreadAngle > lerplimit && formationManager.rSpreadAngle > lerplimit){
+            float angle = Mathf.Max(formationManager.lSpreadAngle, formationManager.rSpreadAngle );
             radius = formationManager.characterRadius * Mathf.Lerp((slotNumber/2 + 1), (slotNumber + 1), (angle - lerplimit) / Mathf.Abs(90-lerplimit)); //distance
-            // Debug.Log("yewot");
-            // Debug.Log((angle - lerplimit) / Mathf.Abs(90-lerplimit));
         } else {
             radius = formationManager.characterRadius * (slotNumber/2 + 1); //distance
         }
+
+
 
         //given: leader rotation
         Vector2 newPosition;
         if(slotNumber % 2 == 0){
             newPosition = new Vector2(
-                radius * Mathf.Cos((-angle + leaderRotation) * Mathf.Deg2Rad),
-                radius * Mathf.Sin((-angle + leaderRotation) * Mathf.Deg2Rad)
+                radius * Mathf.Cos((-formationManager.rSpreadAngle + leaderRotation) * Mathf.Deg2Rad),
+                radius * Mathf.Sin((-formationManager.rSpreadAngle + leaderRotation) * Mathf.Deg2Rad)
             ) ;
         } else {
             newPosition = new Vector2(
-                radius * -Mathf.Cos((-angle - leaderRotation) * Mathf.Deg2Rad),
-                radius * Mathf.Sin((-angle - leaderRotation) * Mathf.Deg2Rad)
+                radius * -Mathf.Cos((-formationManager.lSpreadAngle - leaderRotation) * Mathf.Deg2Rad),
+                radius * Mathf.Sin((-formationManager.lSpreadAngle - leaderRotation) * Mathf.Deg2Rad)
             ) ;
         }
             

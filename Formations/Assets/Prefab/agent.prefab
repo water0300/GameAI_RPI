@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5480316512814064744}
   - component: {fileID: 384460710719426585}
   - component: {fileID: -7677033306700894855}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5480316513263764505}
   - component: {fileID: 5480316513263764506}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
