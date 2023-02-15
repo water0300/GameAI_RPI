@@ -151,7 +151,7 @@ public class Character : MonoBehaviour {
             }
         }
 
-        if(currAngle > 80){
+        if(currAngle > 84){
             Fm.rSpreadAngle = 90;
             Fm.lSpreadAngle = 90;
 
