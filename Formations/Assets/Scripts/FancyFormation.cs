@@ -6,16 +6,16 @@ using System;
 public class FancyFormationPattern : IFormationPattern {
 
     public PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, FormationManager formationManager) {
-        return new PositionOrientation();
-        // PositionOrientation result = new PositionOrientation();
-        // foreach(var assignment in assignments){
-        //     PositionOrientation location = GetSlotLocation(assignment.slotNumber, formationManager);
-        //     result.position += location.position;
-        //     result.orientationDeg += location.orientationDeg;
-        // }
-        // result.position /= assignments.Count;
-        // result.orientationDeg /= assignments.Count;
-        // return result;
+        // return new PositionOrientation();
+        PositionOrientation result = new PositionOrientation();
+        foreach(var assignment in assignments){
+            PositionOrientation location = GetSlotLocation(assignment.slotNumber, formationManager);
+            result.position += location.position;
+            result.orientationDeg += location.orientationDeg;
+        }
+        result.position /= assignments.Count;
+        result.orientationDeg /= assignments.Count;
+        return result;
     }
 
     public PositionOrientation GetSlotLocation(int slotNumber, FormationManager formationManager) {

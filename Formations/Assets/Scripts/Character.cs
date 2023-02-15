@@ -28,10 +28,11 @@ public class Character : MonoBehaviour {
     public Vector2? CollisionIndicatorPoint {get; set; }
     public Vector2? CollisionAheadPoint {get; set; }
     public Vector2? AvoidanceForcePoint {get; set; }
+    private float initSpreadAngle;
     void Awake(){
         Col = GetComponent<Collider2D>();
         Agent = GetComponent<NavMeshAgent>();
-        Fm = GetComponent<FormationManager>();
+        Fm = FindObjectOfType<FormationManager>();
     }
     private void Start() {
         // Steer = new MatchLeaderSteer();
@@ -47,6 +48,8 @@ public class Character : MonoBehaviour {
         } else {
             // Steer = new MatchLeaderSteer();
         }
+
+        initSpreadAngle = Fm.spreadAngle;
     }
 
     public void SetTarget(PositionOrientation target){
@@ -57,13 +60,26 @@ public class Character : MonoBehaviour {
     Vector3 _vPos;
     float oldAng;
     float _m;
+    int currNode = 0;
     private void Update() {
-        if(manual)
+        if(manual) {
             SetTarget(new PositionOrientation(tempTarget.position, tempTarget.rotation.eulerAngles.z));
             Agent.updatePosition = false;
-
+        }
         if(leader){
-            Debug.Log("wot");
+            PositionOrientation target = new PositionOrientation();
+
+            if(Path != null){
+                target.position = Path.nodes[currNode].transform.position;
+                if(Vector2.Distance(transform.position, target.position) <= 2f){
+                    currNode++;
+                    if(currNode >= Path.nodes.Count) {
+                        currNode = Path.nodes.Count - 1;
+                    }
+                }
+            }
+            SetTarget(target);
+
             Vector2 direction = (Target.position - transform.position.IgnoreZ()).normalized;
             float angle = Mathf.Atan2(-direction.x, direction.y) * Mathf.Rad2Deg;
             float newAng = Mathf.SmoothDampAngle(oldAng, angle, ref _m, TimeToAlign);
@@ -71,8 +87,21 @@ public class Character : MonoBehaviour {
             transform.rotation = Quaternion.Euler(0f, 0f, newAng);
             oldAng = newAng;
 
+            //manual for now
+            if(currNode == 5){
+                Fm.spreadAngle = 90;
+            }
+
+            if(currNode == 10){
+                Fm.spreadAngle = initSpreadAngle;
+            }
+
         } else {
-            float newAng = Mathf.SmoothDampAngle(oldAng, Fm.leader.eulerAngles.z, ref _m, TimeToAlign);
+            // if(Fm.leader == null){ //fm needs to be injected?
+            //     Debug.Log("???");
+            //     return;
+            // }
+            float newAng = Mathf.SmoothDampAngle(oldAng, Fm.leader.transform.eulerAngles.z, ref _m, TimeToAlign);
             transform.rotation = Quaternion.Euler(0f, 0f, newAng);
             oldAng = newAng;
 
