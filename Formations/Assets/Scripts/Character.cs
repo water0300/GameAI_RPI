@@ -7,6 +7,7 @@ public class Character : MonoBehaviour {
     public Transform tempTarget;
     public bool manual = false;
     public bool leader = false;
+    public bool invisible = false;
     [Header("Rotational")]
     public float TimeToAlign = .5f;
     [Header("Obstacal")]
@@ -150,11 +151,18 @@ public class Character : MonoBehaviour {
             }
         }
 
-        if(lOrR){
-            Fm.rSpreadAngle = currAngle;
+        if(currAngle > 80){
+            Fm.rSpreadAngle = 90;
+            Fm.lSpreadAngle = 90;
+
         } else {
-            Fm.lSpreadAngle = currAngle;
+            if(lOrR){
+                Fm.rSpreadAngle = currAngle;
+            } else {
+                Fm.lSpreadAngle = currAngle;
+            }
         }
+
 
         
 

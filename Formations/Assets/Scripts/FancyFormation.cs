@@ -31,9 +31,13 @@ public class FancyFormationPattern : IFormationPattern {
         //70- 70 = 0
         //90 - 70 = 20
         //(angle - lerplimit) / abs(angle-lerplimit)
-        if(formationManager.lSpreadAngle > lerplimit && formationManager.rSpreadAngle > lerplimit){
+        if(formationManager.lSpreadAngle > 80f && formationManager.rSpreadAngle > 80f) {
+            Debug.Log("SDFSDF");
+            radius = formationManager.characterRadius * (slotNumber + 1); //distance
+        }
+         else if(formationManager.lSpreadAngle > lerplimit && formationManager.rSpreadAngle > lerplimit){
             float angle = Mathf.Max(formationManager.lSpreadAngle, formationManager.rSpreadAngle );
-            radius = formationManager.characterRadius * Mathf.Lerp((slotNumber/2 + 1), (slotNumber + 1), (angle - lerplimit) / Mathf.Abs(90-lerplimit)); //distance
+            radius = formationManager.characterRadius * Mathf.Lerp((slotNumber/2 + 1), (slotNumber + 1), (angle - lerplimit + .2f) / Mathf.Abs(90-lerplimit)); //distance
         } else {
             radius = formationManager.characterRadius * (slotNumber/2 + 1); //distance
         }
