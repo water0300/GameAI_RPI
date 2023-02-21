@@ -28,7 +28,7 @@ public class Player : MonoBehaviour {
         // Debug.Log(worldpos);
 
         if(other.gameObject.TryGetComponent<Character>(out target)){
-            Debug.Log($"Hit {target.name}");
+            // Debug.Log($"Hit {target.name}");
             _fm.RemoveCharacter(target);
             target.gameObject.SetActive(false);
         } 

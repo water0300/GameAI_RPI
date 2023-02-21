@@ -8,7 +8,7 @@ public class DefensiveCirclePattern : IFormationPattern {
     public int CalculateNumSlots(List<FormationManager.SlotAssignment> assignments) {
         var x = 1 + assignments.Aggregate((max, next) => next.slotNumber > max.slotNumber ? next : max).slotNumber;
     
-        Debug.Log(x);
+        // Debug.Log(x);
         return x;
     }
     public PositionOrientation GetDriftOffset(List<FormationManager.SlotAssignment> assignments, FormationManager formationManager) {

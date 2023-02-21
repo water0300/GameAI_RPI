@@ -141,7 +141,7 @@ public class Character : MonoBehaviour {
             }
             // Debug.DrawLine(transform.position, transform.position.IgnoreZ() + LVec);
             float radius = (Fm.characterRadius * Fm.numberOfSlots / 2);
-            Debug.DrawRay(transform.position, vec * radius);
+            // Debug.DrawRay(transform.position, vec * radius);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, vec, radius,  ~(1 << 6 | 1 << 3 | 1 << 7));
             if(hit.collider != null){
                 // Debug.Log($"Hit: {hit.collider.name}");
