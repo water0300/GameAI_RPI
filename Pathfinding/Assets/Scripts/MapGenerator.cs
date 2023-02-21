@@ -21,7 +21,7 @@ public class MapGenerator : MonoBehaviour {
     public GameObject outOfBoundsBlock;
     public float blockSize; 
     public int mapID;
-    private List<GameObject> _grid;//todo change to monobehavior of choice
+    private List<GameObject> _grid = new List<GameObject>();//todo change to monobehavior of choice
     private static Dictionary<char, GameObject> blockMap;
     private static List<string> mapNames = new List<string>(){
         "lak104d",
@@ -31,7 +31,6 @@ public class MapGenerator : MonoBehaviour {
     };
     private void Start() {
         blockMap = GenerateBlockMap();
-        GenerateMapFromFile(mapNames[mapID]);    
     }
 
     private Dictionary<char, GameObject> GenerateBlockMap(){
@@ -43,7 +42,7 @@ public class MapGenerator : MonoBehaviour {
         };
     }
 
-    private bool GenerateMapFromFile(string fileName){
+    public bool GenerateMapFromFile(string fileName){
         //find file
         string filePath = Application.streamingAssetsPath + "/Maps/" + fileName + ".map";
         if(!File.Exists(filePath)){
@@ -76,22 +75,26 @@ public class MapGenerator : MonoBehaviour {
     //-x to +x == left col to right col
     //+y to -y == top row to bot row
     private void GenerateMap(string[] mapFile, int height, int width){
-        _grid = new List<GameObject>();
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
-                var placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
+                GameObject placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
                 placedBlock.transform.parent = this.transform;
-                _grid.Append(placedBlock);
+                _grid.Add(placedBlock);
 
             }
         }
     }
 
-    private void DestroyMap(){
-        foreach(GameObject go in _grid){
-            Destroy(go);
+    public void DestroyMap(){
+        if(_grid == null){
+            Debug.Log("grid was null");
+            return;
         }
-        
+        Debug.Log(_grid.Count);
+        foreach(GameObject go in _grid){
+            go.SetActive(false);
+            // Destroy(go);
+        }
     }
 
 }
