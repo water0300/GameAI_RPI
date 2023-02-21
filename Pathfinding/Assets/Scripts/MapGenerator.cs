@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 
 public class MapGenerator : MonoBehaviour {
     public struct MapProperties {
@@ -16,28 +17,21 @@ public class MapGenerator : MonoBehaviour {
     }
     
     //assumption: these three objects are the same size?
+    [Header("Prefabs")]
     public GameObject walkableBlock;
     public GameObject treeBlock;
     public GameObject outOfBoundsBlock;
-    public float blockSize; 
-    public int mapID;
-    private List<GameObject> _grid = new List<GameObject>();//todo change to monobehavior of choice
-    private static Dictionary<char, GameObject> blockMap;
-    private static List<string> mapNames = new List<string>(){
-        "lak104d",
-        "arena2",
-        "AR0011SR",
-        "hrt201n"
-    };
-    private void Start() {
-        blockMap = GenerateBlockMap();
-    }
 
-    private Dictionary<char, GameObject> GenerateBlockMap(){
-        return new Dictionary<char, GameObject>(){
+    [Header("Props")]
+    public float blockSize = 1f; 
+    public MapData MapData {get; private set; } 
+    private Dictionary<char, GameObject> blockMap;
+
+    private void GenerateBlockPrefabMap(){
+        blockMap = new Dictionary<char, GameObject>(){
             {'@', outOfBoundsBlock},
             {'T', treeBlock},
-            {'.', walkableBlock},
+            {'.', walkableBlock}, 
 
         };
     }
@@ -75,27 +69,35 @@ public class MapGenerator : MonoBehaviour {
     //-x to +x == left col to right col
     //+y to -y == top row to bot row
     private void GenerateMap(string[] mapFile, int height, int width){
+        if(blockMap == null){
+            GenerateBlockPrefabMap();
+        }
+        if(MapData != null){
+            MapData = ScriptableObject.CreateInstance<MapData>(); 
+        }
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
-                GameObject placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
+                GameObject placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize, Quaternion.identity);
+                // Debug.Log(blockMap);
+                // GameObject placedBlock = PrefabUtility.InstantiatePrefab(blockMap[mapFile[i][j]]) as GameObject;
+                // placedBlock.transform.position = transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize;
                 placedBlock.transform.parent = this.transform;
-                _grid.Add(placedBlock);
+                MapData.AddMapBlock(placedBlock);
 
             }
         }
     }
 
+    #if UNITY_EDITOR
     public void DestroyMap(){
-        if(_grid == null){
+        if(MapData == null){
             Debug.Log("grid was null");
             return;
+        } else {
+            MapData.DestroyMapBlocks();
         }
-        Debug.Log(_grid.Count);
-        foreach(GameObject go in _grid){
-            go.SetActive(false);
-            // Destroy(go);
-        }
+        
     }
-
+    #endif
 }
 
