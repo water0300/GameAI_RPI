@@ -20,10 +20,27 @@ public class MapGenerator : MonoBehaviour {
     public GameObject treeBlock;
     public GameObject outOfBoundsBlock;
     public float blockSize; 
-
-
+    public int mapID;
+    private List<GameObject> _grid;//todo change to monobehavior of choice
+    private static Dictionary<char, GameObject> blockMap;
+    private static List<string> mapNames = new List<string>(){
+        "lak104d",
+        "arena2",
+        "AR0011SR",
+        "hrt201n"
+    };
     private void Start() {
-        GenerateMapFromFile("lak104d");    
+        blockMap = GenerateBlockMap();
+        GenerateMapFromFile(mapNames[mapID]);    
+    }
+
+    private Dictionary<char, GameObject> GenerateBlockMap(){
+        return new Dictionary<char, GameObject>(){
+            {'@', outOfBoundsBlock},
+            {'T', treeBlock},
+            {'.', walkableBlock},
+
+        };
     }
 
     private bool GenerateMapFromFile(string fileName){
@@ -41,10 +58,6 @@ public class MapGenerator : MonoBehaviour {
 
         //deploy map
         string[] file = fileLines.Skip(4).ToArray();
-        // Debug.Log(file.Length);
-        // foreach(string row in file){
-        //     Debug.Log(row);
-        // }
         GenerateMap(file, mapProps.height, mapProps.width);
 
         return true;
@@ -52,7 +65,6 @@ public class MapGenerator : MonoBehaviour {
     }
 
     //assumption - map is of right format
-
     private MapProperties HandleMapHeader(string[] header){
         return new MapProperties(
             Int32.Parse(header[1].Split()[1]),
@@ -64,29 +76,23 @@ public class MapGenerator : MonoBehaviour {
     //-x to +x == left col to right col
     //+y to -y == top row to bot row
     private void GenerateMap(string[] mapFile, int height, int width){
+        _grid = new List<GameObject>();
         for(int i = 0; i < height; i++){
-            // string s = "";
             for(int j = 0; j < width; j++){
-                switch(mapFile[i][j]){
-                    case '@':
-                        var x = Instantiate(outOfBoundsBlock, transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
-                        x.transform.parent = this.transform;
-                        break;
-                    case 'T':
-                        var y = Instantiate(treeBlock, transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
-                        y.transform.parent = this.transform;
-                        break;
-                    case '.':
-                        var z = Instantiate(walkableBlock, transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
-                        z.transform.parent = this.transform;
-                        break;
-                }
-                // s += mapFile[i][j];
+                var placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i + Vector2.right * j, Quaternion.identity);
+                placedBlock.transform.parent = this.transform;
+                _grid.Append(placedBlock);
 
             }
-            // Debug.Log(s);
         }
-      
+    }
+
+    private void DestroyMap(){
+        foreach(GameObject go in _grid){
+            Destroy(go);
+        }
+        
     }
 
 }
+

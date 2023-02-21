@@ -154,8 +154,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkableBlock: {fileID: 1286373881511377035, guid: d8f58d3f384ad1446b35e467cddda695, type: 3}
   treeBlock: {fileID: 7145446658595849704, guid: fa68a9075be74174b994625d68c92b4b, type: 3}
-  outOfBoundsBlock: {fileID: 0}
+  outOfBoundsBlock: {fileID: 5282140198743775170, guid: a004338cd9bfc13418cffc24af84dfdb, type: 3}
   blockSize: 1
+  mapID: 0
 --- !u!4 &92349288
 Transform:
   m_ObjectHideFlags: 0
