@@ -13,11 +13,11 @@ public class UIManager : MonoBehaviour {
     }
 
     public void OnMapGenerate(){
-        _mapGenerator.DestroyMap();
+        // _mapGenerator.ClearMap();
         _mapGenerator.GenerateMapFromFile(dropdown.options[dropdown.value].text); //todo coupling UI text to logic a nono?
     }
     
-    public void OnMapDelete() => _mapGenerator.DestroyMap();
+    // public void OnMapDelete() => _mapGenerator.ClearMap();
 
     public void OnReset(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

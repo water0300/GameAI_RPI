@@ -22,17 +22,19 @@ public class MapGeneratorEditor : Editor {
             OnMapGenerate(filename);
         }
 
-        if(MapGenerator.MapData.MapBlocks.Count > 0 && GUILayout.Button($"Delete {filename}")){
-            OnMapDelete();
+        if(MapGenerator.MapData != null && MapGenerator.MapData.MapBlocks.Count > 0 && GUILayout.Button($"Clear {filename}")){
+            OnMapClear(); 
+        } else if(MapGenerator.MapData != null && GUILayout.Button($"asdfasdf { MapGenerator.MapData.MapBlocks.Count}")){
+
         }
     }
 
     private void OnMapGenerate(string filename){
-        MapGenerator.DestroyMap();
+        MapGenerator.ClearMap();
         MapGenerator.GenerateMapFromFile(filename); //todo coupling UI text to logic a nono?
-    }
+    } 
     
-    private void OnMapDelete() => MapGenerator.DestroyMap();
+    private void OnMapClear() => MapGenerator.ClearMap();
 
 }
 

@@ -7,14 +7,6 @@ using System.Linq;
 using UnityEditor;
 
 public class MapGenerator : MonoBehaviour {
-    public struct MapProperties {
-        public int height;
-        public int width;
-        public MapProperties(int height, int width) {
-            this.height = height;
-            this.width = width;
-        }
-    }
     
     //assumption: these three objects are the same size?
     [Header("Prefabs")]
@@ -24,8 +16,10 @@ public class MapGenerator : MonoBehaviour {
 
     [Header("Props")]
     public float blockSize = 1f; 
-    public MapData MapData {get; private set; } 
+    [field: SerializeField] public MapData MapData {get; private set; } 
     private Dictionary<char, GameObject> blockMap;
+
+    
 
     private void GenerateBlockPrefabMap(){
         blockMap = new Dictionary<char, GameObject>(){
@@ -47,7 +41,7 @@ public class MapGenerator : MonoBehaviour {
         
         //parse header
         string[] fileHeader = fileLines.Take(3).ToArray();
-        MapProperties mapProps = HandleMapHeader(fileHeader);
+        MapDimensions mapProps = HandleMapHeader(fileHeader);
 
         //deploy map
         string[] file = fileLines.Skip(4).ToArray();
@@ -58,8 +52,8 @@ public class MapGenerator : MonoBehaviour {
     }
 
     //assumption - map is of right format
-    private MapProperties HandleMapHeader(string[] header){
-        return new MapProperties(
+    private MapDimensions HandleMapHeader(string[] header){
+        return new MapDimensions(
             Int32.Parse(header[1].Split()[1]),
             Int32.Parse(header[2].Split()[1])
         );
@@ -72,8 +66,9 @@ public class MapGenerator : MonoBehaviour {
         if(blockMap == null){
             GenerateBlockPrefabMap();
         }
-        if(MapData != null){
-            MapData = ScriptableObject.CreateInstance<MapData>(); 
+        if(MapData == null){
+            Debug.Log("grid was null (GENERATE MAP)");
+            MapData = new MapData(); 
         }
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
@@ -81,23 +76,29 @@ public class MapGenerator : MonoBehaviour {
                 // Debug.Log(blockMap);
                 // GameObject placedBlock = PrefabUtility.InstantiatePrefab(blockMap[mapFile[i][j]]) as GameObject;
                 // placedBlock.transform.position = transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize;
-                placedBlock.transform.parent = this.transform;
+                placedBlock.transform.parent = this.transform; 
                 MapData.AddMapBlock(placedBlock);
 
             }
         }
     }
 
-    #if UNITY_EDITOR
-    public void DestroyMap(){
+    private void Start() {
+        Debug.Log(MapData == null);
+    }
+
+    public void ClearMap(){
         if(MapData == null){
-            Debug.Log("grid was null");
+            Debug.Log("grid was null (DELETION)");
             return;
         } else {
-            MapData.DestroyMapBlocks();
+            foreach(GameObject go in MapData.MapBlocks){
+                DestroyImmediate(go);
+            }
+            MapData.ClearBlocks(); 
         }
         
     }
-    #endif
+
 }
 
