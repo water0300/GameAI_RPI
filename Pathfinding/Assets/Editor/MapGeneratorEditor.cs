@@ -22,11 +22,13 @@ public class MapGeneratorEditor : Editor {
             OnMapGenerate(filename);
         }
 
-        if(MapGenerator.MapData != null && MapGenerator.MapData.MapBlocks.Count > 0 && GUILayout.Button($"Clear {filename}")){
+        if(MapGenerator.MapBlockGrid.Count > 0 && GUILayout.Button($"Clear {filename}")){
             OnMapClear(); 
-        } else if(MapGenerator.MapData != null && GUILayout.Button($"asdfasdf { MapGenerator.MapData.MapBlocks.Count}")){
+        } 
 
-        }
+        if( (MapGenerator.MapBlockGrid != null && MapGenerator.MapBlockGrid.Count == 0) && GUILayout.Button($"Purge {filename}")){
+            OnMapPurge(); 
+        } 
     }
 
     private void OnMapGenerate(string filename){
@@ -35,6 +37,6 @@ public class MapGeneratorEditor : Editor {
     } 
     
     private void OnMapClear() => MapGenerator.ClearMap();
-
+    private void OnMapPurge() => MapGenerator.PurgeMap();
 }
 

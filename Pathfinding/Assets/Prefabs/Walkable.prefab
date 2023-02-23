@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1286373881511377033}
   - component: {fileID: 1286373881511377032}
+  - component: {fileID: 8324216290032920296}
   m_Layer: 0
   m_Name: Walkable
   m_TagString: Untagged
@@ -84,3 +85,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8324216290032920296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286373881511377035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9db564895ad71654ebc3eba597912e4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isWalkable: 1

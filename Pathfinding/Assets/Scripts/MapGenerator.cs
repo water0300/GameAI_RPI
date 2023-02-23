@@ -8,21 +8,27 @@ using UnityEditor;
 
 public class MapGenerator : MonoBehaviour {
     
-    //assumption: these three objects are the same size?
+    [Header("In Scene Refs")]
+    public Transform nodeParent;
+
     [Header("Prefabs")]
-    public GameObject walkableBlock;
-    public GameObject treeBlock;
-    public GameObject outOfBoundsBlock;
+    public Block walkableBlock;
+    public Block treeBlock;
+    public Block outOfBoundsBlock;
+    public GraphNode graphNodePrefab;
+
 
     [Header("Props")]
     public float blockSize = 1f; 
-    [field: SerializeField] public MapData MapData {get; private set; } 
-    private Dictionary<char, GameObject> blockMap;
+    public int tileSize = 3;
+    private Dictionary<char, Block> _blockMap;
 
-    
+    [field: SerializeField] public MapDimensions Dimensions {get; set; }
+    [field: SerializeField] public List<List<Block>> MapBlockGrid {get; private set; } = new List<List<Block>>();
+    [field: SerializeField] public MapData MapData {get; private set; } 
 
     private void GenerateBlockPrefabMap(){
-        blockMap = new Dictionary<char, GameObject>(){
+        _blockMap = new Dictionary<char, Block>(){
             {'@', outOfBoundsBlock},
             {'T', treeBlock},
             {'.', walkableBlock}, 
@@ -38,16 +44,10 @@ public class MapGenerator : MonoBehaviour {
             return false;
         } 
         string[] fileLines = File.ReadAllLines(filePath);
-        
-        //fill in data
-        if(MapData == null){
-            Debug.Log("grid was null (GENERATE MAP)");
-            MapData = new MapData(); 
-        }
 
         //parse header
         string[] fileHeader = fileLines.Take(3).ToArray();
-        MapData.Dimensions = HandleMapHeader(fileHeader);
+        Dimensions = HandleMapHeader(fileHeader);
 
         //deploy map
         string[] file = fileLines.Skip(4).ToArray();
@@ -69,34 +69,45 @@ public class MapGenerator : MonoBehaviour {
     //-x to +x == left col to right col
     //+y to -y == top row to bot row
     private void GenerateMap(string[] mapFile){
-        if(blockMap == null){
+        if(_blockMap == null){
             GenerateBlockPrefabMap();
         }
-        for(int i = 0; i < MapData.Dimensions.height; i++){
-            for(int j = 0; j < MapData.Dimensions.width; j++){
-                GameObject placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize, Quaternion.identity);
+        for(int i = 0; i < Dimensions.height; i++){
+            MapBlockGrid.Add(new List<Block>());
+            for(int j = 0; j < Dimensions.width; j++){
+                Block placedBlock = Instantiate(_blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize, Quaternion.identity);
                 placedBlock.transform.parent = this.transform; 
-                MapData.AddMapBlock(placedBlock);
+                MapBlockGrid[i].Add(placedBlock);
 
             }
         }
     }
 
     private void Start() {
-        Debug.Log(MapData == null);
+        MapData = new MapData();
+        // Debug.Log(MapBlockGrid == null);
+        MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }
 
     public void ClearMap(){
-        if(MapData == null){
+        if(MapBlockGrid.Count == 0){
             Debug.Log("grid was null (DELETION)");
             return;
         } else {
-            foreach(GameObject go in MapData.MapBlocks){
-                DestroyImmediate(go);
+            foreach(var goList in MapBlockGrid){
+                foreach(Block go in goList){
+                    DestroyImmediate(go.gameObject);
+                }
             }
-            MapData.ClearBlocks(); 
+            MapBlockGrid.Clear(); 
         }
         
+    }
+
+    public void PurgeMap(){
+        while(transform.childCount > 0){
+            DestroyImmediate(transform.GetChild(0).gameObject);
+        }
     }
 
 }
