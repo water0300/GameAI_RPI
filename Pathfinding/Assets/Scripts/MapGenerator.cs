@@ -39,13 +39,19 @@ public class MapGenerator : MonoBehaviour {
         } 
         string[] fileLines = File.ReadAllLines(filePath);
         
+        //fill in data
+        if(MapData == null){
+            Debug.Log("grid was null (GENERATE MAP)");
+            MapData = new MapData(); 
+        }
+
         //parse header
         string[] fileHeader = fileLines.Take(3).ToArray();
-        MapDimensions mapProps = HandleMapHeader(fileHeader);
+        MapData.Dimensions = HandleMapHeader(fileHeader);
 
         //deploy map
         string[] file = fileLines.Skip(4).ToArray();
-        GenerateMap(file, mapProps.height, mapProps.width);
+        GenerateMap(file);
 
         return true;
         
@@ -62,20 +68,13 @@ public class MapGenerator : MonoBehaviour {
 
     //-x to +x == left col to right col
     //+y to -y == top row to bot row
-    private void GenerateMap(string[] mapFile, int height, int width){
+    private void GenerateMap(string[] mapFile){
         if(blockMap == null){
             GenerateBlockPrefabMap();
         }
-        if(MapData == null){
-            Debug.Log("grid was null (GENERATE MAP)");
-            MapData = new MapData(); 
-        }
-        for(int i = 0; i < height; i++){
-            for(int j = 0; j < width; j++){
+        for(int i = 0; i < MapData.Dimensions.height; i++){
+            for(int j = 0; j < MapData.Dimensions.width; j++){
                 GameObject placedBlock = Instantiate(blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize, Quaternion.identity);
-                // Debug.Log(blockMap);
-                // GameObject placedBlock = PrefabUtility.InstantiatePrefab(blockMap[mapFile[i][j]]) as GameObject;
-                // placedBlock.transform.position = transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize;
                 placedBlock.transform.parent = this.transform; 
                 MapData.AddMapBlock(placedBlock);
 
