@@ -22,11 +22,15 @@ public class MapGeneratorEditor : Editor {
             OnMapGenerate(filename);
         }
 
-        if(MapGenerator.MapBlockGrid.Count > 0 && GUILayout.Button($"Clear {filename}")){
+        if(MapGenerator.MapData != null && MapGenerator.MapData.MapBlockGrid != null && MapGenerator.MapData.MapBlockGrid.Count > 0 && GUILayout.Button($"Clear {filename}")){
             OnMapClear(); 
         } 
 
-        if( (MapGenerator.MapBlockGrid != null && MapGenerator.MapBlockGrid.Count == 0) && GUILayout.Button($"Purge {filename}")){
+        if(MapGenerator.MapData != null){
+            Debug.Log(MapGenerator.MapData.MapBlockGrid == null); 
+        }
+
+        if( GUILayout.Button($"Purge")){
             OnMapPurge(); 
         } 
     }
@@ -34,9 +38,9 @@ public class MapGeneratorEditor : Editor {
     private void OnMapGenerate(string filename){
         MapGenerator.ClearMap();
         MapGenerator.GenerateMapFromFile(filename); //todo coupling UI text to logic a nono?
-    } 
+    }  
     
     private void OnMapClear() => MapGenerator.ClearMap();
-    private void OnMapPurge() => MapGenerator.PurgeMap();
+    private void OnMapPurge() => MapGenerator.PurgeMapData();
 }
 

@@ -23,8 +23,6 @@ public class MapGenerator : MonoBehaviour {
     public int tileSize = 3;
     private Dictionary<char, Block> _blockMap;
 
-    [field: SerializeField] public MapDimensions Dimensions {get; set; }
-    [field: SerializeField] public List<List<Block>> MapBlockGrid {get; private set; } = new List<List<Block>>();
     [field: SerializeField] public MapData MapData {get; private set; } 
 
     private void GenerateBlockPrefabMap(){
@@ -45,9 +43,11 @@ public class MapGenerator : MonoBehaviour {
         } 
         string[] fileLines = File.ReadAllLines(filePath);
 
+        MapData = new MapData();
+
         //parse header
         string[] fileHeader = fileLines.Take(3).ToArray();
-        Dimensions = HandleMapHeader(fileHeader);
+        MapData.Dimensions = HandleMapHeader(fileHeader);
 
         //deploy map
         string[] file = fileLines.Skip(4).ToArray();
@@ -72,42 +72,46 @@ public class MapGenerator : MonoBehaviour {
         if(_blockMap == null){
             GenerateBlockPrefabMap();
         }
-        for(int i = 0; i < Dimensions.height; i++){
-            MapBlockGrid.Add(new List<Block>());
-            for(int j = 0; j < Dimensions.width; j++){
+        MapData.MapBlockGrid = new List<List<Block>>();
+        for(int i = 0; i < MapData.Dimensions.height; i++){
+            MapData.MapBlockGrid.Add(new List<Block>());
+            for(int j = 0; j < MapData.Dimensions.width; j++){
                 Block placedBlock = Instantiate(_blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize, Quaternion.identity);
                 placedBlock.transform.parent = this.transform; 
-                MapBlockGrid[i].Add(placedBlock);
+                MapData.MapBlockGrid[i].Add(placedBlock);
 
             }
-        }
+        } 
     }
 
     private void Start() {
         MapData = new MapData();
         // Debug.Log(MapBlockGrid == null);
-        MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
+        // MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }
 
     public void ClearMap(){
-        if(MapBlockGrid.Count == 0){
-            Debug.Log("grid was null (DELETION)");
+        if(MapData.MapBlockGrid == null){
+            Debug.Log("mapdata grid was null, no deletion neccesary");
             return;
         } else {
-            foreach(var goList in MapBlockGrid){
+            foreach(var goList in MapData.MapBlockGrid){
                 foreach(Block go in goList){
                     DestroyImmediate(go.gameObject);
                 }
+                goList.Clear();
             }
-            MapBlockGrid.Clear(); 
+            MapData.MapBlockGrid.Clear(); 
         }
         
     }
 
-    public void PurgeMap(){
+    public void PurgeMapData(){
         while(transform.childCount > 0){
             DestroyImmediate(transform.GetChild(0).gameObject);
         }
+        MapData = null;
+        Debug.Log("Purged!");
     }
 
 }

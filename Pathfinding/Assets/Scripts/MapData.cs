@@ -5,7 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class MapData {
     
-    
+    [field: SerializeField] public List<List<Block>> MapBlockGrid {get; set; }
+    [field: SerializeField] public MapDimensions Dimensions {get; set; }
+
+
     public Dictionary<GraphNode, List<GraphNode>> AdjList {get; private set; } = new Dictionary<GraphNode, List<GraphNode>>();
 
     public void GenerateTiles(List<List<Block>> grid, MapDimensions dimensions, int tilesize, GraphNode nodePrefab, Transform nodeParent){
