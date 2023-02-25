@@ -27,7 +27,7 @@ public class MapGeneratorEditor : Editor {
         } 
 
         if(MapGenerator.MapData != null){
-            Debug.Log(MapGenerator.MapData.MapBlockList == null); 
+            // Debug.Log(MapGenerator.MapData.MapBlockList == null); 
         }
 
         if( GUILayout.Button($"Purge")){

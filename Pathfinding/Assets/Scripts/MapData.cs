@@ -11,46 +11,66 @@ public class MapData {
 
     public Dictionary<GraphNode, List<GraphNode>> AdjList {get; private set; } = new Dictionary<GraphNode, List<GraphNode>>();
 
-    public void GenerateTiles(List<List<Block>> grid, MapDimensions dimensions, int tilesize, GraphNode nodePrefab, Transform nodeParent){
+    public Block MapBlockGet(int row, int col){
+        return MapBlockList[row * Dimensions.width + col];
+    }
 
-        int rows = Mathf.CeilToInt((float) dimensions.height / (float) tilesize);
-        int cols = Mathf.CeilToInt((float) dimensions.width / (float) tilesize);
+    public void GenerateTiles(int tilesize, GraphNode nodePrefab, Transform nodeParent){
+
+        int rows = Mathf.CeilToInt((float) Dimensions.height / (float) tilesize);
+        int cols = Mathf.CeilToInt((float) Dimensions.width / (float) tilesize);
+        Debug.Log($"Expected dimensions: {rows} rows, {cols} cols, {rows * cols} total (possible) nodes");
         GraphNode[,] nodeMatrix = new GraphNode[rows,cols];
 
-        for(int offsetRow = 0; offsetRow < rows; offsetRow += tilesize){
-            for(int offsetCol = 0; offsetCol < cols; offsetCol += tilesize){
+        int walkable = 0;
+        int notwalk = 0;
+        for(int offsetRow = 0; offsetRow < Dimensions.height; offsetRow += tilesize){
+            for(int offsetCol = 0; offsetCol < Dimensions.width; offsetCol += tilesize){
+                Debug.Log($"Curr Offset: {offsetRow}, {offsetCol}, < {Dimensions.height}, {Dimensions.width}");
 
                 //only get the node if walkable
-                if(IsWalkable(grid, dimensions, new MapDimensions(offsetRow, offsetCol), tilesize)){
+                // if(IsWalkable(offsetRow, offsetCol, tilesize)){
                     //get average position
                     Vector2 nodePos = Vector2.zero;
-                    for(int k = offsetRow; k < offsetRow + tilesize && offsetRow + tilesize < dimensions.height; k++){
-                        for(int l = offsetCol; l < offsetCol + tilesize && offsetRow + tilesize < dimensions.width; l++){
-                            nodePos += grid[k][l].transform.position.IgnoreZ();
+                    int blockCounter = 0;
+                    for(int k = offsetRow; k < Dimensions.height && k - offsetRow < tilesize; k++){
+                        for(int l = offsetCol; l < Dimensions.width && l - offsetCol < tilesize; l++){
+                            Debug.Log(MapBlockGet(k, l).transform.position.IgnoreZ());
+                            nodePos += MapBlockGet(k, l).transform.position.IgnoreZ();
+                            blockCounter++;
                         } 
                     }
-                    nodePos /= tilesize * tilesize;
+                    nodePos /= blockCounter;
 
                     GraphNode node = Object.Instantiate(nodePrefab, nodePos, Quaternion.identity);
                     node.transform.parent = nodeParent;
-                    nodeMatrix[offsetRow, offsetCol] = node;
-                }
+                    nodeMatrix[offsetRow/tilesize, offsetCol/tilesize] = node;
+                    walkable++;
+                // } else {
+                    // notwalk++;
+                // }
+
+                // return;
             }
+            // return;
         }
-    
+        Debug.Log($"walkable: {walkable}, not: {notwalk}");
+
 
     }
 
     //check if all tiles are walkable or not (i.e. if we can reduce tile size)
-    private bool IsWalkable(List<List<Block>> grid, MapDimensions dimensions, MapDimensions offset, int tilesize){
-        for(int i = offset.height; i < offset.height + tilesize && i + tilesize < dimensions.height; i++){
-            for(int j = offset.width; j < offset.width + tilesize && j + tilesize < dimensions.width; j++){
-                Debug.Log($"i: {i}, j: {j}");
-                if(!grid[i][j].isWalkable){
-                    return false;
-                }
-            }
-        }
+    private bool IsWalkable(int rowOffset, int colOffset, int tilesize){
+        // Debug.Log($"Curr Offset: {rowOffset}, {colOffset}, con: {rowOffset + tilesize}, {colOffset + tilesize}");
+
+        // for(int i = rowOffset; i < Dimensions.height && i < rowOffset + tilesize; i++){
+        //     for(int j = colOffset; j < Dimensions.width && i < colOffset + tilesize; j++){
+        //         Debug.Log($"Check Offset: {i}, {j}, < {Dimensions.height}, {Dimensions.height}");
+        //         if(!MapBlockGet(i, j).isWalkable){
+        //             return false;
+        //         }
+        //     }
+        // }
 
         return true;
     }

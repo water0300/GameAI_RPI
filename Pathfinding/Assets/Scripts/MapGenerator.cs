@@ -83,7 +83,7 @@ public class MapGenerator : MonoBehaviour {
     }
 
     private void Start() {
-        MapData = new MapData();
+        MapData.GenerateTiles(tileSize, graphNodePrefab, nodeParent);
         // Debug.Log(MapBlockGrid == null);
         // MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }
