@@ -22,12 +22,12 @@ public class MapGeneratorEditor : Editor {
             OnMapGenerate(filename);
         }
 
-        if(MapGenerator.MapData != null && MapGenerator.MapData.MapBlockGrid != null && MapGenerator.MapData.MapBlockGrid.Count > 0 && GUILayout.Button($"Clear {filename}")){
+        if(MapGenerator.MapData != null && MapGenerator.MapData.MapBlockList != null && MapGenerator.MapData.MapBlockList.Count > 0 && GUILayout.Button($"Clear {filename}")){
             OnMapClear(); 
         } 
 
         if(MapGenerator.MapData != null){
-            Debug.Log(MapGenerator.MapData.MapBlockGrid == null); 
+            Debug.Log(MapGenerator.MapData.MapBlockList == null); 
         }
 
         if( GUILayout.Button($"Purge")){

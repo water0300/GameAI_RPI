@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class MapData {
     
-    [field: SerializeField] public List<List<Block>> MapBlockGrid {get; set; }
+    [field: SerializeField] public List<Block> MapBlockList {get; set; } = new List<Block>();
     [field: SerializeField] public MapDimensions Dimensions {get; set; }
 
 
@@ -27,7 +27,7 @@ public class MapData {
                     for(int k = offsetRow; k < offsetRow + tilesize && offsetRow + tilesize < dimensions.height; k++){
                         for(int l = offsetCol; l < offsetCol + tilesize && offsetRow + tilesize < dimensions.width; l++){
                             nodePos += grid[k][l].transform.position.IgnoreZ();
-                        }
+                        } 
                     }
                     nodePos /= tilesize * tilesize;
 

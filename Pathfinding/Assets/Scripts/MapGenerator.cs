@@ -72,13 +72,11 @@ public class MapGenerator : MonoBehaviour {
         if(_blockMap == null){
             GenerateBlockPrefabMap();
         }
-        MapData.MapBlockGrid = new List<List<Block>>();
         for(int i = 0; i < MapData.Dimensions.height; i++){
-            MapData.MapBlockGrid.Add(new List<Block>());
             for(int j = 0; j < MapData.Dimensions.width; j++){
                 Block placedBlock = Instantiate(_blockMap[mapFile[i][j]], transform.position.IgnoreZ() + Vector2.down * i * blockSize + Vector2.right * j  * blockSize, Quaternion.identity);
                 placedBlock.transform.parent = this.transform; 
-                MapData.MapBlockGrid[i].Add(placedBlock);
+                MapData.MapBlockList.Add(placedBlock);
 
             }
         } 
@@ -91,17 +89,14 @@ public class MapGenerator : MonoBehaviour {
     }
 
     public void ClearMap(){
-        if(MapData.MapBlockGrid == null){
+        if(MapData.MapBlockList == null){
             Debug.Log("mapdata grid was null, no deletion neccesary");
             return;
         } else {
-            foreach(var goList in MapData.MapBlockGrid){
-                foreach(Block go in goList){
-                    DestroyImmediate(go.gameObject);
-                }
-                goList.Clear();
+            foreach(Block go in MapData.MapBlockList){
+                DestroyImmediate(go.gameObject);
             }
-            MapData.MapBlockGrid.Clear(); 
+            MapData.MapBlockList.Clear(); 
         }
         
     }
