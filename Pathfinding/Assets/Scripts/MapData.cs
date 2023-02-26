@@ -81,6 +81,8 @@ public class MapData {
                     continue;
                 }
 
+                AdjList.Add(nodeMatrix[i,j]);
+
                 List<GraphNode> neighborNodes = new List<GraphNode>();
                 foreach((int, int) direction in directions){
                     int row = direction.Item1 + i;
@@ -97,7 +99,6 @@ public class MapData {
                         continue;
                     }
 
-                    AdjList.Add(nodeMatrix[i,j]);
                     nodeMatrix[i,j].Children.Add(nodeMatrix[row, col]);
                 }
 
