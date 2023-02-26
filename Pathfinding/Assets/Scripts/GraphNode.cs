@@ -3,5 +3,5 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GraphNode : MonoBehaviour {
-    [field: SerializeField] public List<Block> AssignedBlocks {get; set; } 
+    [field: SerializeField] public List<GraphNode> Children {get; set; } = new List<GraphNode>();
 }
