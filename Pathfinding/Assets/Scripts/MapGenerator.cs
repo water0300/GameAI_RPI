@@ -88,6 +88,16 @@ public class MapGenerator : MonoBehaviour {
         // MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }
 
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.blue;
+        if(MapData != null){
+            foreach(var edge in MapData.edges){
+                Gizmos.DrawLine(edge.Item1, edge.Item2);
+            }
+        }
+
+    }
+
     public void ClearMap(){
         if(MapData.MapBlockList == null){
             Debug.Log("mapdata grid was null, no deletion neccesary");

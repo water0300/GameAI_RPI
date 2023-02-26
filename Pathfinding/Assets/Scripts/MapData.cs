@@ -73,6 +73,7 @@ public class MapData {
     };
 
     
+    public List<(Vector3, Vector3)> edges = new List<(Vector3, Vector3)>();
     private void SetupAdjList(GraphNode[,] nodeMatrix){
         for(int i = 0; i < nodeMatrix.GetLength(0); i++){
             for(int j = 0; j < nodeMatrix.GetLength(1); j++){
@@ -99,16 +100,15 @@ public class MapData {
                         continue;
                     }
 
+                    //established a connection
                     nodeMatrix[i,j].Children.Add(nodeMatrix[row, col]);
+                    edges.Add((nodeMatrix[i,j].transform.position, nodeMatrix[row, col].transform.position));
+                    //temporarily draw list
                 }
 
             }
         }
     }
-
-    // private void 
-
-    //check if all tiles are walkable or not (i.e. if we can reduce tile size)
     private bool IsWalkable(int offsetRow, int offsetCol, int tilesize){
         // Debug.Log($"Curr Offset: {rowOffset}, {colOffset}, con: {rowOffset + tilesize}, {colOffset + tilesize}");
         int walkable = 0;
@@ -125,6 +125,12 @@ public class MapData {
         }
 
         return walkable > notwalkable;
+    }
+
+
+
+    public bool AStar(){
+        return true;
     }
 
 }

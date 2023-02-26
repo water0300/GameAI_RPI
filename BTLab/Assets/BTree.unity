@@ -1636,7 +1636,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524558653}
   m_LocalRotation: {x: -0.22950613, y: 0.34205493, z: -0.08654347, w: -0.9071029}
-  m_LocalPosition: {x: 22.542892, y: 19.594994, z: -4.3823223}
+  m_LocalPosition: {x: 34.15, y: 23.92, z: -23.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2006,7 +2006,7 @@ MonoBehaviour:
   van: {fileID: 716975898}
   frontdoor: {fileID: 1791870521}
   backdoor: {fileID: 919599686}
-  money: 800
+  money: 239
 --- !u!1 &716268924
 GameObject:
   m_ObjectHideFlags: 0
