@@ -20,7 +20,7 @@ public class MapGenerator : MonoBehaviour {
 
     [Header("Props")]
     public float blockSize = 1f; 
-    public int tileSize = 3;
+    public int tileSize = 2;
     private Dictionary<char, Block> _blockMap;
 
     [field: SerializeField] public MapData MapData {get; private set; } 

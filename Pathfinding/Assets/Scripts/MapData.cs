@@ -137,7 +137,7 @@ public class MapData {
         }
     }
 
-    public List<GraphNode> FindPath(GraphNode startNode, GraphNode targetNode){
+    public List<GraphNode> FindPath(GraphNode startNode, GraphNode targetNode, float HWeight, bool isEuler){
         ResetGH();
 
         List<GraphNode> toSearch = new List<GraphNode>() {startNode };
@@ -168,6 +168,7 @@ public class MapData {
                     currentPathNode.IsPath = true;
                 }
 
+                path.Reverse();
                 return path;
             }
 
@@ -181,7 +182,7 @@ public class MapData {
                     neighbor.Connection = current;
 
                     if(!inSearch){
-                        neighbor.H = neighbor.GetManhattan(targetNode);
+                        neighbor.H = (isEuler ? neighbor.GetEuler(targetNode) : neighbor.GetManhattan(targetNode)) * HWeight;
                         toSearch.Add(neighbor);
                     }
                 }
