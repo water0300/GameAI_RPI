@@ -21,7 +21,7 @@ public class GraphNode : MonoBehaviour {
     }
 
     void Update(){
-        if(G == 0 && H == 0){
+        if(G == 0){
             text.text = $"Start";
             _renderer.color = Color.magenta;
         } else if (G == -1 && H == -1){
@@ -29,15 +29,15 @@ public class GraphNode : MonoBehaviour {
             _renderer.color = Color.grey;
         } else if (H == 0){
             text.text = $"End";
-            _renderer.color = Color.cyan;
+            _renderer.color = Color.magenta;
         } else if(IsPath) {
-            text.text = $"G={Math.Round(G, 2)}\nH={Math.Round(H, 2)}";
+            text.text = $"G={Math.Round(G, 2)}\nH:{Math.Round(H, 2)}";
 
             _renderer.color = Color.green;
         } else {
-            text.text = $"G={Math.Round(G, 2)}\nH={Math.Round(H, 2)}";
+            text.text = $"G={Math.Round(G, 2)}\nH:{Math.Round(H, 2)}";
 
-            _renderer.color = Color.blue;
+            _renderer.color = Color.cyan;
         }
 
     }

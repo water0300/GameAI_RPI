@@ -9,7 +9,8 @@ using UnityEditor;
 public class MapGenerator : MonoBehaviour {
     
     [Header("In Scene Refs")]
-    public Transform nodeParent;
+    public Transform tileParent;
+    public Transform waypointParent;
 
     [Header("Prefabs")]
     public Block walkableBlock;
@@ -83,7 +84,7 @@ public class MapGenerator : MonoBehaviour {
     }
 
     private void Start() {
-        MapData.GenerateTiles(tileSize, graphNodePrefab, nodeParent);
+        MapData.GenerateTiles(tileSize, graphNodePrefab, tileParent);
         // Debug.Log(MapBlockGrid == null);
         // MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }

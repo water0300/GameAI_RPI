@@ -9,7 +9,11 @@ public class MapData {
     [field: SerializeField] public List<Block> MapBlockList {get; set; } = new List<Block>();
     [field: SerializeField] public MapDimensions Dimensions {get; set; }
 
-    public List<GraphNode> AdjList = new List<GraphNode>();
+    public List<GraphNode> TileAdjList = new List<GraphNode>();
+    public List<GraphNode> WaypointAdjList = new List<GraphNode>();
+    //atm:
+        //manually add to this list
+        //disable parent
 
     public Block MapBlockGet(int row, int col){
         return MapBlockList[row * Dimensions.width + col];
@@ -58,7 +62,7 @@ public class MapData {
         Debug.Log($"walkable: {walkable}, not: {notwalk}");
 
         //setup the adj list
-        SetupAdjList(nodeMatrix);
+        SetupTileAdjList(nodeMatrix);
 
     }
 
@@ -75,7 +79,7 @@ public class MapData {
 
     
     public List<(Vector3, Vector3)> edges = new List<(Vector3, Vector3)>();
-    private void SetupAdjList(GraphNode[,] nodeMatrix){
+    private void SetupTileAdjList(GraphNode[,] nodeMatrix){
         for(int i = 0; i < nodeMatrix.GetLength(0); i++){
             for(int j = 0; j < nodeMatrix.GetLength(1); j++){
                 //check all 8 directions
@@ -83,7 +87,7 @@ public class MapData {
                     continue;
                 }
 
-                AdjList.Add(nodeMatrix[i,j]);
+                TileAdjList.Add(nodeMatrix[i,j]);
 
                 List<GraphNode> neighborNodes = new List<GraphNode>();
                 foreach((int, int) direction in directions){
@@ -129,22 +133,37 @@ public class MapData {
     }
 
 
-    private void ResetGH(){
-        foreach(GraphNode node in AdjList){
+    public void ResetGH(){
+        foreach(GraphNode node in TileAdjList){
+            node.G = -1;
+            node.H = -1;
+            node.IsPath = false;
+        }
+        foreach(GraphNode node in WaypointAdjList){
             node.G = -1;
             node.H = -1;
             node.IsPath = false;
         }
     }
 
-    public void DeleteNode(GraphNode node){
+    public void DeleteNode(GraphNode node, bool isTile){
         //delete from children
-        foreach(GraphNode neighbor in AdjList){
-            neighbor.Children.Remove(node);
-        }
-        AdjList.Remove(node);
+        if(isTile){
+            foreach(GraphNode neighbor in TileAdjList){
+                neighbor.Children.Remove(node);
+            }
+            TileAdjList.Remove(node);
 
-        Object.Destroy(node);
+            node.gameObject.SetActive(false);
+        } else {
+            foreach(GraphNode neighbor in WaypointAdjList){
+                neighbor.Children.Remove(node);
+            }
+            WaypointAdjList.Remove(node);
+
+            node.gameObject.SetActive(false);
+        }
+
         //delete from adj list
         //destroy
 
@@ -205,27 +224,6 @@ public class MapData {
         return null;
     }
 
-    // private GraphNode GetMinNode(HashSet<GraphNode> open, GraphNode startNode){
 
-    // }
-
-    // private float GetFCost(Vector2 startPos, Vector2 endPos, float pasthCost, bool isEuler){
-    //     return GetGCost(startPos, endPos) + GetHCost(startPos, endPos, isEuler);
-    // }
-
-    private float GetGCost(Vector2 startPos, Vector2 endPos, float prevCost, float pathCost = 1){
-        // return true;
-        return 0f;
-    }
- 
-    //euler vs chebyshev
-    private float GetHCost(Vector2 startPos, Vector2 endPos, bool isEuler){
-        if(isEuler){
-            return Vector3.Distance(startPos, endPos);
-        } else {
-            return Mathf.Max(Mathf.Abs(endPos.x - startPos.x), Mathf.Abs(endPos.y - startPos.y));
-
-        }   
-    }
 
 }
