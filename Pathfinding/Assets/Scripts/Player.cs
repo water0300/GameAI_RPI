@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
 
     public GraphNode currStartNode = null;
     public GraphNode currEndNode = null;
+
+    bool startOrEndPlace = true; //true == start, false == end;
     
 
     private void Start() {
@@ -22,17 +24,26 @@ public class Player : MonoBehaviour
     }
     void Update(){
         if(Input.GetMouseButtonDown(0)){
-            currStartNode = GetNodeAtMousePos();
-            if(currStartNode != null){
-                currStartNode.H = 0;
-                currStartNode.G = 0;
+            if(startOrEndPlace){
+                currStartNode = GetNodeAtMousePos();
+                if(currStartNode != null){
+                    currStartNode.H = 0;
+                    currStartNode.G = 0;
+                }
+            } else {
+                currEndNode = GetNodeAtMousePos();
+                if(currEndNode != null){
+                    currEndNode.H = 0;
+                }
             }
+            startOrEndPlace = !startOrEndPlace;
+
         }
         
         if(Input.GetMouseButtonDown(1)){
-            currEndNode = GetNodeAtMousePos();
-            if(currEndNode != null){
-                currEndNode.H = 0;
+            GraphNode node = GetNodeAtMousePos();
+            if(node != null){
+                _generator.MapData.DeleteNode(node);
             }
         }
 

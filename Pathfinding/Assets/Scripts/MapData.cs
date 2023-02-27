@@ -137,6 +137,19 @@ public class MapData {
         }
     }
 
+    public void DeleteNode(GraphNode node){
+        //delete from children
+        foreach(GraphNode neighbor in AdjList){
+            neighbor.Children.Remove(node);
+        }
+        AdjList.Remove(node);
+
+        Object.Destroy(node);
+        //delete from adj list
+        //destroy
+
+    }
+
     public List<GraphNode> FindPath(GraphNode startNode, GraphNode targetNode, float HWeight, bool isEuler){
         ResetGH();
 
