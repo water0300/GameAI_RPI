@@ -88,6 +88,10 @@ public class MapGenerator : MonoBehaviour {
         // MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }
 
+    private void Update() {
+
+    }
+
     private void OnDrawGizmos() {
         Gizmos.color = Color.blue;
         if(MapData != null){

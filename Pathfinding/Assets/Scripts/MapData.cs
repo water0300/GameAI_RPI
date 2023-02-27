@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class MapData {
@@ -62,14 +63,14 @@ public class MapData {
     }
 
     private static (int, int)[] directions = new (int, int)[]{
-        (-1,-1),
+        // (-1,-1),
         (-1,0),
-        (-1,1),
+        // (-1,1),
         (0,-1),
         (0,1),
-        (1,-1),
+        // (1,-1),
         (1,0),
-        (1,1)
+        // (1,1)
     };
 
     
@@ -128,14 +129,66 @@ public class MapData {
     }
 
 
+    private void ResetGH(){
+        foreach(GraphNode node in AdjList){
+            node.G = -1;
+            node.H = -1;
+            node.IsPath = false;
+        }
+    }
 
-    public bool GetAstarPath(GraphNode startNode, GraphNode endNode){
-        HashSet<GraphNode> open = new HashSet<GraphNode>() {startNode };
-        HashSet<GraphNode> closed = new HashSet<GraphNode>();
-        // while(true){
+    public List<GraphNode> FindPath(GraphNode startNode, GraphNode targetNode){
+        ResetGH();
 
-        // }
-        return true;
+        List<GraphNode> toSearch = new List<GraphNode>() {startNode };
+        List<GraphNode> processed = new List<GraphNode>();
+
+        startNode.G = 0;
+        startNode.H = 0;
+
+        while(toSearch.Count > 0){
+            GraphNode current = toSearch[0];
+
+            //does this new node have a better F cost than the current one
+            foreach(GraphNode toSearchNode in toSearch){
+                if(toSearchNode.F < current.F || toSearchNode.F == current.F && toSearchNode.H < current.H){
+                    current = toSearchNode;
+                }
+            }
+
+            processed.Add(current);
+            toSearch.Remove(current);
+
+            if(current == targetNode){
+                var currentPathNode = targetNode;
+                var path = new List<GraphNode>();
+                while(currentPathNode != startNode){
+                    path.Add(currentPathNode);
+                    currentPathNode = currentPathNode.Connection;
+                    currentPathNode.IsPath = true;
+                }
+
+                return path;
+            }
+
+            //foreach unprocessed neighbor
+            foreach(GraphNode neighbor in current.Children.Where(t => !processed.Contains(t))){
+                bool inSearch = toSearch.Contains(neighbor);
+                float costToNeighbor = current.G + current.GetManhattan(neighbor);
+
+                if(!inSearch || costToNeighbor < neighbor.G){
+                    neighbor.G = costToNeighbor;
+                    neighbor.Connection = current;
+
+                    if(!inSearch){
+                        neighbor.H = neighbor.GetManhattan(targetNode);
+                        toSearch.Add(neighbor);
+                    }
+                }
+            }
+
+        }
+        return null;
     }
 
     // private GraphNode GetMinNode(HashSet<GraphNode> open, GraphNode startNode){
