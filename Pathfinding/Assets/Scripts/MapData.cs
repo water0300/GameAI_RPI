@@ -129,8 +129,36 @@ public class MapData {
 
 
 
-    public bool AStar(){
+    public bool GetAstarPath(GraphNode startNode, GraphNode endNode){
+        HashSet<GraphNode> open = new HashSet<GraphNode>() {startNode };
+        HashSet<GraphNode> closed = new HashSet<GraphNode>();
+        // while(true){
+
+        // }
         return true;
+    }
+
+    // private GraphNode GetMinNode(HashSet<GraphNode> open, GraphNode startNode){
+
+    // }
+
+    // private float GetFCost(Vector2 startPos, Vector2 endPos, float pasthCost, bool isEuler){
+    //     return GetGCost(startPos, endPos) + GetHCost(startPos, endPos, isEuler);
+    // }
+
+    private float GetGCost(Vector2 startPos, Vector2 endPos, float prevCost, float pathCost = 1){
+        // return true;
+        return 0f;
+    }
+ 
+    //euler vs chebyshev
+    private float GetHCost(Vector2 startPos, Vector2 endPos, bool isEuler){
+        if(isEuler){
+            return Vector3.Distance(startPos, endPos);
+        } else {
+            return Mathf.Max(Mathf.Abs(endPos.x - startPos.x), Mathf.Abs(endPos.y - startPos.y));
+
+        }   
     }
 
 }
