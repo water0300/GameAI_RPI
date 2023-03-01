@@ -51,5 +51,11 @@ public class GraphNode : MonoBehaviour {
         return Vector3.Distance(transform.position, node.transform.position);
     }
 
+    private void OnDrawGizmos() {
+        foreach(var child in Children){
+            Gizmos.DrawLine(transform.position, child.transform.position);
+        }
+    }
+
 
 }

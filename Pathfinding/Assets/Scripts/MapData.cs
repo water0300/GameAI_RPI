@@ -14,12 +14,11 @@ public class MapData {
     //atm:
         //manually add to this list
         //disable parent
-
     public Block MapBlockGet(int row, int col){
         return MapBlockList[row * Dimensions.width + col];
     }
 
-    public void GenerateTiles(int tilesize, GraphNode nodePrefab, Transform nodeParent){
+    public void GenerateTiles(int tilesize, GraphNode nodePrefab, Transform nodeParent, LineRenderer linePrefab){
 
         int rows = Mathf.CeilToInt((float) Dimensions.height / (float) tilesize);
         int cols = Mathf.CeilToInt((float) Dimensions.width / (float) tilesize);
@@ -62,7 +61,7 @@ public class MapData {
         Debug.Log($"walkable: {walkable}, not: {notwalk}");
 
         //setup the adj list
-        SetupTileAdjList(nodeMatrix);
+        SetupTileAdjList(nodeMatrix, linePrefab, nodeParent);
 
     }
 
@@ -79,7 +78,7 @@ public class MapData {
 
     
     public List<(Vector3, Vector3)> edges = new List<(Vector3, Vector3)>();
-    private void SetupTileAdjList(GraphNode[,] nodeMatrix){
+    private void SetupTileAdjList(GraphNode[,] nodeMatrix, LineRenderer linePrefab, Transform parent){
         for(int i = 0; i < nodeMatrix.GetLength(0); i++){
             for(int j = 0; j < nodeMatrix.GetLength(1); j++){
                 //check all 8 directions
@@ -108,7 +107,9 @@ public class MapData {
                     //established a connection
                     nodeMatrix[i,j].Children.Add(nodeMatrix[row, col]);
                     edges.Add((nodeMatrix[i,j].transform.position, nodeMatrix[row, col].transform.position));
-                    //temporarily draw list
+                    //draw
+                    // DrawLine(nodeMatrix[i,j].transform.position, nodeMatrix[row, col].transform.position, linePrefab, parent);
+
                 }
 
             }
@@ -144,6 +145,42 @@ public class MapData {
             node.H = -1;
             node.IsPath = false;
         }
+    }
+
+    private void DrawLine(Vector3 startPos, Vector3 endPos, LineRenderer linePrefab, Transform parent){
+        LineRenderer line = Object.Instantiate(linePrefab);
+        line.SetPosition(0, startPos);
+        line.SetPosition(1, endPos);
+        line.widthMultiplier = 0.2f;
+        line.transform.parent = parent;
+    }
+
+    public float lookahead = 1.5f;
+    public float range = 4f;
+
+    public void SetupWaypointAdjList(Transform parent, LineRenderer linePrefab){
+        Physics2D.queriesStartInColliders = false;
+        foreach(GraphNode node in WaypointAdjList){
+            Collider2D[] cols = Physics2D.OverlapCircleAll(node.transform.position, range);
+            foreach(var col in cols){
+                GraphNode hitnode;
+                if(col.TryGetComponent<GraphNode>(out hitnode) && hitnode != node){
+                    //check line of sight
+                    var dir = hitnode.transform.position - node.transform.position;
+                    var hit = Physics2D.Raycast(node.transform.position + dir.normalized * lookahead, dir);
+                    if(hit.collider != null && hit.transform.position == hitnode.transform.position){
+                        node.Children.Add(hitnode);
+
+                        //draw edge
+                        DrawLine(node.transform.position, hitnode.transform.position, linePrefab, parent);
+                    }else{
+                        // Debug.Log($"{hit.transform.position} vs. {hitnode.transform.position}");
+                    }
+                }
+            }
+        }
+        Physics2D.queriesStartInColliders = true;
+
     }
 
     public void DeleteNode(GraphNode node, bool isTile){

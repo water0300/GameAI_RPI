@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     }
 
     public void OnMapChange(){
+        SceneManager.LoadScene(mapDropdown.value );
+
 
     }
 
@@ -48,10 +50,10 @@ public class Player : MonoBehaviour
         }
         _generator.tileParent.gameObject.SetActive(isTile);
         _generator.waypointParent.gameObject.SetActive(!isTile);
-        isTile = !isTile;
         currStartNode = null;
         currEndNode = null;
         _generator.MapData.ResetGH();
+        startOrEndPlace = true;
     }
 
     public void OnHeuristicWeightChange(){
@@ -85,6 +87,8 @@ public class Player : MonoBehaviour
     void Update(){
         _pointerOverUI = EventSystem.current.IsPointerOverGameObject();
         mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        mouseWorldPos = new Vector3(mouseWorldPos.x, mouseWorldPos.y, 30f);
+        
         RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPos, Vector3.forward);
         foreach(var hit in hits){
             GraphNode node;
@@ -115,7 +119,7 @@ public class Player : MonoBehaviour
         if(Input.GetMouseButtonDown(1) && !_pointerOverUI){
             GraphNode node = GetNodeAtMousePos();
             if(node != null){
-                Debug.Log("asdf");
+                // Debug.Log("asdf");
                 _generator.MapData.DeleteNode(node, isTile);
             }
         }

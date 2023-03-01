@@ -17,7 +17,7 @@ public class MapGenerator : MonoBehaviour {
     public Block treeBlock;
     public Block outOfBoundsBlock;
     public GraphNode graphNodePrefab;
-
+    public LineRenderer linePrefab;
 
     [Header("Props")]
     public float blockSize = 1f; 
@@ -84,7 +84,9 @@ public class MapGenerator : MonoBehaviour {
     }
 
     private void Start() {
-        MapData.GenerateTiles(tileSize, graphNodePrefab, tileParent);
+        MapData.SetupWaypointAdjList(waypointParent, linePrefab);
+        waypointParent.gameObject.SetActive(false);
+        MapData.GenerateTiles(tileSize, graphNodePrefab, tileParent, linePrefab);
         // Debug.Log(MapBlockGrid == null);
         // MapData.GenerateTiles(MapBlockGrid, Dimensions, tileSize, graphNodePrefab, nodeParent);
     }
