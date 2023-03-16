@@ -145,7 +145,7 @@ public class HummingbirdAgent : Agent {
         if(Input.GetKey(KeyCode.RightArrow)){
             yaw = 1f;
         } else if(Input.GetKey(KeyCode.LeftArrow)){
-            yaw = 1f;
+            yaw = -1f;
         }
 
         Vector3 combined = (forward + left + up).normalized;
