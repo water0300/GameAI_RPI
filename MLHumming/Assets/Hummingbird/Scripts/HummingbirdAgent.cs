@@ -51,4 +51,46 @@ public class HummingbirdAgent : Agent {
         MoveToSafeRandomPosition(inFrontOfFlower);
         UpdateNearestFlower();
     }
+
+    private void MoveToSafeRandomPosition(bool inFrontOfFlower){
+        bool safePositionFound = false;
+        int attemptsRemaining = 100;
+        Vector3 potentialPosition = Vector3.zero;
+        Quaternion potentialRotation = new Quaternion();
+
+        while(!safePositionFound && attemptsRemaining > 0){
+            attemptsRemaining--;
+            if(inFrontOfFlower){
+                Flower randomFlower = flowerArea.Flowers[Random.Range(0, flowerArea.Flowers.Count)];
+
+                float distanceFromFlower = Random.Range(0.1f, 0.2f);
+                potentialPosition = randomFlower.transform.position + randomFlower.FlowerUpVector * distanceFromFlower;
+
+                Vector3 toFlower = randomFlower.FlowerCenterPosition - potentialPosition;
+                potentialRotation = Quaternion.LookRotation(toFlower, Vector3.up);
+            } else {
+                float height = Random.Range(1.2f, 2.5f);
+                float radius = Random.Range(2f, 7f);
+
+                Quaternion direction = Quaternion.Euler(0f, Random.Range(-180f, 180f), 0f);
+                potentialPosition = flowerArea.transform.position + Vector3.up * height + direction * Vector3.forward * radius;
+
+                float pitch = Random.Range(-60f, 60f);
+                float yaw = Random.Range(-180f, 180f);
+                potentialRotation = Quaternion.Euler(pitch, yaw, 0f);
+            }
+
+            var colliders = Physics.OverlapSphere(potentialPosition, 0.05f);
+            safePositionFound = colliders.Length == 0;
+
+            Debug.Assert(safePositionFound, "Could not find safe pos to spawn");
+
+            transform.position = potentialPosition;
+            transform.rotation = potentialRotation;
+        }
+    }
+
+    private void UpdateNearestFlower(){
+        
+    }
 }
