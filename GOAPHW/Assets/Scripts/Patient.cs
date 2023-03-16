@@ -18,6 +18,10 @@
         SubGoal s3 = new SubGoal("isHome", 1, true);
         // Add it to the goals
         goals.Add(s3, 1);
+
+        SubGoal s4 = new SubGoal("collectMeds", 1, true);
+        goals.Add(s4, 7);
+        
     }
 
 }
