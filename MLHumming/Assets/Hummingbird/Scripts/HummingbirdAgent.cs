@@ -187,12 +187,11 @@ public class HummingbirdAgent : Agent {
 
             var colliders = Physics.OverlapSphere(potentialPosition, 0.05f);
             safePositionFound = colliders.Length == 0;
-
-            Debug.Assert(safePositionFound, "Could not find safe pos to spawn");
-
-            transform.position = potentialPosition;
-            transform.rotation = potentialRotation;
         }
+        Debug.Assert(safePositionFound, "Could not find safe pos to spawn");
+
+        transform.position = potentialPosition;
+        transform.rotation = potentialRotation;
     }
 
     private void UpdateNearestFlower(){
@@ -241,7 +240,7 @@ public class HummingbirdAgent : Agent {
 
                 if(trainingMode){
                     float bonus = .02f * Mathf.Clamp01(Vector3.Dot(transform.forward.normalized, -nearestFlower.FlowerUpVector.normalized));
-                    AddReward(0.01f + bonus);
+                    AddReward(0.03f + bonus);
                 }
 
                 if(!flower.HasNectar){
@@ -254,7 +253,7 @@ public class HummingbirdAgent : Agent {
 
     private void OnCollisionEnter(Collision other) {
         if(trainingMode && other.collider.CompareTag("boundary")){
-            AddReward(-.5f);
+            AddReward(-.3f);
         }
     }
 

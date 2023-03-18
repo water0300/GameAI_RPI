@@ -1,4 +1,4 @@
-public class GoWash : GAction {
+public class GoSmoke : GAction {
     public override bool PrePerform() {
 
         return true;
@@ -6,7 +6,7 @@ public class GoWash : GAction {
 
     public override bool PostPerform() {
 
-        Destroy(this.gameObject);
+        beliefs.RemoveState("needSmoke");
         return true;
     }
 }
