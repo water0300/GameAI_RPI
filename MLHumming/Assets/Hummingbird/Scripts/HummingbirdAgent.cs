@@ -240,7 +240,7 @@ public class HummingbirdAgent : Agent {
 
                 if(trainingMode){
                     float bonus = .02f * Mathf.Clamp01(Vector3.Dot(transform.forward.normalized, -nearestFlower.FlowerUpVector.normalized));
-                    AddReward(0.03f + bonus);
+                    AddReward(0.01f + bonus);
                 }
 
                 if(!flower.HasNectar){
@@ -253,7 +253,7 @@ public class HummingbirdAgent : Agent {
 
     private void OnCollisionEnter(Collision other) {
         if(trainingMode && other.collider.CompareTag("boundary")){
-            AddReward(-.3f);
+            AddReward(-.5f);
         }
     }
 
