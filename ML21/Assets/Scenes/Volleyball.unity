@@ -182,6 +182,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 21
@@ -264,7 +268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &171300458
 AudioListener:
   m_ObjectHideFlags: 0
@@ -389,6 +393,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -598,6 +606,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 14
@@ -721,6 +733,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -846,6 +862,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -970,6 +990,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -1093,6 +1117,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -1301,6 +1329,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -1539,6 +1571,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -1621,7 +1657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1680,14 +1716,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.054884188, y: -0.7049736, z: 0.05488418, w: 0.7049736}
-  m_LocalPosition: {x: 21.54, y: 8.71, z: 0}
+  m_LocalRotation: {x: 0.25692233, y: -0.65877986, z: 0.2569223, w: 0.65877986}
+  m_LocalPosition: {x: 16.1, y: 17.9, z: 35.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 8.903, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 42.611, y: -90, z: 0}
 --- !u!1 &997631133
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,9 +1756,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentRunSpeed: 1.5
   agentJumpHeight: 2.75
-  agentJumpVelocity: 400
+  agentJumpVelocity: 777
   agentJumpVelocityMaxChange: 10
-  speedReductionFactor: 0.7
+  speedReductionFactor: 0.75
   blueGoalMaterial: {fileID: 2100000, guid: c9fa44c2c3f8ce74ca39a3355ea42631, type: 2}
   purpleGoalMaterial: {fileID: 2100000, guid: b0da1813c36914e678ba57f2790424e1, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 36dc31c319681407abc2da4ddfe78a8a, type: 2}
@@ -1818,6 +1854,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -1943,6 +1983,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 20
@@ -2066,6 +2110,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -2191,6 +2239,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -2295,6 +2347,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_Name
       value: VolleyballArea (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
@@ -2420,6 +2476,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolleyballArea (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7954672815519958404, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -2492,6 +2552,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5501864745727209264, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7756907178769414777, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_BehaviorType
       value: 0
@@ -2587,6 +2651,10 @@ PrefabInstance:
     - target: {fileID: 7954672815519958407, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7954672815851726557, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
+      propertyPath: m_BehaviorType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fed76ada46450914f86122b2893fe1bd, type: 3}
