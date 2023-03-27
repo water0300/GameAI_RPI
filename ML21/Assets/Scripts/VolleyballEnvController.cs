@@ -130,6 +130,7 @@ public class VolleyballEnvController : MonoBehaviour
             case Event.HitIntoBlueArea:
                 if (lastHitter == Team.Purple)
                 {
+                    Debug.Log("Purp won!");
                     purpleAgent.AddReward(1);
 
                 }
@@ -138,6 +139,8 @@ public class VolleyballEnvController : MonoBehaviour
             case Event.HitIntoPurpleArea:
                 if (lastHitter == Team.Blue)
                 {
+                    Debug.Log("blue won!");
+
                     blueAgent.AddReward(1);
 
                 }

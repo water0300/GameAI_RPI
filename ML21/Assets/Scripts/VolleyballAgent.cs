@@ -133,9 +133,9 @@ public class VolleyballAgent : Agent
         var dirToGoSideAction = act[2];
         var jumpAction = act[3];
 
-        if (dirToGoForwardAction == 1){
+        if (dirToGoForwardAction == 1)
             dirToGo = (grounded ? 1f : 0.5f) * transform.forward * 1f;
-        }else if (dirToGoForwardAction == 2)
+        else if (dirToGoForwardAction == 2)
             dirToGo = (grounded ? 1f : 0.5f) * transform.forward * volleyballSettings.speedReductionFactor * -1f;
 
         if (rotateDirAction == 1)
@@ -187,8 +187,6 @@ public class VolleyballAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        // agentRb.AddForce(Vector3.up * 20f);
-        Debug.Log(string.Join(",", actionBuffers.DiscreteActions.Array));
         MoveAgent(actionBuffers.DiscreteActions);
     }
 
