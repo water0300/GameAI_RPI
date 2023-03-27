@@ -15,7 +15,7 @@ from keras.layers import Dense, Input
 from keras.optimizers import Adam, SGD, RMSprop
 
 BUFFER_SIZE = int(1000) # replay buffer size
-BATCH_SIZE = 32         # minibatch size
+BATCH_SIZE = 6         # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 UPDATE_EVERY = 4        # how often to update the network
@@ -71,14 +71,18 @@ class DQNAgent_Discrete:
         for state, action, reward, next_state, done in minibatch:
             target = reward
             if not done:
-              target = reward + self.gamma * \
-                       np.amax(self.model.predict(next_state)[0])
+                next_state_pred = self.model.predict(next_state)
+                next_action_probs = [next_state_pred[i][0] for i in range(len(self.discrete_branches))]
+                target = reward + self.gamma * max(next_action_probs)
             target_f = self.model.predict(state)
-            target_f[0][action] = target
+            for i in range(len(self.discrete_branches)):
+                if i == action[i]:
+                    target_f[i][0][action[i]] = target
+                else:
+                    target_f[i][0][action[i]] = 0
             self.model.fit(state, target_f, epochs=2, verbose=0)
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
-    
     
 def train_discrete(env : UE):
     try:
@@ -137,17 +141,18 @@ def train_discrete(env : UE):
                         next_state = terminal_steps[tracked_agent].obs[0]
                         reward += terminal_steps[tracked_agent].reward
                         done[tracked_agent] = True
-                        print(done)
+                        # print(done)
    
                     agent.remember(state, action, reward, next_state, done)
                 
                 if all(done):
                     break
-            if episode % 1 == 0:
+            if episode % 20 == 0:
                 print("episode: {}/{}, reward: {}"
                     .format(episode, EPISODES, reward))
                 
             results.append(reward)
+            agent.replay(6)
 
 
         env.close()
@@ -162,10 +167,10 @@ def train_discrete(env : UE):
         
     
 if __name__ == '__main__':
-        
+
     print("Press Play...")
     channel = EngineConfigurationChannel()
     env = UE(side_channels=[channel])
-    # channel.set_configuration_parameters(time_scale=20)
+    channel.set_configuration_parameters(time_scale=20)
     env.reset()
     train_discrete(env)
