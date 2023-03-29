@@ -1,0 +1,65 @@
+{
+    "Volleyball": {
+        "checkpoints": [
+            {
+                "steps": 14499990,
+                "file_path": "results\\VB_2\\Volleyball\\Volleyball-14499990.onnx",
+                "reward": 0.38288288288288286,
+                "creation_time": 1679714801.2129378,
+                "auxillary_file_paths": [
+                    "results\\VB_2\\Volleyball\\Volleyball-14499990.pt"
+                ]
+            },
+            {
+                "steps": 14999902,
+                "file_path": "results\\VB_2\\Volleyball\\Volleyball-14999902.onnx",
+                "reward": 0.5635910224438903,
+                "creation_time": 1679715623.4988036,
+                "auxillary_file_paths": [
+                    "results\\VB_2\\Volleyball\\Volleyball-14999902.pt"
+                ]
+            },
+            {
+                "steps": 15499988,
+                "file_path": "results\\VB_2\\Volleyball\\Volleyball-15499988.onnx",
+                "reward": 0.5353846153846153,
+                "creation_time": 1679716462.6097274,
+                "auxillary_file_paths": [
+                    "results\\VB_2\\Volleyball\\Volleyball-15499988.pt"
+                ]
+            },
+            {
+                "steps": 15999995,
+                "file_path": "results\\VB_2\\Volleyball\\Volleyball-15999995.onnx",
+                "reward": 0.5844748858447488,
+                "creation_time": 1679717417.084136,
+                "auxillary_file_paths": [
+                    "results\\VB_2\\Volleyball\\Volleyball-15999995.pt"
+                ]
+            },
+            {
+                "steps": 16159364,
+                "file_path": "results\\VB_2\\Volleyball\\Volleyball-16159364.onnx",
+                "reward": 0.7407407407407407,
+                "creation_time": 1679717714.5406516,
+                "auxillary_file_paths": [
+                    "results\\VB_2\\Volleyball\\Volleyball-16159364.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 16159364,
+            "file_path": "results\\VB_2\\Volleyball.onnx",
+            "reward": 0.7407407407407407,
+            "creation_time": 1679717714.5406516,
+            "auxillary_file_paths": [
+                "results\\VB_2\\Volleyball\\Volleyball-16159364.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.13.1"
+    }
+}
