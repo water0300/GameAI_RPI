@@ -57,16 +57,17 @@ class DQNAgent_Discrete:
     def act(self, state):
         if np.random.rand() <= self.epsilon:
             return [np.random.choice(self.discrete_branches[i]) for i in range(len(self.discrete_branches))]
-        # print(state.shape)
-        q_values = self.model.predict(state) # shape: (1, num_branches)
+        q_values = self.model.predict(state, verbose=0) # shape: (1, num_branches)
         actions = [np.argmax(q_value[0]) for q_value in q_values]
         return actions
     
     def replay(self, batch_size):
         minibatch = random.sample(self.memory, batch_size)
         for state, action, reward, next_state, done in minibatch:
-            targets = [reward]*self.continuous_size
+            targets = [reward]* len(self.discrete_branches)
             if not done:
+                # print('next state: ', next_state)
+
                 next_state_pred = self.model.predict(next_state)
                 for i, action_q_value in enumerate(next_state_pred):
                     # print('action q value', action_q_value)
@@ -77,7 +78,7 @@ class DQNAgent_Discrete:
             # print("replay targets: ", targets, targets.shape)
             # print("replay targetf: ", target_f, target_f)
             # print("action: ", action, len(action))
-            for i in range(self.continuous_size):
+            for i in range(len(self.discrete_branches)):
                 # print(f'target_f_{i}: {target_f[i]}')
                 # print(f'targets_0_{i}: {targets[0][i]}')
 
@@ -121,7 +122,7 @@ def train_discrete(env : UE):
                 states = []
                 actions = []
                 for tracked_agent in decision_steps.agent_id:
-                    state = decision_steps[tracked_agent].obs[0].reshape((1, 11))
+                    state = decision_steps[tracked_agent].obs[0].reshape((1, state_size))
         
                     action = agent.act(state)
                     discrete = np.array(action).reshape((1,len(discrete_branches)))
@@ -138,11 +139,11 @@ def train_discrete(env : UE):
 
                 for tracked_agent, tracked_state, tracked_action in zip(agents, states, actions):
                     if tracked_agent in decision_steps:
-                        next_state = decision_steps[tracked_agent].obs[0]
+                        next_state = decision_steps[tracked_agent].obs[0].reshape((1, state_size))
                         reward += decision_steps[tracked_agent].reward
                     elif tracked_agent in terminal_steps:
                         # print('terminal:', done)
-                        next_state = terminal_steps[tracked_agent].obs[0]
+                        next_state = terminal_steps[tracked_agent].obs[0].reshape((1, state_size))
                         reward += terminal_steps[tracked_agent].reward
                         done[tracked_agent] = True
                         # print(done)
@@ -151,9 +152,9 @@ def train_discrete(env : UE):
                 
                 if all(done):
                     break
-            if episode % 20 == 0:
-                print("episode: {}/{}, reward: {}"
-                    .format(episode, EPISODES, reward))
+            # if episode % 20 == 0:
+            print("episode: {}/{}, reward: {}"
+                .format(episode, EPISODES, reward))
                 
             results.append(reward)
             agent.replay(6)

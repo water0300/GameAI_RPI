@@ -19,8 +19,8 @@ BUFFER_SIZE = int(500) # replay buffer size
 BATCH_SIZE = 6         # minibatch size
 DISCRETE_RESOLUTION = 6
 
-EPISODES = 200000
-MAX_EPISODE_STEPS = 200
+EPISODES = 5000
+MAX_EPISODE_STEPS = 80
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
@@ -115,7 +115,7 @@ class DQNAgent_Continuous:
             # print("modified targetf: ", target_f)
             # exit()
             # print('BEGIN FIT')
-            self.model.fit(state, target_f, epochs=2, verbose=2)
+            self.model.fit(state, target_f, epochs=2, verbose=0)
             # print('ENDING FIT')
 
         if self.epsilon > self.epsilon_min:
