@@ -24,8 +24,6 @@ public abstract class GAction : MonoBehaviour {
     public Dictionary<string, int> preconditions;
     // Dictionary of effects
     public Dictionary<string, int> effects;
-    // State of the agent
-    public WorldStates agentBeliefs;
     // Access our inventory
     public GInventory inventory;
     public WorldStates beliefs;
