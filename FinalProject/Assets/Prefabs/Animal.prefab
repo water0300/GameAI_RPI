@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5113875060052777908}
-  - component: {fileID: 5113875060052777909}
+  - component: {fileID: 5113875060626504031}
+  - component: {fileID: 5113875060626504032}
   m_Layer: 0
   m_Name: Animal
   m_TagString: Untagged
@@ -34,7 +35,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5113875060052777909
+--- !u!114 &5113875060626504031
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,15 +44,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 5113875060052777914}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6447d8325714307448940ea175092273, type: 3}
+  m_Script: {fileID: 11500000, guid: fc55187ca82310e449876649c40d304b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 5
-  detectionRadius: 3
+  maxSpeed: 0
+  agentArrivalRadius: 1.53
+  agentWanderSampleRadius: 5.62
+  agentWanderForwardBias: 0.85
   maxThirst: 100
   maxHunger: 100
-  <CurrentThirst>k__BackingField: 30
-  <CurrentHunger>k__BackingField: 60
+  maxMateDesire: 100
+  <Target>k__BackingField: {fileID: 0}
+  <CurrentThirst>k__BackingField: 90
+  <CurrentHunger>k__BackingField: 100
+  <CurrentMateDesire>k__BackingField: 100
+  <Sex>k__BackingField: 0
+  <ActiveGoal>k__BackingField: 0
+--- !u!195 &5113875060626504032
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5113875060052777914}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5113875060409730663
 GameObject:
   m_ObjectHideFlags: 0
