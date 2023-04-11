@@ -13,7 +13,8 @@ public abstract class Animal : MonoBehaviour {
     public float maxSpeed;
     [Range(0.01f, 2f)] public float agentArrivalRadius = 1f; 
     [Range(0.01f, 10f)] public float agentWanderSampleRadius = 5f; 
-    [Range(0.01f, 5f)] public float agentWanderForwardBias = 1f; 
+    [Range(0.1f, 1f)] public float agentWanderForwardBias = .5f; 
+    [Range(0.1f, 90f)] public float agentWanderForwardAngleRange = 45f; 
 
     [Header("Health Attributes")]
     public float maxThirst = 100;
@@ -29,6 +30,7 @@ public abstract class Animal : MonoBehaviour {
 
     private NavMeshAgent _agent;
     private Vector3 _debugSetPosition;
+    private Vector3 _debugTrySetPosition;
     
     private void Awake() {
         _agent = GetComponent<NavMeshAgent>();
@@ -119,12 +121,17 @@ public abstract class Animal : MonoBehaviour {
     }
 
     private Vector3 SampleProximatePosition(){
-        NavMesh.SamplePosition(transform.position + transform.forward * agentWanderForwardBias, out NavMeshHit hit, agentWanderSampleRadius, NavMesh.AllAreas);
-        // NavMesh.SamplePosition(transform.position, out NavMeshHit hit, agentWanderSampleRadius, NavMesh.AllAreas);
 
+        //randomly pick a forward position
+        float targetAngle = Random.value > agentWanderForwardBias ? Mathf.Lerp(-180, 180, Random.value) :  Mathf.Lerp(-agentWanderForwardAngleRange, agentWanderForwardAngleRange, Random.value);
+        Vector3 rotatedVector = Quaternion.AngleAxis(targetAngle, Vector3.up) * transform.forward;
+
+        _debugTrySetPosition = transform.position + rotatedVector * agentWanderSampleRadius;
+
+        NavMesh.SamplePosition(transform.position + rotatedVector * agentWanderSampleRadius, out NavMeshHit hit, agentWanderSampleRadius, NavMesh.AllAreas);
+        // NavMesh.SamplePosition(transform.position, out NavMeshHit hit, agentWanderSampleRadius, NavMesh.AllAreas);
         if(hit.hit == false){
-            Debug.Log("No valid sample found, recalculating...");
-            NavMesh.SamplePosition(transform.position + transform.forward * agentWanderForwardBias, out hit, agentWanderSampleRadius, NavMesh.AllAreas);
+            Debug.LogError("No valid sample found, handle eventually...");
         }
 
         return hit.position;
@@ -132,10 +139,15 @@ public abstract class Animal : MonoBehaviour {
 
     private void OnDrawGizmos() {
         DrawCircle(transform.position, agentArrivalRadius, Color.red);
-        DrawCircle(transform.position + transform.forward * agentWanderForwardBias, agentWanderSampleRadius, Color.green);
-        
+        DrawCircle(transform.position, agentWanderSampleRadius, Color.green);
+        DrawWireArc(transform.position, transform.forward, agentWanderForwardAngleRange*2, agentWanderSampleRadius);
         if(_debugSetPosition != null)
+            Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(_debugSetPosition, 1);
+
+        if(_debugTrySetPosition != null)
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(_debugTrySetPosition, 1.2f);
     }
 
     private void DrawCircle(Vector3 center, float radius, Color color, float resolution = 40f){
@@ -149,6 +161,35 @@ public abstract class Animal : MonoBehaviour {
             oldPos = center + pos;
             theta += deltaTheta;
         }
+    }
+
+    public void DrawWireArc(Vector3 position, Vector3 dir, float anglesRange, float radius, float maxSteps = 20)
+    {
+        var srcAngles = GetAnglesFromDir(position, dir);
+        var initialPos = position;
+        var posA = initialPos;
+        var stepAngles = anglesRange / maxSteps;
+        var angle = srcAngles - anglesRange / 2;
+        for (var i = 0; i <= maxSteps; i++)
+        {
+            var rad = Mathf.Deg2Rad * angle;
+            var posB = initialPos;
+            posB += new Vector3(radius * Mathf.Cos(rad), 0, radius * Mathf.Sin(rad));
+
+            Gizmos.DrawLine(posA, posB);
+
+            angle += stepAngles;
+            posA = posB;
+        }
+        Gizmos.DrawLine(posA, initialPos);
+    }
+
+    static float GetAnglesFromDir(Vector3 position, Vector3 dir)
+    {
+        var forwardLimitPos = position + dir;
+        var srcAngles = Mathf.Rad2Deg * Mathf.Atan2(forwardLimitPos.z - position.z, forwardLimitPos.x - position.x);
+
+        return srcAngles;
     }
 
 }
