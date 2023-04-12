@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MonoBehaviour {
+public class LiveResource : MonoBehaviour {
     
-    public bool isInfinite = false;
     [Range(0f, 500f)] public float maxCapacity;
     [Range(0f, 10f)] public float regenerationPerSec; 
     public float CurrentCapacity {get; private set; }
@@ -12,9 +11,7 @@ public class Resource : MonoBehaviour {
     public bool IsEmpty{get => CurrentCapacity <= 0f; }
 
     private void Start() {
-        if(!isInfinite){
-            StartCoroutine(DoRegeneration());
-        }
+        StartCoroutine(DoRegeneration());
     }
 
     IEnumerator DoRegeneration(){
@@ -25,10 +22,6 @@ public class Resource : MonoBehaviour {
     }
 
     public float GetConsumed(float amount){
-        if(isInfinite){
-            return amount;
-        }
-
         float resourceTaken = Mathf.Clamp(amount, 0f, CurrentCapacity);
         CurrentCapacity -= resourceTaken;
 
