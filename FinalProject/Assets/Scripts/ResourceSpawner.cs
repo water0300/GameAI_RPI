@@ -4,24 +4,23 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Collider))]
 public class ResourceSpawner : MonoBehaviour {
 
+    [Header("Prefab Refs")]
     public LiveResource resourcePrefab;
 
+    [Header("Spawn Properties Refs")]
     [Range(10, 1000)] public int initialSpawnCount = 100;
     [Range(.1f, 5)] public float spawnRatePerSec = 1;
     [Range(0f, 1f)] public float spawnRateVariability = 0;
     [Range(.05f, 1f)] public float maxSpawnDelay = 0.05f;
 
-    private Collider _collider;
     private List<LiveResource> _resourceList = new List<LiveResource>();
 
     private Vector3 _debugSpawnPoint;
     private Vector3 _debugTrySpawnPoint;
 
     private void Awake() {
-        _collider = GetComponent<Collider>();
     }
 
     private void Start() {

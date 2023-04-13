@@ -6,7 +6,7 @@ public class Prey : Animal
 {
     protected override bool DecideGoal() {
         if(Target != null && Target.TryGetComponent<Predator>(out _)){
-            return SetGoal(Goal.FLEE);
+            return SetGoal(AnimalBehaviorState.FLEE);
         } else {
             return base.DecideGoal();
         }

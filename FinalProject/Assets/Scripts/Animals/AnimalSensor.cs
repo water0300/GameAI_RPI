@@ -1,22 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [RequireComponent(typeof(Animal))]
 public class AnimalSensor : MonoBehaviour
 {
     public float detectionRadius;
 
+    private Animal _animal;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Awake(){
+        _animal = GetComponent<Animal>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void FixedUpdate() {
         
+        _animal.Target = Physics.OverlapSphere(transform.position, detectionRadius)
+                .FirstOrDefault(h => _animal.ActiveState.CompareGoalToTarget(h))?.gameObject;
+
     }
 
     private void OnDrawGizmos() {
