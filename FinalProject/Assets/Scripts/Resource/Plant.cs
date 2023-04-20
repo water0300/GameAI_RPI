@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LiveResource : MonoBehaviour {
+public class Plant : Resource {
     
     [Range(0f, 500f)] public float maxCapacity;
     [Range(0f, 10f)] public float regenerationPerSec; 
@@ -21,7 +21,7 @@ public class LiveResource : MonoBehaviour {
         }
     }
 
-    public float GetConsumed(float amount){
+    public override float GetConsumed(float amount){
         float resourceTaken = Mathf.Clamp(amount, 0f, CurrentCapacity);
         CurrentCapacity -= resourceTaken;
 

@@ -9,18 +9,19 @@ public class AnimalSensor : MonoBehaviour
     public float detectionRadius;
 
     private Animal _animal;
-
+    private int _floorLayerID;
     // Start is called before the first frame update
     void Awake(){
         _animal = GetComponent<Animal>();
+        _floorLayerID = LayerMask.NameToLayer("Floor");
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        
-        _animal.Target = Physics.OverlapSphere(transform.position, detectionRadius)
-                .FirstOrDefault(h => _animal.ActiveState.CompareGoalToTarget(h))?.gameObject;
-
+        if(_animal.ActiveState != null){
+                _animal.Target = Physics.OverlapSphere(transform.position, detectionRadius, Utility.IgnoreLayer(_floorLayerID))?
+            .FirstOrDefault(h => _animal.ActiveState.CompareGoalToTarget(h))?.transform;
+        }
     }
 
     private void OnDrawGizmos() {

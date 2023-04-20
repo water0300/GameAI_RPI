@@ -4,6 +4,10 @@ using UnityEngine;
 
 public static class Utility {
     
+    public static LayerMask IgnoreLayer(int layerToIgnore){
+        return ~(1 << layerToIgnore);
+    }
+
     public static bool CompareFloats(float a, float b, float tolerance = 0.0001f){
         return Mathf.Abs(a - b) <= tolerance;
     }

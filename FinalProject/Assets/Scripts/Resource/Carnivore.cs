@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Predator : Animal
+public class Carnivore : Animal
 {
-    protected override IEnumerator FoodRoutine()
+
+    protected override bool SetFoodGoal()
     {
         throw new System.NotImplementedException();
     }
 
-    protected override IEnumerator MateRoutine()
+    protected override bool SetMateGoal()
     {
         throw new System.NotImplementedException();
     }

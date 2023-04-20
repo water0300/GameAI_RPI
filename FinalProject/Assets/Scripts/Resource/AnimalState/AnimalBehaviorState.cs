@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[System.Serializable]
 public abstract class AnimalBehaviorState {
     public Animal Animal {get; set; }
     public abstract bool CompareGoalToTarget(Collider potentialTarget);
@@ -24,6 +25,7 @@ public abstract class AnimalBehaviorState {
 
     bool cycleSampledPosition = true; 
     private void Wander(){
+        // Debug.Log($"cycle: {cycleSampledPosition}");
         if(cycleSampledPosition){
             Animal.DebugSetPosition = SampleProximatePosition();
             Animal.Agent.SetDestination(Animal.DebugSetPosition);
@@ -31,7 +33,9 @@ public abstract class AnimalBehaviorState {
         }
 
         if (!Animal.Agent.pathPending && Animal.Agent.remainingDistance < Animal.agentArrivalRadius) {
-            // The agent has reached its destination
+            // The agent has reached its destination, EVEN IF THEY"RE NOT WANDERING (side effect)
+            // Debug.Log($"reach dest???");
+
             cycleSampledPosition = true;
         }
     }
@@ -55,44 +59,35 @@ public abstract class AnimalBehaviorState {
     }
 }
 
-
-public class SeekWaterState : AnimalBehaviorState
+[System.Serializable]
+public class SeekResourceFeedState<TResource> : AnimalBehaviorState where TResource : Resource
 {
-
-    public SeekWaterState(Animal animal) : base(animal)
+    public SeekResourceFeedState(Animal animal) : base(animal)
     {
     }
     public override bool CompareGoalToTarget(Collider potentialTarget)
     {
-        throw new System.NotImplementedException();
+        return potentialTarget.TryGetComponent<TResource>(out _);
+       
     }
 
     public override void OnUpdateGoalAcquired()
     {
-        throw new System.NotImplementedException();
+        Animal.DebugSetPosition = Animal.Target.transform.position;
+        Animal.Agent.SetDestination(Animal.Target.transform.position);
+
+        if (!Animal.Agent.pathPending && Animal.Agent.remainingDistance < Animal.agentArrivalRadius) {
+            // The agent has reached its destination
+            var resource = Animal.Target.GetComponent<TResource>();
+            float yield = resource.GetConsumed(Animal.maxHunger - Animal.CurrentHunger);
+            Animal.Feed(yield);
+            //todo: as of this point, goal should be changed, but consider forcing a rethink?
+        }
     }
 }
 
-public class SeekFoodState : AnimalBehaviorState
-{
-    public SeekFoodState(Animal animal) : base(animal)
-    {
-    }
-
-    public override bool CompareGoalToTarget(Collider potentialTarget)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void OnUpdateGoalAcquired()
-    {
-        throw new System.NotImplementedException();
-    }
-}
-
-
-
-public class SeekMateState : AnimalBehaviorState
+[System.Serializable]
+public class SeekMateState<TAnimal> : AnimalBehaviorState where TAnimal : Animal
 {
     public SeekMateState(Animal animal) : base(animal)
     {

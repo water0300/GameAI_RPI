@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class ResourceSpawner : MonoBehaviour {
 
     [Header("Prefab Refs")]
-    public LiveResource resourcePrefab;
+    public Plant resourcePrefab;
 
     [Header("Spawn Properties Refs")]
     [Range(10, 1000)] public int initialSpawnCount = 100;
@@ -15,7 +15,7 @@ public class ResourceSpawner : MonoBehaviour {
     [Range(0f, 1f)] public float spawnRateVariability = 0;
     [Range(.05f, 1f)] public float maxSpawnDelay = 0.05f;
 
-    private List<LiveResource> _resourceList = new List<LiveResource>();
+    private List<Plant> _resourceList = new List<Plant>();
 
     private Vector3 _debugSpawnPoint;
     private Vector3 _debugTrySpawnPoint;
@@ -25,7 +25,7 @@ public class ResourceSpawner : MonoBehaviour {
 
     private void Start() {
         for(int i = 0; i < initialSpawnCount; i++){
-            LiveResource resource = Instantiate(resourcePrefab, GetRandomNavmeshPosition(), Quaternion.identity);
+            Plant resource = Instantiate(resourcePrefab, GetRandomNavmeshPosition(), Quaternion.identity);
             _resourceList.Add(resource);
         }
         
