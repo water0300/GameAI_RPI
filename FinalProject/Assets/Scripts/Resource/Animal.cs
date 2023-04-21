@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum SexEnum { MALE, FEMALE }
 
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Animal : Resource {
@@ -26,7 +25,7 @@ public abstract class Animal : Resource {
     [field: SerializeField] public float CurrentMateDesire {get; protected set; }
     [field: SerializeField] public AnimalBehaviorState ActiveState {get; protected set; }
 
-    [field: SerializeField] public Sex Sex {get; private set; }
+    public Sex Sex {get; private set; }
     public NavMeshAgent Agent {get; private set; }
 
     [field: SerializeField] public Transform Target {get; set; }
@@ -36,6 +35,17 @@ public abstract class Animal : Resource {
     
     private void Awake() {
         Agent = GetComponent<NavMeshAgent>();
+
+        bool isM = TryGetComponent<Male>(out Male m);
+        bool isFm = TryGetComponent<Female>(out Female fm);
+        
+        if(isM ^ isFm){
+            Sex = isM ? m : fm;
+        } else {
+            Debug.LogError("Check sex assignment?");
+        }
+
+        
     }
 
     private void Update() {

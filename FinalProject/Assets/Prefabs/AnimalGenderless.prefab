@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 5113875060626504031}
   - component: {fileID: 5113875060626504032}
   - component: {fileID: 2007999705}
+  - component: {fileID: 7271951118863693976}
   m_Layer: 0
-  m_Name: Animal
+  m_Name: AnimalGenderless
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,10 +58,10 @@ MonoBehaviour:
   maxThirst: 100
   maxHunger: 100
   maxMateDesire: 100
-  <Target>k__BackingField: {fileID: 0}
   <CurrentThirst>k__BackingField: 100
   <CurrentHunger>k__BackingField: 100
   <CurrentMateDesire>k__BackingField: 90
+  <Target>k__BackingField: {fileID: 0}
   <DebugState>k__BackingField: DEFAULT
 --- !u!195 &5113875060626504032
 NavMeshAgent:
@@ -97,6 +98,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 11.57
+--- !u!65 &7271951118863693976
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5113875060052777914}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5113875060409730663
 GameObject:
   m_ObjectHideFlags: 0
