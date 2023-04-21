@@ -94,13 +94,13 @@ public class ResourceSpawner : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        if(_debugSpawnPoint != null)
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(_debugSpawnPoint, 1);
+        // if(_debugSpawnPoint != null)
+        //     Gizmos.color = Color.blue;
+        //     Gizmos.DrawWireSphere(_debugSpawnPoint, 1);
 
-        if(_debugTrySpawnPoint != null)
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(_debugTrySpawnPoint, 1.2f);
+        // if(_debugTrySpawnPoint != null)
+        //     Gizmos.color = Color.green;
+        //     Gizmos.DrawWireSphere(_debugTrySpawnPoint, 1.2f);
     }
 
 }

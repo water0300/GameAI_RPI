@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum Sex { MALE, FEMALE}
+public enum SexEnum { MALE, FEMALE }
 
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Animal : Resource {
@@ -21,17 +21,18 @@ public abstract class Animal : Resource {
     public float maxHunger = 100;
     public float maxMateDesire = 100;
 
-    [field: SerializeField] public Transform Target {get; set; }
     [field: SerializeField] public float CurrentThirst {get; protected set; } 
     [field: SerializeField] public float CurrentHunger {get; protected set; }
     [field: SerializeField] public float CurrentMateDesire {get; protected set; }
-    [field: SerializeField] public Sex Sex {get; protected set; }
     [field: SerializeField] public AnimalBehaviorState ActiveState {get; protected set; }
 
-    // [field: SerializeField] public string DebugState {get; set; } = "DEFAULT";
+    [field: SerializeField] public Sex Sex {get; private set; }
     public NavMeshAgent Agent {get; private set; }
+
+    [field: SerializeField] public Transform Target {get; set; }
     public Vector3 DebugSetPosition {get; set; }
     public Vector3 DebugTrySetPosition {get; set; }
+    [field: SerializeField] public string DebugState {get; set; } = "DEFAULT";
     
     private void Awake() {
         Agent = GetComponent<NavMeshAgent>();
@@ -77,7 +78,7 @@ public abstract class Animal : Resource {
         } else if(Utility.CompareFloats(minVal, CurrentHunger)){
             return SetFoodGoal();
         } else {
-            Debug.Log("?????");
+            // Debug.Log("?????");
             return SetMateGoal();
         }
     }
@@ -93,6 +94,15 @@ public abstract class Animal : Resource {
             ActiveState = newGoal;
             return true;
         }
+    }
+
+    public void Mate(){
+        if(Sex is Female){
+            //handle pregnancy here
+            Debug.Log("PREGNANT NOW");
+        }
+
+        CurrentMateDesire = maxMateDesire;
     }
 
     private void OnDrawGizmos() {

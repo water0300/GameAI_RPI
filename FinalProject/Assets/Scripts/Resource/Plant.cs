@@ -6,8 +6,8 @@ public class Plant : Resource {
     
     [Range(0f, 500f)] public float maxCapacity;
     [Range(0f, 10f)] public float regenerationPerSec; 
-    public float CurrentCapacity {get; private set; }
-    public bool IsDead {get; private set; }
+    [field: SerializeField] public float CurrentCapacity {get; private set; }
+    [field: SerializeField] public bool IsDead {get; private set; }
     public bool IsEmpty{get => CurrentCapacity <= 0f; }
 
     private void Start() {

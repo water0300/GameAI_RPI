@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//todo herbivore should be abstract
 public class Herbivore : Animal
 {
     // protected override bool DecideGoal() {
@@ -15,8 +16,5 @@ public class Herbivore : Animal
 
     protected override bool SetFoodGoal() => SetGoal(new SeekResourceFeedState<Plant>(this));
 
-    protected override bool SetMateGoal()
-    {
-        throw new System.NotImplementedException();
-    }
+    protected override bool SetMateGoal() => SetGoal(new SeekMateState<Herbivore>(this));
 }

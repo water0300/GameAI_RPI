@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class AnimalInfoUI : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class AnimalInfoUI : MonoBehaviour
     public Slider hungerSlider;
     public Slider thirstSlider;
     public Slider matingSlider;
+    public TMP_Text stateText;
     private Transform _cameraTransform;
     void Start() {
         _cameraTransform = Camera.main.transform;
@@ -22,5 +24,7 @@ public class AnimalInfoUI : MonoBehaviour
 
         hungerSlider.value = _animal.CurrentHunger / _animal.maxHunger;
         thirstSlider.value = _animal.CurrentThirst / _animal.maxThirst;
+
+        stateText.text = _animal.DebugState;
     }
 }

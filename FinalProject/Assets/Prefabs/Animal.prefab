@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5113875060052777908}
   - component: {fileID: 5113875060626504031}
   - component: {fileID: 5113875060626504032}
+  - component: {fileID: 2007999705}
   m_Layer: 0
   m_Name: Animal
   m_TagString: Untagged
@@ -48,18 +49,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 0
-  agentArrivalRadius: 1.53
-  agentWanderSampleRadius: 5.62
-  agentWanderForwardBias: 0.85
+  agentArrivalRadius: 1
+  agentWanderSampleRadius: 5
+  agentWanderForwardBias: 0.5
+  agentWanderForwardAngleRange: 45
+  foodYield: 50
   maxThirst: 100
   maxHunger: 100
   maxMateDesire: 100
   <Target>k__BackingField: {fileID: 0}
-  <CurrentThirst>k__BackingField: 90
+  <CurrentThirst>k__BackingField: 100
   <CurrentHunger>k__BackingField: 100
-  <CurrentMateDesire>k__BackingField: 100
-  <Sex>k__BackingField: 0
-  <ActiveGoal>k__BackingField: 0
+  <CurrentMateDesire>k__BackingField: 90
+  <DebugState>k__BackingField: DEFAULT
 --- !u!195 &5113875060626504032
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -82,6 +84,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2007999705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5113875060052777914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc9b0110418d714da2aea5d28c666c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRadius: 11.57
 --- !u!1 &5113875060409730663
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +390,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4174684101506841556, guid: fae4a38ed0fa2724083dde39e9bd01dc,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4174684101506841557, guid: fae4a38ed0fa2724083dde39e9bd01dc,
         type: 3}
