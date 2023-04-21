@@ -59,8 +59,8 @@ public class SeekMateState<TAnimal> : AnimalBehaviorState where TAnimal : Animal
         if (!Animal.Agent.pathPending && Animal.Agent.remainingDistance < Animal.agentArrivalRadius) {
             // The agent has reached its mate
             TAnimal mate = Animal.Target.GetComponent<TAnimal>();
-            Animal.Mate();
-            mate.Mate();
+            Animal.Mate(mate);
+            mate.Mate(Animal);
             //todo: as of this point, goal should be changed, but consider forcing a rethink?
         }
 

@@ -4,22 +4,29 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
+//STATIC = LIFESPAN SHOULD BE ONE MINUTE?
+
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Animal : Resource {
     
+    [Header("Generic Genes")]
+    public float maxSpeed; 
+    [Range(0.1f, 1f)] public float agentWanderForwardBias = .8f; 
+    public float metabolism; //todo: how quicky you consume this stuff
+    public float foodYield = 50;
+    public float detectionRadius = 12;
+
     [Header("Movement Attributes")]
-    public float maxSpeed;
     [Range(0.01f, 2f)] public float agentArrivalRadius = 1f; 
     [Range(0.01f, 10f)] public float agentWanderSampleRadius = 5f; 
-    [Range(0.1f, 1f)] public float agentWanderForwardBias = .5f; 
     [Range(0.1f, 90f)] public float agentWanderForwardAngleRange = 45f; 
 
     [Header("Health Attributes")]
-    public float foodYield = 50;
     public float maxThirst = 100;
     public float maxHunger = 100;
     public float maxMateDesire = 100;
 
+    [field: Header("Info")]
     [field: SerializeField] public float CurrentThirst {get; protected set; } 
     [field: SerializeField] public float CurrentHunger {get; protected set; }
     [field: SerializeField] public float CurrentMateDesire {get; protected set; }
@@ -106,10 +113,12 @@ public abstract class Animal : Resource {
         }
     }
 
-    public void Mate(){
+    public void Mate(Animal partner){
         if(Sex is Female){
             //handle pregnancy here
             Debug.Log("PREGNANT NOW");
+            (Sex as Female).GeneAbstraction = new GeneAbstraction(partner, this);
+            (Sex as Female).InitPregnancyHandler();
         }
 
         CurrentMateDesire = maxMateDesire;
