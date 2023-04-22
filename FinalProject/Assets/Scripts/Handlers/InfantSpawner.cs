@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InfantSpawner<TAnimal> : MonoBehaviour where TAnimal : Animal
-{
+
+
+public class InfantSpawner<TAnimal> where TAnimal : Animal {
     // Start is called before the first frame update
     void Start()
     {

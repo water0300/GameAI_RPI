@@ -53,4 +53,8 @@ public static class Utility {
 
         return srcAngles;
     }
+
+    public static float RandomGaussian(float mean = 0f, float stdev = 1f){
+        return mean + stdev * (Mathf.Sqrt(-2f * Mathf.Log(Random.value)) * Mathf.Sin(2f * Mathf.PI * Random.value));
+    }
 }

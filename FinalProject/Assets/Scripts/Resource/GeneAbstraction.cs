@@ -30,6 +30,34 @@ public class GeneAbstraction {
         _desirability = (male.Sex as Male).desirability;
     }
 
+    public void LoadGenes(ref Animal child){
+        child.maxSpeed = LoadGene(_maxSpeed);
+        child.agentWanderForwardBias = LoadGene(_agentWanderForwardBias);
+        child.foodYield = LoadGene(_foodYield);
+        child.detectionRadius = LoadGene(_detectionRadius);
+        child.metabolism = LoadGene(_metabolism);
+    }
 
+    public float LoadFemaleGenes(){
+        return HandleMutation(_gestationDuration);
+    }
+
+    public float LoadMaleGenes(){
+       return HandleMutation(_desirability);
+    }
+
+    float LoadGene(Vector2 genePair){
+        float gene = Random.value > 0.5f ? genePair[0] : genePair[1];
+        return HandleMutation(gene);
+    }       
+
+    float HandleMutation(float gene){
+        if(Random.value < GameManager.Instance.mutationChance){
+            Debug.Log("MUTATED");
+            gene += Utility.RandomGaussian() * GameManager.Instance.mutationAmount;
+        }
+
+        return gene;
+    }
 
 }
