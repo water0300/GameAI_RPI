@@ -290,12 +290,13 @@ MonoBehaviour:
   agentArrivalRadius: 1
   agentWanderSampleRadius: 8.52
   agentWanderForwardAngleRange: 45
-  maxThirst: 100
-  maxHunger: 100
-  maxMateDesire: 100
-  <CurrentThirst>k__BackingField: 100
-  <CurrentHunger>k__BackingField: 100
-  <CurrentMateDesire>k__BackingField: 90
+  maxThirst: 30
+  maxHunger: 30
+  maxMateDesire: 30
+  <CurrentThirst>k__BackingField: 30
+  <CurrentHunger>k__BackingField: 30
+  <CurrentMateDesire>k__BackingField: 30
+  <Age>k__BackingField: 0
   <Target>k__BackingField: {fileID: 0}
   <DebugState>k__BackingField: DEFAULT
 --- !u!114 &2495096553154990465
@@ -326,6 +327,7 @@ MonoBehaviour:
   pregnancyDurationRandomRangeSecs: {x: 5, y: 5}
   gestationDuration: 15
   minChance: 0.2
+  _blacklist: []
 --- !u!1 &3580809592052992687
 GameObject:
   m_ObjectHideFlags: 0

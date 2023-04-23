@@ -1212,7 +1212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc55187ca82310e449876649c40d304b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  infant: {fileID: 0}
   maxSpeed: 5
   agentWanderForwardBias: 0.799
   metabolism: 0
@@ -1221,12 +1220,13 @@ MonoBehaviour:
   agentArrivalRadius: 1
   agentWanderSampleRadius: 8.52
   agentWanderForwardAngleRange: 45
-  maxThirst: 100
-  maxHunger: 100
-  maxMateDesire: 100
-  <CurrentThirst>k__BackingField: 100
-  <CurrentHunger>k__BackingField: 100
-  <CurrentMateDesire>k__BackingField: 90
+  maxThirst: 30
+  maxHunger: 30
+  maxMateDesire: 30
+  <CurrentThirst>k__BackingField: 30
+  <CurrentHunger>k__BackingField: 30
+  <CurrentMateDesire>k__BackingField: 30
+  <Age>k__BackingField: 0
   <Target>k__BackingField: {fileID: 0}
   <DebugState>k__BackingField: DEFAULT
 --- !u!114 &7521567700346806641

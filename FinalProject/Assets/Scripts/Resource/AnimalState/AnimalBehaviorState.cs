@@ -14,6 +14,10 @@ public abstract class AnimalBehaviorState {
 
 
     public void OnUpdate(){
+        if(!Animal.IsAlive){
+            return;
+        }
+
         if(Animal.Target == null){
             Animal.DebugState = $"Wandering, {ToString()}";
             Wander();
@@ -58,8 +62,3 @@ public abstract class AnimalBehaviorState {
         return hit.position;
     }
 }
-
-
-// public class FleeState : AnimalBehaviorState {
-    
-// }

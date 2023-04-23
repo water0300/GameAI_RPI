@@ -9,9 +9,9 @@ public class Female : Sex {
     public float gestationDuration; //variable
     [Range(0f, 1f)] public float minChance = 0.2f;
 
-    [field: SerializeField] public bool IsPregnant => GeneAbstraction != null;
+    public bool IsPregnant => GeneAbstraction != null;
     [field: SerializeField] public GeneAbstraction GeneAbstraction {get; set; }
-    private List<Male> _blacklist = new List<Male>();
+    [SerializeField] private List<Male> _blacklist = new List<Male>();
     private Animal _animal;
 
     private void Awake() {

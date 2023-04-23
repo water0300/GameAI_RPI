@@ -5,14 +5,23 @@ using UnityEngine;
 public class StatTracker : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
-    {
+    GameManager manager; //cache for perforamcne?
+
+
+    //stats
+    int herbivorePopulationSize;
+    // int 
+
+
+    void Start(){
+        manager = FindObjectOfType<GameManager>();
+        StartCoroutine(OnStatUpdate());
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    IEnumerator OnStatUpdate(){
+        while(true){
+            var population = manager.Population;
+        }
     }
 }

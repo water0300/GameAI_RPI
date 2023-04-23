@@ -31,30 +31,30 @@ public class GeneAbstraction {
     }
 
     public void LoadGenes(ref Animal child){
-        child.maxSpeed = LoadGene(_maxSpeed);
-        child.agentWanderForwardBias = LoadGene(_agentWanderForwardBias);
-        child.foodYield = LoadGene(_foodYield);
-        child.detectionRadius = LoadGene(_detectionRadius);
-        child.metabolism = LoadGene(_metabolism);
+        child.maxSpeed = LoadGene(_maxSpeed, 5, 2, 10);
+        child.agentWanderForwardBias = LoadGene(_agentWanderForwardBias, .3f, 0, 1);
+        child.foodYield = LoadGene(_foodYield, 25, 10, 90);
+        child.detectionRadius = LoadGene(_detectionRadius, 7, 5, 30);
+        child.metabolism = LoadGene(_metabolism, .3f, 0.3f, 1);
     }
 
     public float LoadFemaleGenes(){
-        return HandleMutation(_gestationDuration);
+        return HandleMutation(_gestationDuration, 5, 5, 15);
     }
 
     public float LoadMaleGenes(){
-       return HandleMutation(_desirability);
+       return HandleMutation(_desirability, .3f, 0, 1);
     }
 
-    float LoadGene(Vector2 genePair){
+    float LoadGene(Vector2 genePair, float maxMutationAmount, float minBound, float maxBound){
         float gene = Random.value > 0.5f ? genePair[0] : genePair[1];
-        return HandleMutation(gene);
+        return HandleMutation(gene, maxMutationAmount, minBound, maxBound);
     }       
 
-    float HandleMutation(float gene){
+    float HandleMutation(float gene, float maxMutationAmount, float minBound, float maxBound){
         if(Random.value < GameManager.Instance.mutationChance){
-            Debug.Log("MUTATED");
-            gene += Utility.RandomGaussian() * GameManager.Instance.mutationAmount;
+            // Debug.Log("MUTATED");
+            gene += Utility.RandomGaussian() * maxMutationAmount;
         }
 
         return gene;
