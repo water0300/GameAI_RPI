@@ -185,18 +185,18 @@ MonoBehaviour:
   maxSpeed: 5
   agentWanderForwardBias: 0.799
   metabolism: 0.5
-  foodYield: 50
+  foodYield: 100
   detectionRadius: 12
-  agentArrivalRadius: 1
+  agentArrivalRadius: 1.5
   agentWanderSampleRadius: 8.52
   agentWanderForwardAngleRange: 45
-  maxThirst: 50
-  maxHunger: 50
-  maxMateDesire: 50
-  idleThreshold: 40
-  <CurrentThirst>k__BackingField: 40
-  <CurrentHunger>k__BackingField: 40
-  <CurrentMateDesire>k__BackingField: 40
+  maxThirst: 55
+  maxHunger: 55
+  maxMateDesire: 55
+  idleThreshold: 50
+  <CurrentThirst>k__BackingField: 55
+  <CurrentHunger>k__BackingField: 55
+  <CurrentMateDesire>k__BackingField: 55
   <Age>k__BackingField: 0
   <InfancyDuration>k__BackingField: 10
   <Target>k__BackingField: {fileID: 0}

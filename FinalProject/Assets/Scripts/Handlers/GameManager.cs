@@ -13,12 +13,17 @@ public class GameManager : MonoBehaviour {
     [Header("Prefabs")]
     public Herbivore maleHerbivore;
     public Herbivore femaleHerbivore;
+    public Carnivore maleCarnivore;
+    public Carnivore femaleCarnivore;
 
     [Header("Initial Conditions")]
     public int maleHerbivoreCount = 5;
     public int femaleHerbivoreCount = 5;
+    public int maleCarnivoreCount = 5;
+    public int femaleCarnivoreCount = 5;
 
     [Header("Global Props")]
+    public bool debug;
     public float lifetimeBoundSecs = 60;
     public float mutationChance = 0.05f;
     public float mutationAmount = 1;
@@ -31,7 +36,9 @@ public class GameManager : MonoBehaviour {
 
     private CinemachineVirtualCamera vcam;
 
-    [field: SerializeField] public List<Animal> Population {get; private set; } = new List<Animal>();
+    // [field: SerializeField] public List<Animal> Population {get; private set; } = new List<Animal>();
+    [field: SerializeField] public List<Herbivore> HerbivorePop {get; private set; } = new List<Herbivore>();
+    [field: SerializeField] public List<Carnivore> CarnivorePop {get; private set; } = new List<Carnivore>();
 
     private void Awake()
     {
@@ -49,50 +56,82 @@ public class GameManager : MonoBehaviour {
     }
     
     private void Start() {
-        InitEnvironment();
+        if(!debug)
+            InitEnvironment();
     }
 
     private void Update() {
 
         if(Input.GetKeyDown(KeyCode.Space)){
-            vcam.Follow = Population[Random.Range(0, Population.Count)].transform;
+            vcam.Follow = HerbivorePop[Random.Range(0, HerbivorePop.Count)].transform;
 
         }
 
+        if(Input.GetKeyDown(KeyCode.X)){
+            vcam.Follow = CarnivorePop[Random.Range(0, CarnivorePop.Count)].transform;
+
+        }
         Time.timeScale = timeScale;
     }
+
+    int id = 0;
 
     private void InitEnvironment(){
         for(int i = 0; i < maleHerbivoreCount; ++i){
             Animal spawnedMale = Instantiate(maleHerbivore, Utility.GetRandomNavmeshPosition(), Quaternion.identity);
             RandomizeStats(ref spawnedMale);
             (spawnedMale.Sex as Male).desirability = Random.Range(0.4f, 1);
-            spawnedMale.InfancyDuration = 35;
+            spawnedMale.InfancyDuration = 20;
             spawnedMale.Age = Random.Range(0, 20);
-            Population.Add(spawnedMale);
+            HerbivorePop.Add(spawnedMale as Herbivore);
+            spawnedMale.name += $"{id}";
+            id++;
         }
 
         for(int i = 0; i < femaleHerbivoreCount; ++i){
             Animal spawnedFemale = Instantiate(femaleHerbivore, Utility.GetRandomNavmeshPosition(), Quaternion.identity);
             RandomizeStats(ref spawnedFemale);
             (spawnedFemale.Sex as Female).gestationDuration = Random.Range(gestationDurationRange[0], gestationDurationRange[1]);
-            spawnedFemale.InfancyDuration = 35;
+            spawnedFemale.InfancyDuration = 20;
             spawnedFemale.Age = Random.Range(0, 20);
-            Population.Add(spawnedFemale);
+            HerbivorePop.Add(spawnedFemale as Herbivore);
+            spawnedFemale.name += $"{id}";
+            id++;
         }
+
+        for(int i = 0; i < maleCarnivoreCount; ++i){
+            Animal spawnedMale = Instantiate(maleCarnivore, Utility.GetRandomNavmeshPosition(), Quaternion.identity);
+            RandomizeStats(ref spawnedMale);
+            (spawnedMale.Sex as Male).desirability = Random.Range(0.4f, 1);
+            spawnedMale.InfancyDuration = 20;
+            spawnedMale.Age = Random.Range(0, 20);
+            CarnivorePop.Add(spawnedMale as Carnivore);
+            spawnedMale.name += $"{id}";
+            id++;
+        }
+
+        for(int i = 0; i < femaleCarnivoreCount; ++i){
+            Animal spawnedFemale = Instantiate(femaleCarnivore, Utility.GetRandomNavmeshPosition(), Quaternion.identity);
+            RandomizeStats(ref spawnedFemale);
+            (spawnedFemale.Sex as Female).gestationDuration = Random.Range(gestationDurationRange[0], gestationDurationRange[1]);
+            spawnedFemale.InfancyDuration = 20;
+            spawnedFemale.Age = Random.Range(0, 20);
+            CarnivorePop.Add(spawnedFemale as Carnivore);
+            spawnedFemale.name += $"{id}";
+            id++;
+        } 
 
     }
 
     private void RandomizeStats(ref Animal animal){
         animal.maxSpeed = Random.Range(2, 6);
         animal.agentWanderForwardBias = Random.Range(0.5f, 0.95f);
-        animal.foodYield = Random.Range(30, 70);
+        // animal.foodYield = Random.Range(30, 70);
         animal.detectionRadius = Random.Range(6, 28);
         animal.metabolism = Random.Range(0.5f, 1);
     }
 
     public void HandleBirth(Animal birthingAnimal, Female birthingSex){
-
         if(birthingSex == null){
             Debug.LogWarning("BIRTHING SEX MISSING???");
             return;
@@ -101,7 +140,16 @@ public class GameManager : MonoBehaviour {
             return;
         } 
 
-        Animal child = Random.value > 0.5 ? Instantiate(maleHerbivore, birthingAnimal.transform.position, Quaternion.identity) : Instantiate(femaleHerbivore, birthingAnimal.transform.position, Quaternion.identity);
+        Animal child = null;
+
+        if(birthingAnimal is Carnivore){
+            child = Random.value > 0.5 ? Instantiate(maleCarnivore, birthingAnimal.transform.position, Quaternion.identity) : Instantiate(femaleCarnivore, birthingAnimal.transform.position, Quaternion.identity);
+        } else if (birthingAnimal is Herbivore) {
+            child = Random.value > 0.5 ? Instantiate(maleHerbivore, birthingAnimal.transform.position, Quaternion.identity) : Instantiate(femaleHerbivore, birthingAnimal.transform.position, Quaternion.identity);
+        } else {
+            Debug.LogError("what u give birth to tf?");
+        }
+
 
         birthingSex.GeneAbstraction.LoadGenes(ref child);
         if(child.Sex is Male){ //todo hard coded
@@ -112,12 +160,36 @@ public class GameManager : MonoBehaviour {
 
         child.InfancyDuration = birthingSex.gestationDuration;
 
-        Population.Add(child);
+        if(child is Herbivore){
+            HerbivorePop.Add(child as Herbivore);
+
+        }else if(child is Carnivore){
+            // Debug.Log("Carnivore gave birth");
+            CarnivorePop.Add(child as Carnivore);
+
+        } else {
+            Debug.LogError("tf is this child bro");
+        }
+
+            child.name += $"{id}";
+            id++;
+
     }
 
     public void HandleDeath(Animal deadAnimal, string causeOfDeath){
-        Population.Remove(deadAnimal);
-        Debug.Log($"Cause of Death: {causeOfDeath}");
+        string typ = "";
+        if(deadAnimal is Herbivore){
+            typ = "herbivore";
+            HerbivorePop.Remove(deadAnimal as Herbivore);
+
+        }else if(deadAnimal is Carnivore){
+            typ = "carnivore";
+            CarnivorePop.Remove(deadAnimal as Carnivore);
+
+        } else {
+            Debug.LogError("tf is this child bro");
+        }
+        Debug.Log($"{typ}, Cause of Death: {causeOfDeath}");
         Destroy(deadAnimal.gameObject);
     }
 }

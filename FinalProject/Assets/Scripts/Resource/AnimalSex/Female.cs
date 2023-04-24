@@ -6,7 +6,7 @@ public class Female : Sex {
     
     public float gestationDuration; //variable
 
-    public bool IsPregnant => GeneAbstraction != null;
+    [field: SerializeField] public bool IsPregnant {get; private set; }
     [field: SerializeField] public GeneAbstraction GeneAbstraction {get; set; }
     [SerializeField] private List<Male> _blacklist = new List<Male>();
     private Animal _animal;
@@ -18,6 +18,7 @@ public class Female : Sex {
     public void InitPregnancyHandler() => StartCoroutine(PregnancyHandler());
 
     private IEnumerator PregnancyHandler() {
+        IsPregnant = true;
         yield return new WaitForSeconds(Random.Range(GameManager.Instance.pregnancyDurationRandomRangeSecs[0], GameManager.Instance.pregnancyDurationRandomRangeSecs[1]));
 
         for(int i = 0; i < Random.Range(GameManager.Instance.litterSizeRandomRange[0], GameManager.Instance.litterSizeRandomRange[1]); i++){
@@ -31,6 +32,8 @@ public class Female : Sex {
         }
 
         GeneAbstraction = null;
+
+        IsPregnant = false;
     }
 
     private void DoBirth(){

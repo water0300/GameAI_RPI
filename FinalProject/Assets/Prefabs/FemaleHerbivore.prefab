@@ -88,18 +88,18 @@ MonoBehaviour:
   maxSpeed: 5
   agentWanderForwardBias: 0.799
   metabolism: 0.5
-  foodYield: 50
+  foodYield: 100
   detectionRadius: 12
-  agentArrivalRadius: 1
+  agentArrivalRadius: 1.5
   agentWanderSampleRadius: 8.52
   agentWanderForwardAngleRange: 45
-  maxThirst: 50
-  maxHunger: 50
-  maxMateDesire: 50
-  idleThreshold: 40
-  <CurrentThirst>k__BackingField: 40
-  <CurrentHunger>k__BackingField: 40
-  <CurrentMateDesire>k__BackingField: 40
+  maxThirst: 55
+  maxHunger: 55
+  maxMateDesire: 55
+  idleThreshold: 50
+  <CurrentThirst>k__BackingField: 55
+  <CurrentHunger>k__BackingField: 55
+  <CurrentMateDesire>k__BackingField: 55
   <Age>k__BackingField: 0
   <InfancyDuration>k__BackingField: 10
   <Target>k__BackingField: {fileID: 0}
@@ -128,10 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c383b953a4d04d629264586825f8e71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  litterSizeRandomRange: {x: 1, y: 12}
-  pregnancyDurationRandomRangeSecs: {x: 3, y: 10}
   gestationDuration: 15
-  minChance: 0.2
+  <IsPregnant>k__BackingField: 0
   _blacklist: []
 --- !u!1 &5735635158631308970
 GameObject:

@@ -11,22 +11,29 @@ public class StatDataEditor : Editor {
         StatData = (StatData) target;
     }
     public override void OnInspectorGUI() {
-        base.OnInspectorGUI();
-        
         if(GUILayout.Button($"Save to TXT")){
             SaveToTXT();
         }
+
+        base.OnInspectorGUI();
+
     }
 
     private void SaveToTXT(){
-        string _overwriteFile = Application.dataPath + "/Python/data.txt";
-        using(var writer = new StreamWriter(_overwriteFile, false)){
-            foreach(var data in StatData.data){
-                writer.WriteLine($"{data.timestep}, {data.populationCount}");
-            }
-        }
+        WriteHelper("/Python/herbivore_data.txt", StatData.herbivoreData);
+        WriteHelper("/Python/carnivore_data.txt", StatData.carnivoreData);
 
     }  
+
+    private void WriteHelper(string filepath, List<StatDataObj> datalist){
+        string file = Application.dataPath + filepath;
+        using(var writer = new StreamWriter(file, false)){
+            foreach(var data in datalist){
+                writer.WriteLine(
+                    $"{data.timestep}, {data.populationCount}, {data.avgMaxSpeed}, {data.averageForwardBias}, {data.avgMetabolism}, {data.avgDetectionRadius}, {data.avgDesire}, {data.avgGestationDuration}");
+            }
+        }
+    }
     
 
 }

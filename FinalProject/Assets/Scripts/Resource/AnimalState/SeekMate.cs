@@ -18,7 +18,7 @@ public class SeekMateState<TAnimal> : AnimalBehaviorState where TAnimal : Animal
     public override bool CompareGoalToTarget(Collider potentialTarget)
     {
         //only initiate mating with those who also seek to mate (the same species)
-        if(potentialTarget.TryGetComponent<TAnimal>(out TAnimal potentialMate) && potentialMate.ActiveState is SeekMateState<TAnimal>){
+        if(potentialTarget.gameObject != Animal.gameObject && potentialTarget.TryGetComponent<TAnimal>(out TAnimal potentialMate) && potentialMate.ActiveState is SeekMateState<TAnimal>){
             
             // SeekMateState<TAnimal> potentialMateState = potentialMate.ActiveState as SeekMateState<TAnimal>;
 
@@ -32,12 +32,17 @@ public class SeekMateState<TAnimal> : AnimalBehaviorState where TAnimal : Animal
                 return false;
             } 
 
+
+
             //otherwise, decide to mate or not
             if(
                 Animal.Sex is Male && (potentialMate.Sex as Female).RequestMate(Animal.Sex as Male)
                 || Animal.Sex is Female && (Animal.Sex as Female).RequestMate(potentialMate.Sex as Male)
             ){
                 potentialMate.Target = Animal.transform;
+                // if(potentialMate is Carnivore){
+                //     // Debug.Log(potentialMate.name);
+                // }
                 return true;
             } else {
                 return false;

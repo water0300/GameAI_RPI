@@ -7,7 +7,7 @@ public abstract class AnimalBehaviorState {
     public Animal Animal {get; set; }
     public abstract bool CompareGoalToTarget(Collider potentialTarget);
     public abstract void OnUpdateGoalAcquired();
-
+    public bool needToFlee = false;
     public AnimalBehaviorState(Animal animal){
         Animal = animal;
     }
@@ -22,7 +22,12 @@ public abstract class AnimalBehaviorState {
             Animal.DebugState = $"Wandering, {ToString()}";
             Wander();
         } else {
-            OnUpdateGoalAcquired();
+            if(needToFlee){
+                Animal.DebugState = $"Fleeing from predator";
+                OnFleeUpdate();
+            } else {
+                OnUpdateGoalAcquired();
+            }
         }
 
     }
@@ -44,6 +49,29 @@ public abstract class AnimalBehaviorState {
         }
     }
 
+    public bool CheckForPredator(Collider potentialTarget){
+        return Animal is Herbivore && potentialTarget.TryGetComponent<Carnivore>(out _);
+    }
+
+    private void OnFleeUpdate(){
+        // Debug.Log("FLEEING");
+        //randomly pick a position away from the target
+
+        Vector3 fleeDirection = (Animal.transform.position - Animal.Target.position).normalized;
+        // fleeDirection *= -1;
+        Animal.DebugSetPosition = Animal.transform.position + fleeDirection;
+
+        //  = newDestination;
+
+        NavMesh.SamplePosition(Animal.DebugSetPosition, out NavMeshHit hit, Animal.agentWanderSampleRadius, NavMesh.AllAreas);
+        // NavMesh.SamplePosition(transform.position, out NavMeshHit hit, agentWanderSampleRadius, NavMesh.AllAreas);
+        if(hit.hit == false){
+            Debug.LogWarning("No flee location found, give up");
+        } else {
+            Animal.Agent.SetDestination(Animal.DebugSetPosition);
+        }
+
+    }
 
     private Vector3 SampleProximatePosition(){
 
@@ -62,5 +90,7 @@ public abstract class AnimalBehaviorState {
 
         return hit.position;
     }
+
+
 }
 

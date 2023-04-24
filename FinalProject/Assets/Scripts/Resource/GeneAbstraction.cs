@@ -22,7 +22,7 @@ public class GeneAbstraction {
 
         _maxSpeed = new Vector2(male.maxSpeed, female.maxSpeed);
         _agentWanderForwardBias = new Vector2(male.agentWanderForwardBias, female.agentWanderForwardBias);
-        _foodYield = new Vector2(male.foodYield, female.foodYield);
+        // _foodYield = new Vector2(male.foodYield, female.foodYield);
         _detectionRadius = new Vector2(male.detectionRadius, female.detectionRadius);
         _metabolism  = new Vector2(male.metabolism, female.metabolism);
 
@@ -33,7 +33,7 @@ public class GeneAbstraction {
     public void LoadGenes(ref Animal child){
         child.maxSpeed = LoadGene(_maxSpeed, 5, 1, 10);
         child.agentWanderForwardBias = LoadGene(_agentWanderForwardBias, .3f, 0, 1);
-        child.foodYield = LoadGene(_foodYield, 25, 10, 90);
+        // child.foodYield = LoadGene(_foodYield, 25, 10, 90);
         child.detectionRadius = LoadGene(_detectionRadius, 7, 5, 35);
         child.metabolism = LoadGene(_metabolism, .3f, 0.3f, 1);
     }

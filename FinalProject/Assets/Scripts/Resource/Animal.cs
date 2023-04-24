@@ -13,7 +13,7 @@ public abstract class Animal : Resource {
     public float maxSpeed; 
     [Range(0.1f, 1f)] public float agentWanderForwardBias = .8f; 
     public float metabolism = .5f; //higher = need more food
-    public float foodYield = 50;
+    public float foodYield = 100;
     public float detectionRadius = 12;
 
     [Header("Movement Attributes")]
@@ -80,6 +80,7 @@ public abstract class Animal : Resource {
         if(DecideGoal()){
             Target = null;
         }
+
         ActiveState.OnUpdate();
 
     }
@@ -116,12 +117,12 @@ public abstract class Animal : Resource {
 
     void AdjustHealthStats(){
         //as a function of speed
-        float speed = Agent.velocity.magnitude;
+        // float speed = Agent.velocity.magnitude;
 
         // Debug.Log(Time.deltaTime * speed * metabolism);
 
-        CurrentThirst -= Time.deltaTime * speed * metabolism;
-        CurrentHunger -= Time.deltaTime * speed * metabolism;
+        CurrentThirst -= Time.deltaTime * metabolism * 3f;
+        CurrentHunger -= Time.deltaTime * metabolism * 3f;
 
         CurrentMateDesire -= Time.deltaTime;
     }
@@ -154,13 +155,13 @@ public abstract class Animal : Resource {
     protected virtual bool DecideGoal(){
         //if hunger and thirst are too low, always prioritize
         float minVal = Mathf.Min(CurrentThirst, CurrentHunger);
-        // if(!_isInfant && CurrentThirst/maxThirst > 0.36f && CurrentHunger/maxHunger > 0.36f){
-        //     minVal = Mathf.Min(minVal, CurrentMateDesire);
-        // }
-
-        if(!_isInfant){
+        if(!_isInfant && CurrentThirst/maxThirst > 0.2f && CurrentHunger/maxHunger > 0.2f || Sex is Female && !(Sex as Female).IsPregnant){
             minVal = Mathf.Min(minVal, CurrentMateDesire);
         }
+
+        // if(!_isInfant){
+        //     minVal = Mathf.Min(minVal, CurrentMateDesire);
+        // }
 
         //if too high, don't bother
         if(minVal > idleThreshold){
