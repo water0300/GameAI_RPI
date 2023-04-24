@@ -7,11 +7,11 @@ public class Carnivore : Animal
 
     protected override bool SetFoodGoal()
     {
-        throw new System.NotImplementedException();
+        return SetGoal(new SeekResourceFeedState<Herbivore>(this));
     }
 
     protected override bool SetMateGoal()
     {
-        throw new System.NotImplementedException();
+        return SetGoal(new SeekMateState<Carnivore>(this));
     }
 }

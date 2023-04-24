@@ -6,6 +6,11 @@ using UnityEngine.AI;
 
 public class ResourceSpawner : MonoBehaviour {
 
+    private static ResourceSpawner instance;
+    public static ResourceSpawner Instance {
+        get { return instance; }
+    }
+
     [Header("Prefab Refs")]
     public Plant resourcePrefab;
 
@@ -17,32 +22,55 @@ public class ResourceSpawner : MonoBehaviour {
 
     private List<Plant> _resourceList = new List<Plant>();
 
+    [SerializeField] private int resourceCount;
+
     private Vector3 _debugSpawnPoint;
     private Vector3 _debugTrySpawnPoint;
 
     private void Awake() {
+        if (instance == null)
+        {
+            instance = this;
+            // DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start() {
         for(int i = 0; i < initialSpawnCount; i++){
-            Plant resource = Instantiate(resourcePrefab, Utility.GetRandomNavmeshPosition(), Quaternion.identity);
-            _resourceList.Add(resource);
+            SpawnPlant();
         }
         
-        // StartCoroutine(SpawnResource());
+        StartCoroutine(SpawnResource());
 
+    }
+
+    private void Update() {
+        resourceCount = _resourceList.Count;
+    }
+
+    void SpawnPlant(){
+        Plant resource = Instantiate(resourcePrefab, Utility.GetRandomNavmeshPosition(), Quaternion.identity);
+        resource.transform.parent = this.transform;
+        _resourceList.Add(resource);
     }
 
     IEnumerator SpawnResource(){
         while(true){
 
-            //sample a position on the mesh
-            Vector3 pos = Utility.GetRandomNavmeshPosition();
-
+            SpawnPlant();
             float randoSpawnRate = Mathf.Max(Random.Range(spawnRatePerSec - spawnRateVariability, spawnRatePerSec + spawnRateVariability), maxSpawnDelay);
             // Debug.Log($"Rando Spawn Rate: {randoSpawnRate}");
             yield return new WaitForSeconds(1 / randoSpawnRate);
         }
+    }
+
+    public void DestroyResource(Plant resource){
+        _resourceList.Remove(resource);
+        Destroy(resource.gameObject);
     }
 
    

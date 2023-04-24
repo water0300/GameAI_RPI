@@ -1,0 +1,273 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73dc0e1226662e4438b5a4eeaa11e8bf, type: 3}
+  m_Name: StatData
+  m_EditorClassIdentifier: 
+  data:
+  - timestep: 0
+    populationCount: 0
+  - timestep: 1
+    populationCount: 160
+  - timestep: 2
+    populationCount: 160
+  - timestep: 3
+    populationCount: 160
+  - timestep: 4
+    populationCount: 160
+  - timestep: 5
+    populationCount: 160
+  - timestep: 6
+    populationCount: 160
+  - timestep: 7
+    populationCount: 160
+  - timestep: 8
+    populationCount: 160
+  - timestep: 9
+    populationCount: 160
+  - timestep: 10
+    populationCount: 159
+  - timestep: 11
+    populationCount: 159
+  - timestep: 12
+    populationCount: 158
+  - timestep: 13
+    populationCount: 158
+  - timestep: 14
+    populationCount: 155
+  - timestep: 15
+    populationCount: 152
+  - timestep: 16
+    populationCount: 151
+  - timestep: 17
+    populationCount: 148
+  - timestep: 18
+    populationCount: 147
+  - timestep: 19
+    populationCount: 145
+  - timestep: 20
+    populationCount: 141
+  - timestep: 21
+    populationCount: 131
+  - timestep: 22
+    populationCount: 128
+  - timestep: 23
+    populationCount: 124
+  - timestep: 24
+    populationCount: 122
+  - timestep: 25
+    populationCount: 123
+  - timestep: 26
+    populationCount: 121
+  - timestep: 27
+    populationCount: 127
+  - timestep: 28
+    populationCount: 129
+  - timestep: 29
+    populationCount: 147
+  - timestep: 30
+    populationCount: 143
+  - timestep: 31
+    populationCount: 141
+  - timestep: 32
+    populationCount: 139
+  - timestep: 33
+    populationCount: 138
+  - timestep: 34
+    populationCount: 146
+  - timestep: 35
+    populationCount: 149
+  - timestep: 36
+    populationCount: 155
+  - timestep: 37
+    populationCount: 164
+  - timestep: 38
+    populationCount: 167
+  - timestep: 39
+    populationCount: 173
+  - timestep: 40
+    populationCount: 172
+  - timestep: 41
+    populationCount: 167
+  - timestep: 42
+    populationCount: 166
+  - timestep: 43
+    populationCount: 169
+  - timestep: 44
+    populationCount: 160
+  - timestep: 45
+    populationCount: 164
+  - timestep: 46
+    populationCount: 163
+  - timestep: 47
+    populationCount: 166
+  - timestep: 48
+    populationCount: 172
+  - timestep: 49
+    populationCount: 168
+  - timestep: 50
+    populationCount: 160
+  - timestep: 51
+    populationCount: 151
+  - timestep: 52
+    populationCount: 147
+  - timestep: 53
+    populationCount: 145
+  - timestep: 54
+    populationCount: 140
+  - timestep: 55
+    populationCount: 140
+  - timestep: 56
+    populationCount: 131
+  - timestep: 57
+    populationCount: 126
+  - timestep: 58
+    populationCount: 123
+  - timestep: 59
+    populationCount: 117
+  - timestep: 60
+    populationCount: 112
+  - timestep: 61
+    populationCount: 117
+  - timestep: 62
+    populationCount: 111
+  - timestep: 63
+    populationCount: 108
+  - timestep: 64
+    populationCount: 100
+  - timestep: 65
+    populationCount: 90
+  - timestep: 66
+    populationCount: 84
+  - timestep: 67
+    populationCount: 81
+  - timestep: 68
+    populationCount: 75
+  - timestep: 69
+    populationCount: 69
+  - timestep: 70
+    populationCount: 71
+  - timestep: 71
+    populationCount: 79
+  - timestep: 72
+    populationCount: 86
+  - timestep: 73
+    populationCount: 88
+  - timestep: 74
+    populationCount: 88
+  - timestep: 75
+    populationCount: 88
+  - timestep: 76
+    populationCount: 98
+  - timestep: 77
+    populationCount: 98
+  - timestep: 78
+    populationCount: 97
+  - timestep: 79
+    populationCount: 97
+  - timestep: 80
+    populationCount: 104
+  - timestep: 81
+    populationCount: 102
+  - timestep: 82
+    populationCount: 100
+  - timestep: 83
+    populationCount: 97
+  - timestep: 84
+    populationCount: 95
+  - timestep: 85
+    populationCount: 95
+  - timestep: 86
+    populationCount: 101
+  - timestep: 87
+    populationCount: 115
+  - timestep: 88
+    populationCount: 113
+  - timestep: 89
+    populationCount: 110
+  - timestep: 90
+    populationCount: 107
+  - timestep: 91
+    populationCount: 109
+  - timestep: 92
+    populationCount: 111
+  - timestep: 93
+    populationCount: 106
+  - timestep: 94
+    populationCount: 105
+  - timestep: 95
+    populationCount: 108
+  - timestep: 96
+    populationCount: 107
+  - timestep: 97
+    populationCount: 108
+  - timestep: 98
+    populationCount: 116
+  - timestep: 99
+    populationCount: 122
+  - timestep: 100
+    populationCount: 123
+  - timestep: 101
+    populationCount: 135
+  - timestep: 102
+    populationCount: 137
+  - timestep: 103
+    populationCount: 147
+  - timestep: 104
+    populationCount: 155
+  - timestep: 105
+    populationCount: 166
+  - timestep: 106
+    populationCount: 167
+  - timestep: 107
+    populationCount: 170
+  - timestep: 108
+    populationCount: 167
+  - timestep: 109
+    populationCount: 160
+  - timestep: 110
+    populationCount: 157
+  - timestep: 111
+    populationCount: 163
+  - timestep: 112
+    populationCount: 163
+  - timestep: 113
+    populationCount: 168
+  - timestep: 114
+    populationCount: 170
+  - timestep: 115
+    populationCount: 164
+  - timestep: 116
+    populationCount: 166
+  - timestep: 117
+    populationCount: 182
+  - timestep: 118
+    populationCount: 194
+  - timestep: 119
+    populationCount: 213
+  - timestep: 120
+    populationCount: 233
+  - timestep: 121
+    populationCount: 252
+  - timestep: 122
+    populationCount: 278
+  - timestep: 123
+    populationCount: 296
+  - timestep: 124
+    populationCount: 311
+  - timestep: 125
+    populationCount: 316
+  - timestep: 126
+    populationCount: 317
+  - timestep: 127
+    populationCount: 325
+  - timestep: 128
+    populationCount: 333

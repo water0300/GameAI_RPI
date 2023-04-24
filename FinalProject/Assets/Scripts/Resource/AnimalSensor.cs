@@ -17,8 +17,22 @@ public class AnimalSensor : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate() {
         if(_animal.ActiveState != null){
-                _animal.Target = Physics.OverlapSphere(transform.position, _animal.detectionRadius, Utility.IgnoreLayer(_floorLayerID))?
-            .FirstOrDefault(h => _animal.ActiveState.CompareGoalToTarget(h))?.transform;
+            var cols = Physics.OverlapSphere(transform.position, _animal.detectionRadius, Utility.IgnoreLayer(_floorLayerID));
+
+            Collider closestCol = null;
+            foreach(Collider col in cols){
+                if(_animal.ActiveState.CompareGoalToTarget(col)){
+                    if(closestCol == null 
+                        || (closestCol.transform.position - _animal.transform.position).sqrMagnitude > (col.transform.position - _animal.transform.position).sqrMagnitude){
+                        closestCol = col;
+                    }
+                }
+
+            }
+
+            _animal.Target = closestCol?.transform;
+            //     _animal.Target = Physics.OverlapSphere(transform.position, _animal.detectionRadius, Utility.IgnoreLayer(_floorLayerID))?
+            // .FirstOrDefault(h => _animal.ActiveState.CompareGoalToTarget(h))?.transform;
         }
     }
 

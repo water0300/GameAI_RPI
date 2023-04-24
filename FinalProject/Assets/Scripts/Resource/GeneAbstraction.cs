@@ -31,15 +31,15 @@ public class GeneAbstraction {
     }
 
     public void LoadGenes(ref Animal child){
-        child.maxSpeed = LoadGene(_maxSpeed, 5, 2, 10);
+        child.maxSpeed = LoadGene(_maxSpeed, 5, 1, 10);
         child.agentWanderForwardBias = LoadGene(_agentWanderForwardBias, .3f, 0, 1);
         child.foodYield = LoadGene(_foodYield, 25, 10, 90);
-        child.detectionRadius = LoadGene(_detectionRadius, 7, 5, 30);
+        child.detectionRadius = LoadGene(_detectionRadius, 7, 5, 35);
         child.metabolism = LoadGene(_metabolism, .3f, 0.3f, 1);
     }
 
     public float LoadFemaleGenes(){
-        return HandleMutation(_gestationDuration, 5, 5, 15);
+        return HandleMutation(_gestationDuration, 5, GameManager.Instance.gestationDurationRange[0], GameManager.Instance.gestationDurationRange[1]);
     }
 
     public float LoadMaleGenes(){
@@ -57,7 +57,7 @@ public class GeneAbstraction {
             gene += Utility.RandomGaussian() * maxMutationAmount;
         }
 
-        return gene;
+        return Mathf.Clamp(gene, minBound, maxBound);
     }
 
 }

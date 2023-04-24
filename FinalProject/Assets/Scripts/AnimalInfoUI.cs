@@ -24,6 +24,7 @@ public class AnimalInfoUI : MonoBehaviour
 
         hungerSlider.value = _animal.CurrentHunger / _animal.maxHunger;
         thirstSlider.value = _animal.CurrentThirst / _animal.maxThirst;
+        matingSlider.value = _animal.CurrentMateDesire / _animal.maxMateDesire;
 
         stateText.text = _animal.DebugState;
     }

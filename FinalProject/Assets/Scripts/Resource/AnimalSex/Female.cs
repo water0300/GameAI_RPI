@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Female : Sex {
     
-    public Vector2 litterSizeRandomRange = new Vector2(1, 12);
-    public Vector2 pregnancyDurationRandomRangeSecs = new Vector2(5, 15);
     public float gestationDuration; //variable
-    [Range(0f, 1f)] public float minChance = 0.2f;
 
     public bool IsPregnant => GeneAbstraction != null;
     [field: SerializeField] public GeneAbstraction GeneAbstraction {get; set; }
@@ -21,10 +18,14 @@ public class Female : Sex {
     public void InitPregnancyHandler() => StartCoroutine(PregnancyHandler());
 
     private IEnumerator PregnancyHandler() {
-        yield return new WaitForSeconds(Random.Range(pregnancyDurationRandomRangeSecs[0], pregnancyDurationRandomRangeSecs[1]));
+        yield return new WaitForSeconds(Random.Range(GameManager.Instance.pregnancyDurationRandomRangeSecs[0], GameManager.Instance.pregnancyDurationRandomRangeSecs[1]));
 
-        for(int i = 0; i < Random.Range(litterSizeRandomRange[0], litterSizeRandomRange[1]); i++){
+        for(int i = 0; i < Random.Range(GameManager.Instance.litterSizeRandomRange[0], GameManager.Instance.litterSizeRandomRange[1]); i++){
             // Instantiate(_animal.infant)
+            if(!_animal.IsAlive){
+                break;
+            }
+
             GameManager.Instance.HandleBirth(_animal, this);
             yield return new WaitForSeconds(0.1f);
         }
@@ -44,7 +45,7 @@ public class Female : Sex {
             return false;
         }
 
-        float chance = Mathf.Lerp(minChance, 1, male.desirability);
+        float chance = Mathf.Lerp(GameManager.Instance.acceptMaleMinChance, 1, male.desirability);
         if(Random.value > chance){
             _blacklist.Add(male);
             return false;

@@ -9,6 +9,8 @@ public static class Utility {
         return ~(1 << layerToIgnore);
     }
 
+    // public static bool CompareDistances
+
     public static bool CompareFloats(float a, float b, float tolerance = 0.0001f){
         return Mathf.Abs(a - b) <= tolerance;
     }

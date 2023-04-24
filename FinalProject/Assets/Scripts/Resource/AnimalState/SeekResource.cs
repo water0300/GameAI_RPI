@@ -26,7 +26,12 @@ public class SeekResourceFeedState<TResource> : AnimalBehaviorState where TResou
             // The agent has reached its destination
             var resource = Animal.Target.GetComponent<TResource>();
             float yield = resource.GetConsumed(Animal.maxHunger - Animal.CurrentHunger);
-            Animal.Feed(yield);
+
+            if(resource is WaterResource){
+                Animal.Drink(yield);
+            } else{
+                Animal.Feed(yield);
+            } 
             //todo: as of this point, goal should be changed, but consider forcing a rethink?
         }
     }

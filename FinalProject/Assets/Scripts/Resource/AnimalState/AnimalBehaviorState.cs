@@ -56,9 +56,11 @@ public abstract class AnimalBehaviorState {
         NavMesh.SamplePosition(Animal.transform.position + rotatedVector * Animal.agentWanderSampleRadius, out NavMeshHit hit, Animal.agentWanderSampleRadius, NavMesh.AllAreas);
         // NavMesh.SamplePosition(transform.position, out NavMeshHit hit, agentWanderSampleRadius, NavMesh.AllAreas);
         if(hit.hit == false){
-            Debug.LogError("No valid sample found, handle eventually...");
+            Debug.LogWarning("No valid sample found, handle recursively...");
+            return SampleProximatePosition();
         }
 
         return hit.position;
     }
 }
+

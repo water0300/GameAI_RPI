@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5657541178272645741}
   - component: {fileID: 5657541178272645714}
   - component: {fileID: 5657541178272645743}
+  - component: {fileID: -2386864166149809878}
   m_Layer: 0
   m_Name: food
   m_TagString: Untagged
@@ -96,5 +97,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fbe7c2ce2a889c408d7de584e037ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCapacity: 100
-  regenerationPerSec: 5
+  maxCapacity: 30
+  regenerationPerSec: 2
+  <CurrentCapacity>k__BackingField: 0
+  <IsDead>k__BackingField: 0
+--- !u!65 &-2386864166149809878
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5657541178272645712}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1.0000001}
+  m_Center: {x: 0.00000005960464, y: 0, z: -0.00000008940696}
