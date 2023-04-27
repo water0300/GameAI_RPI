@@ -117,12 +117,12 @@ public abstract class Animal : Resource {
 
     void AdjustHealthStats(){
         //as a function of speed
-        // float speed = Agent.velocity.magnitude;
+        float speed = Agent.velocity.magnitude;
 
         // Debug.Log(Time.deltaTime * speed * metabolism);
 
-        CurrentThirst -= Time.deltaTime * metabolism * 3f;
-        CurrentHunger -= Time.deltaTime * metabolism * 3f;
+        CurrentThirst -= Time.deltaTime * metabolism * speed;
+        CurrentHunger -= Time.deltaTime * metabolism * speed;
 
         CurrentMateDesire -= Time.deltaTime;
     }

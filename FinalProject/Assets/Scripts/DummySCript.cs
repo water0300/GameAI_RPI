@@ -2,14 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//script purely for pseudocode for presentaiton/article
 public class DummySCript : MonoBehaviour
 {
    AnimalBehaviorState ActiveState;
 
     //Animal Superclass
+    // void UpdateSensor();
+    List<Male> _blacklist;
 
+
+    float minChance;
+    public bool RequestMate(Male male){
+        if (_blacklist.Contains(male))
+            return false;
+
+        float chance = Mathf.Lerp(minChance, 1, male.desirability);
+        if(Random.value > chance){
+            _blacklist.Add(male);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    void SpawnPlant(){
+
+    
+    }
+
+    float waitTime;
+
+    IEnumerator PlantSpawning(){
+        while(true){
+            SpawnPlant();
+            yield return new WaitForSeconds(waitTime);
+        }
+    }
+
+    
     void Update()
     {
+        // UpdateSensor(); 
+
         UpdateResourceValues();
 
         //if goal changed

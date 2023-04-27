@@ -8,6 +8,7 @@ public class StatTracker : MonoBehaviour
     // Start is called before the first frame update
     GameManager manager; //cache for perforamcne?
 
+    public float recordIntervalSecs = 1f;
     public StatData dataSO;
 
     private string _overwriteFile;
@@ -129,7 +130,7 @@ public class StatTracker : MonoBehaviour
 
             timestep += 1;
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(recordIntervalSecs);
 
         }
         
